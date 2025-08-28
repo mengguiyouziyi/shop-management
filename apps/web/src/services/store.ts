@@ -1,9 +1,9 @@
-import { ref } from 'vue'
+import { Store } from '../types/shop';
 
-const currentStore = ref(null)
+let currentStore: Store | null = null;
 
-export const switchStore = (store) => {
-  currentStore.value = store
-}
+export const switchStore = (store: Store) => {
+  currentStore = store;
+};
 
-export { currentStore }
+export { currentStore };

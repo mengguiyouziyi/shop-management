@@ -28,4 +28,11 @@ export function updateStock(product: Product, quantity: number): Product {
   return products[product.id]
 }
 
+export function deleteProduct(id: string): void {
+  if (!products[id]) {
+    throw new Error('商品不存在')
+  }
+  delete products[id]
+}
+
 export { products }

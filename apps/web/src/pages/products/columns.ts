@@ -1,36 +1,60 @@
-import { ColumnDef } from "@tanstack/react-table"
-import { Product } from "@/types"
+import React from "react";
+import { Product } from "../../types";
+import { EditIcon, DeleteIcon } from "tdesign-icons-react";
 
-export const productColumns: ColumnDef<Product>[] = [
+export const productColumns = [
   {
-    accessorKey: "name",
-    header: "商品名称",
+    key: "name",
+    title: "商品名称",
+    dataIndex: "name"
   },
   {
-    accessorKey: "category",
-    header: "分类",
+    key: "category",
+    title: "分类",
+    dataIndex: "category"
   },
   {
-    accessorKey: "price",
-    header: "价格",
-    cell: ({ row }) => `¥${row.getValue('price')}`
+    key: "price",
+    title: "价格",
+    dataIndex: "price",
+    render: (price: number) => `¥${price}`
   },
   {
-    accessorKey: "stock",
-    header: "库存",
+    key: "stock",
+    title: "库存",
+    dataIndex: "stock"
   },
   {
-    id: "actions",
-    cell: ({ row }) => (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost">操作</Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem>编辑</DropdownMenuItem>
-          <DropdownMenuItem>删除</DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    ),
-  },
-]
+    key: "actions",
+    title: "操作",
+    render: (record: Product) => {
+      return React.createElement('div', { 
+        style: { display: 'flex', gap: '8px' } 
+      }, [
+        React.createElement('button', {
+          key: 'edit',
+          onClick: () => console.log('Edit', record.id),
+          style: {
+            padding: '4px 8px',
+            border: '1px solid #ddd',
+            borderRadius: '4px',
+            background: '#fff',
+            cursor: 'pointer'
+          }
+        }, React.createElement(EditIcon)),
+        React.createElement('button', {
+          key: 'delete',
+          onClick: () => console.log('Delete', record.id),
+          style: {
+            padding: '4px 8px',
+            border: '1px solid #ddd',
+            borderRadius: '4px',
+            background: '#fff',
+            color: '#f5222d',
+            cursor: 'pointer'
+          }
+        }, React.createElement(DeleteIcon))
+      ]);
+    }
+  }
+];

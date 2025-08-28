@@ -1,0 +1,19 @@
+// apps/web/src/components/pos/SuspendOrder.tsx
+import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+
+export function SuspendOrder({ onSave }: { onSave: (name: string) => void }) {
+  return (
+    <Dialog>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>挂单管理</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <Input placeholder="输入挂单名称（如：桌号）" />
+          <Button onClick={() => onSave('临时挂单')}>确认挂单</Button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  )
+}
