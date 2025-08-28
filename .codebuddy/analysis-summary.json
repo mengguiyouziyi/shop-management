@@ -1,0 +1,1 @@
+{"title":"店铺管理系统测试实施","features":["Vitest配置","核心服务测试","覆盖率优化","集成测试"],"tech":{"Web":{"arch":"react","component":"shadcn"}},"design":"测试驱动开发","plan":{"测试环境搭建":"done","核心服务测试":"done","覆盖率优化":"done","集成测试":"done"}}
