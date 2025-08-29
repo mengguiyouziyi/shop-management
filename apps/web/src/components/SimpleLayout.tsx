@@ -33,6 +33,7 @@ export default function SimpleLayout() {
     menuItems.push({ path: '/reports/cross-store', label: '跨店铺报表' });
     menuItems.push({ path: '/resource-sharing', label: '资源共享' });
     menuItems.push({ path: '/headquarters-branch', label: '总部-分店管理' });
+    menuItems.push({ path: '/system-settings', label: '系统设置' });
   }
 
   // 库存管理员额外菜单项
