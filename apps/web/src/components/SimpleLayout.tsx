@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { PermissionService } from '../services/permission';
 import OfflineIndicator from './OfflineIndicator';
@@ -12,6 +12,7 @@ export default function SimpleLayout() {
   const currentUser = permissionService.getCurrentUser();
   const { isOnline } = useNetworkStore();
   const { currentStore } = useAppStore();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const menuItems = [
     { path: '/', label: '首页' },
@@ -36,6 +37,15 @@ export default function SimpleLayout() {
     menuItems.push({ path: '/purchase-orders', label: '采购订单' });
     menuItems.push({ path: '/inventory', label: '库存管理' });
   }
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    setMobileMenuOpen(false); // 关闭移动端菜单
+  };
 
   return (
     <div>
@@ -72,43 +82,48 @@ export default function SimpleLayout() {
           </div>
         )}
       </div>
+      
+      {/* 移动端菜单按钮 */}
+      <button 
+        className="mobile-menu-button"
+        onClick={toggleMobileMenu}
+        style={{ 
+          position: 'fixed', 
+          top: '70px', 
+          left: '20px', 
+          zIndex: 1000 
+        }}
+      >
+        ☰ 菜单
+      </button>
+      
       <div style={{ display: 'flex' }}>
-        <div style={{ 
-          width: '200px', 
-          background: '#001529',
-          minHeight: 'calc(100vh - 60px)',
-          padding: '20px 0',
-          boxShadow: '2px 0 8px rgba(0, 0, 0, 0.15)'
-        }}>
+        {/* 桌面端菜单 */}
+        <div className="desktop-menu">
           {menuItems.map(item => (
             <div 
               key={item.path}
               className={`menu-item ${location.pathname === item.path ? 'active' : ''}`}
-              style={{ 
-                color: 'white', 
-                padding: '12px 20px', 
-                cursor: 'pointer',
-                background: location.pathname === item.path ? '#1890ff' : 'transparent',
-                transition: 'all 0.3s',
-                margin: '4px 8px',
-                borderRadius: '4px'
-              }}
-              onClick={() => navigate(item.path)}
-              onMouseEnter={(e) => {
-                if (location.pathname !== item.path) {
-                  e.currentTarget.style.background = '#1f2c3e';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (location.pathname !== item.path) {
-                  e.currentTarget.style.background = 'transparent';
-                }
-              }}
+              onClick={() => handleNavigation(item.path)}
             >
               {item.label}
             </div>
           ))}
         </div>
+        
+        {/* 移动端菜单 */}
+        <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
+          {menuItems.map(item => (
+            <div 
+              key={item.path}
+              className={`mobile-menu-item ${location.pathname === item.path ? 'active' : ''}`}
+              onClick={() => handleNavigation(item.path)}
+            >
+              {item.label}
+            </div>
+          ))}
+        </div>
+        
         <div style={{ flex: 1, background: '#f5f7fa' }}>
           <Outlet />
         </div>

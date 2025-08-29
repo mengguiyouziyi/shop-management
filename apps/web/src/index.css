@@ -1,4 +1,85 @@
-:root {
+:root {/* 移动端菜单样式 */
+.mobile-menu-button {
+  display: none;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all var(--transition-speed);
+  margin: 10px;
+}
+
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
+  background: #001529;
+  z-index: 1000;
+  padding: 10px 0;
+}
+
+.mobile-menu.open {
+  display: block;
+}
+
+.mobile-menu-item {
+  display: block;
+  color: white;
+  padding: 12px 20px;
+  text-decoration: none;
+  transition: all var(--transition-speed);
+}
+
+.mobile-menu-item:hover,
+.mobile-menu-item.active {
+  background: var(--primary-color);
+}
+
+/* 桌面端菜单样式 */
+.desktop-menu {
+  width: 200px;
+  background: #001529;
+  min-height: calc(100vh - 60px);
+  padding: 20px 0;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+  transition: all var(--transition-speed);
+}
+
+/* 菜单项样式 */
+.menu-item {
+  color: white;
+  padding: 12px 20px;
+  cursor: pointer;
+  background: transparent;
+  transition: all var(--transition-speed);
+  margin: 4px 8px;
+  border-radius: 4px;
+  text-decoration: none;
+  display: block;
+}
+
+.menu-item:hover {
+  background: #1f2c3e;
+}
+
+.menu-item.active {
+  background: var(--primary-color);
+}
+
+/* 按钮样式优化 */
+.btn {
+  font-size: 14px;
+  transition: all var(--transition-speed);
+}
+
+.btn.small {
+  font-size: 12px;
+}
   --primary-color: #1890ff;
   --success-color: #52c41a;
   --warning-color: #faad14;
@@ -11,6 +92,7 @@
   --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
     'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
     'Noto Color Emoji';
+  --transition-speed: 0.3s;
 }
 
 body {
@@ -18,12 +100,27 @@ body {
   font-family: var(--font-family);
   color: var(--text-color);
   background-color: var(--background-color);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .page-container {
   padding: 20px;
   max-width: 1200px;
   margin: 0 auto;
+}
+
+/* 页面容器移动端适配 */
+@media (max-width: 768px) {
+  .page-container {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-container {
+    padding: 10px;
+  }
 }
 
 .page-title {
@@ -33,12 +130,43 @@ body {
   color: var(--text-color);
 }
 
+/* 页面标题移动端适配 */
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+}
+
 .card {
   background: var(--card-background);
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
   margin-bottom: 20px;
+  transition: all var(--transition-speed);
+}
+
+/* 卡片移动端适配 */
+@media (max-width: 768px) {
+  .card {
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
 }
 
 .btn {
@@ -122,8 +250,21 @@ body {
   border: 1px solid var(--border-color);
   border-radius: 4px;
   font-size: 14px;
-  transition: border-color 0.3s;
+  transition: border-color var(--transition-speed);
   box-sizing: border-box;
+}
+
+/* 表单输入框移动端适配 */
+@media (max-width: 768px) {
+  .form-input {
+    font-size: 16px; /* 防止iOS缩放 */
+  }
+}
+
+@media (max-width: 480px) {
+  .form-input {
+    font-size: 15px;
+  }
 }
 
 .form-input:focus {
@@ -139,6 +280,7 @@ body {
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all var(--transition-speed);
 }
 
 .table th,
@@ -157,10 +299,34 @@ body {
   background-color: #f5f7fa;
 }
 
+/* 表格移动端适配 */
+@media (max-width: 768px) {
+  .table {
+    font-size: 14px;
+  }
+
+  .table th,
+  .table td {
+    padding: 8px 4px;
+  }
+}
+
+@media (max-width: 480px) {
+  .table {
+    font-size: 13px;
+  }
+
+  .table th,
+  .table td {
+    padding: 6px 2px;
+  }
+}
+
 .alert {
   padding: 12px 16px;
   border-radius: 4px;
   margin-bottom: 16px;
+  transition: all var(--transition-speed);
 }
 
 .alert-success {
@@ -223,4 +389,11 @@ body {
 
 .font-bold {
   font-weight: 700;
+}
+
+/* 响应式表格容器 */
+.table-container {
+  overflow-x: auto;
+  margin-bottom: 20px;
+  -webkit-overflow-scrolling: touch;
 }
