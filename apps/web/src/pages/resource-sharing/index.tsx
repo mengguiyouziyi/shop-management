@@ -340,7 +340,7 @@ export default function ResourceSharingPage() {
           </div>
           
           <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', marginBottom: '20px' }}>
-            <h2 style={{ fontSize: '20px', marginBottom: '16px' }}>收到的共享请求</h2>
+            <h2 style={{ fontSize: '20px', marginBottom: '16px' }}}>收到的共享请求</h2>
             <Table
               data={shareRequests.filter(request => 
                 currentStore && request.targetStoreId === currentStore.id
@@ -360,7 +360,6 @@ export default function ResourceSharingPage() {
               rowKey="id"
             />
           </div>
-
         </Tabs.TabPanel>
       </Tabs>
     </div>
