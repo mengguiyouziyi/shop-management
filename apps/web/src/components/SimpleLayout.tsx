@@ -27,6 +27,7 @@ export default function SimpleLayout() {
     menuItems.push({ path: '/data', label: '数据管理' });
     menuItems.push({ path: '/stores', label: '店铺管理' });
     menuItems.push({ path: '/reports/sales', label: '销售报表' });
+    menuItems.push({ path: '/reports/inventory', label: '库存报表' });
   }
 
   // 库存管理员额外菜单项
