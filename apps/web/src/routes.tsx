@@ -27,6 +27,7 @@ const SystemSettingsPage = lazy(() => import('./pages/system-settings/index'));
 const ChangelogPage = lazy(() => import('./pages/changelog/index'));
 const AboutPage = lazy(() => import('./pages/about/index'));
 const FeedbackPage = lazy(() => import('./pages/feedback/index'));
+const HealthCheckPage = lazy(() => import('./pages/health-check/index'));
 
 // Loading component
 const LoadingComponent = () => (
@@ -266,6 +267,16 @@ export const router = createBrowserRouter([
           <Suspense fallback={<LoadingComponent />}>
             <ProtectedRoute>
               <FeedbackPage />
+            </ProtectedRoute>
+          </Suspense>
+        )
+      },
+      { 
+        path: 'health-check', 
+        element: (
+          <Suspense fallback={<LoadingComponent />}>
+            <ProtectedRoute requiredRole="admin">
+              <HealthCheckPage />
             </ProtectedRoute>
           </Suspense>
         )
