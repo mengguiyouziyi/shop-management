@@ -1,16 +1,24 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 import ProductsPage from './pages/products';
 import PosPage from './pages/pos';
 
+const router = createBrowserRouter([
+  {
+    path: "/products",
+    element: <ProductsPage />
+  },
+  {
+    path: "/pos",
+    element: <PosPage />
+  }
+]);
+
+export { router };
+import { RouterProvider } from 'react-router-dom';
+import { router } from './routes';
+
 function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/products" element={<ProductsPage />} />
-        <Route path="/pos" element={<PosPage />} />
-      </Routes>
-    </BrowserRouter>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
