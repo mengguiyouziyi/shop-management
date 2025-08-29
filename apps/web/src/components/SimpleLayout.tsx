@@ -28,6 +28,12 @@ export default function SimpleLayout() {
     menuItems.push({ path: '/stores', label: '店铺管理' });
   }
 
+  // 库存管理员额外菜单项
+  if (currentUser?.role === 'inventory') {
+    menuItems.push({ path: '/suppliers', label: '供应商管理' });
+    menuItems.push({ path: '/purchase-orders', label: '采购订单' });
+  }
+
   return (
     <div>
       <OfflineIndicator />
