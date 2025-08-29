@@ -43,8 +43,9 @@ export default function SimpleLayout() {
     menuItems.push({ path: '/inventory', label: '库存管理' });
   }
 
-  // 所有用户都可以访问帮助文档
+  // 所有用户都可以访问帮助文档和更新日志
   menuItems.push({ path: '/help', label: '帮助文档' });
+  menuItems.push({ path: '/changelog', label: '更新日志' });
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
