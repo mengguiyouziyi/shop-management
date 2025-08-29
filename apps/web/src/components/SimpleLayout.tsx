@@ -1,12 +1,15 @@
 import React from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { PermissionService } from '../services/permission';
+import OfflineIndicator from './OfflineIndicator';
+import { useNetworkStore } from '../services/network';
 
 export default function SimpleLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const permissionService = PermissionService.getInstance();
   const currentUser = permissionService.getCurrentUser();
+  const { isOnline } = useNetworkStore();
 
   const menuItems = [
     { path: '/', label: '首页' },
@@ -24,6 +27,7 @@ export default function SimpleLayout() {
 
   return (
     <div>
+      <OfflineIndicator />
       <div style={{ 
         height: '60px', 
         background: '#001529', 
@@ -32,7 +36,8 @@ export default function SimpleLayout() {
         alignItems: 'center',
         padding: '0 20px',
         boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        marginTop: !location.pathname.startsWith('/login') && !isOnline ? '36px' : '0'
       }}>
         <h1 style={{ margin: 0, fontSize: '20px', fontWeight: '600' }}>店铺管理系统</h1>
         {currentUser && (
