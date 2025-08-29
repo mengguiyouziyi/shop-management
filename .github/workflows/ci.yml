@@ -1,0 +1,108 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [16.x, 18.x]
+        
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: apps/web/package-lock.json
+    
+    - name: Install dependencies
+      run: |
+        cd apps/web
+        npm ci
+    
+    - name: Run tests
+      run: |
+        cd apps/web
+        npm run test:coverage
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./apps/web/coverage/lcov.info
+        flags: unittests
+        name: codecov-umbrella
+
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js 18.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+        cache-dependency-path: apps/web/package-lock.json
+    
+    - name: Install dependencies
+      run: |
+        cd apps/web
+        npm ci
+    
+    - name: Build project
+      run: |
+        cd apps/web
+        npm run build
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: web-build
+        path: apps/web/dist/
+
+  deploy-dev:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/develop'
+    
+    steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: web-build
+        path: dist/
+    
+    - name: Deploy to development server
+      run: |
+        echo "Deploying to development server"
+        # 这里添加部署到开发服务器的命令
+        # 示例：rsync -avz dist/ user@server:/path/to/dev/server/
+
+  deploy-prod:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: web-build
+        path: dist/
+    
+    - name: Deploy to production server
+      run: |
+        echo "Deploying to production server"
+        # 这里添加部署到生产服务器的命令
+        # 示例：rsync -avz dist/ user@server:/path/to/prod/server/
