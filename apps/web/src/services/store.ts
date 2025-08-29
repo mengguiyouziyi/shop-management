@@ -172,12 +172,6 @@ export class StoreService {
     return permissions.filter(p => p.userId === userId);
   }
   
-  // 获取子店铺
-  async getChildStores(parentStoreId: string): Promise<Store[]> {
-    const stores = await this.getAllStores();
-    return stores.filter(store => store.parentId === parentStoreId);
-  }
-  
   // 获取店铺层级路径
   async getStoreHierarchy(storeId: string): Promise<Store[]> {
     const stores = await this.getAllStores();
@@ -202,5 +196,11 @@ export class StoreService {
     }
     
     return hierarchy;
+  }
+  
+  // 获取子店铺
+  async getChildStores(parentStoreId: string): Promise<Store[]> {
+    const stores = await this.getAllStores();
+    return stores.filter(store => store.parentId === parentStoreId);
   }
 }
