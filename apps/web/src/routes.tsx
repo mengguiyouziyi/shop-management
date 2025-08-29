@@ -1,4 +1,4 @@
-import { lazy } from 'react';
+import { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import SimpleLayout from './components/SimpleLayout';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -19,143 +19,166 @@ const SalesReportPage = lazy(() => import('./pages/reports/sales'));
 const InventoryReportPage = lazy(() => import('./pages/reports/inventory'));
 const MobilePosPage = lazy(() => import('./pages/mobile-pos/index'));
 
+// Loading component
+const LoadingComponent = () => (
+  <div style={{ padding: '20px', textAlign: 'center' }}>
+    页面加载中...
+  </div>
+);
+
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <SimpleLayout />,
-    errorElement: <div>页面加载失败，请刷新重试</div>,
     children: [
       {
         index: true,
         element: (
-          <ProtectedRoute>
-            <DashboardPage />
-          </ProtectedRoute>
-        ),
-        errorElement: <div>页面加载失败，请刷新重试</div>
+          <Suspense fallback={<LoadingComponent />}>
+            <ProtectedRoute>
+              <DashboardPage />
+            </ProtectedRoute>
+          </Suspense>
+        )
       },
       { 
         path: 'members', 
         element: (
-          <ProtectedRoute requiredRole="cashier">
-            <MembersPage />
-          </ProtectedRoute>
-        ), 
-        errorElement: <div>页面加载失败，请刷新重试</div> 
+          <Suspense fallback={<LoadingComponent />}>
+            <ProtectedRoute requiredRole="cashier">
+              <MembersPage />
+            </ProtectedRoute>
+          </Suspense>
+        )
       },
       { 
         path: 'products', 
         element: (
-          <ProtectedRoute requiredRole="inventory">
-            <ProductsPage />
-          </ProtectedRoute>
-        ), 
-        errorElement: <div>页面加载失败，请刷新重试</div> 
+          <Suspense fallback={<LoadingComponent />}>
+            <ProtectedRoute requiredRole="inventory">
+              <ProductsPage />
+            </ProtectedRoute>
+          </Suspense>
+        )
       },
       { 
         path: 'orders/pos', 
         element: (
-          <ProtectedRoute requiredRole="cashier">
-            <POSPage />
-          </ProtectedRoute>
-        ), 
-        errorElement: <div>页面加载失败，请刷新重试</div> 
+          <Suspense fallback={<LoadingComponent />}>
+            <ProtectedRoute requiredRole="cashier">
+              <POSPage />
+            </ProtectedRoute>
+          </Suspense>
+        )
       },
       { 
         path: 'finance/daily', 
         element: (
-          <ProtectedRoute requiredRole="finance">
-            <DailyFinancePage />
-          </ProtectedRoute>
-        ), 
-        errorElement: <div>页面加载失败，请刷新重试</div> 
+          <Suspense fallback={<LoadingComponent />}>
+            <ProtectedRoute requiredRole="finance">
+              <DailyFinancePage />
+            </ProtectedRoute>
+          </Suspense>
+        )
       },
       { 
         path: 'roles', 
         element: (
-          <ProtectedRoute requiredRole="admin">
-            <RolesPage />
-          </ProtectedRoute>
-        ), 
-        errorElement: <div>页面加载失败，请刷新重试</div> 
+          <Suspense fallback={<LoadingComponent />}>
+            <ProtectedRoute requiredRole="admin">
+              <RolesPage />
+            </ProtectedRoute>
+          </Suspense>
+        )
       },
       { 
         path: 'data', 
         element: (
-          <ProtectedRoute requiredRole="admin">
-            <DataExportPage />
-          </ProtectedRoute>
-        ), 
-        errorElement: <div>页面加载失败，请刷新重试</div> 
+          <Suspense fallback={<LoadingComponent />}>
+            <ProtectedRoute requiredRole="admin">
+              <DataExportPage />
+            </ProtectedRoute>
+          </Suspense>
+        )
       },
       { 
         path: 'stores', 
         element: (
-          <ProtectedRoute requiredRole="admin">
-            <StoresPage />
-          </ProtectedRoute>
-        ), 
-        errorElement: <div>页面加载失败，请刷新重试</div> 
+          <Suspense fallback={<LoadingComponent />}>
+            <ProtectedRoute requiredRole="admin">
+              <StoresPage />
+            </ProtectedRoute>
+          </Suspense>
+        )
       },
       { 
         path: 'suppliers', 
         element: (
-          <ProtectedRoute requiredRole="inventory">
-            <SuppliersPage />
-          </ProtectedRoute>
-        ), 
-        errorElement: <div>页面加载失败，请刷新重试</div> 
+          <Suspense fallback={<LoadingComponent />}>
+            <ProtectedRoute requiredRole="inventory">
+              <SuppliersPage />
+            </ProtectedRoute>
+          </Suspense>
+        )
       },
       { 
         path: 'purchase-orders', 
         element: (
-          <ProtectedRoute requiredRole="inventory">
-            <PurchaseOrdersPage />
-          </ProtectedRoute>
-        ), 
-        errorElement: <div>页面加载失败，请刷新重试</div> 
+          <Suspense fallback={<LoadingComponent />}>
+            <ProtectedRoute requiredRole="inventory">
+              <PurchaseOrdersPage />
+            </ProtectedRoute>
+          </Suspense>
+        )
       },
       { 
         path: 'inventory', 
         element: (
-          <ProtectedRoute requiredRole="inventory">
-            <InventoryPage />
-          </ProtectedRoute>
-        ), 
-        errorElement: <div>页面加载失败，请刷新重试</div> 
+          <Suspense fallback={<LoadingComponent />}>
+            <ProtectedRoute requiredRole="inventory">
+              <InventoryPage />
+            </ProtectedRoute>
+          </Suspense>
+        )
       },
       { 
         path: 'reports/sales', 
         element: (
-          <ProtectedRoute requiredRole="admin">
-            <SalesReportPage />
-          </ProtectedRoute>
-        ), 
-        errorElement: <div>页面加载失败，请刷新重试</div> 
+          <Suspense fallback={<LoadingComponent />}>
+            <ProtectedRoute requiredRole="admin">
+              <SalesReportPage />
+            </ProtectedRoute>
+          </Suspense>
+        )
       },
       { 
         path: 'reports/inventory', 
         element: (
-          <ProtectedRoute requiredRole="admin">
-            <InventoryReportPage />
-          </ProtectedRoute>
-        ), 
-        errorElement: <div>页面加载失败，请刷新重试</div> 
+          <Suspense fallback={<LoadingComponent />}>
+            <ProtectedRoute requiredRole="admin">
+              <InventoryReportPage />
+            </ProtectedRoute>
+          </Suspense>
+        )
       },
       { 
         path: 'mobile-pos', 
         element: (
-          <ProtectedRoute requiredRole="cashier">
-            <MobilePosPage />
-          </ProtectedRoute>
-        ), 
-        errorElement: <div>页面加载失败，请刷新重试</div> 
+          <Suspense fallback={<LoadingComponent />}>
+            <ProtectedRoute requiredRole="cashier">
+              <MobilePosPage />
+            </ProtectedRoute>
+          </Suspense>
+        )
       }
     ]
   },
   {
     path: '/login',
-    element: <LoginPage />,
-    errorElement: <div>页面加载失败，请刷新重试</div>
+    element: (
+      <Suspense fallback={<LoadingComponent />}>
+        <LoginPage />
+      </Suspense>
+    )
   }
 ]);

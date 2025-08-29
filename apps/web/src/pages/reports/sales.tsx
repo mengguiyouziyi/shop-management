@@ -101,43 +101,19 @@ export default function SalesReportPage() {
   const averageOrderValue = totalOrders > 0 ? totalSales / totalOrders : 0;
 
   return (
-    <div className="page-container">
-      <h1 className="page-title">销售报表</h1>
+    <div style={{ padding: '20px' }}>
+      <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>销售报表</h1>
       
-      <div className="card">
-        <div className="flex justify-between items-center mb-4">
-          <h2>报表筛选</h2>
-          <DatePicker.RangePicker 
-            value={[startDate, endDate]} 
-            onChange={handleDateChange}
-          />
-        </div>
-      </div>
-      
-      <div className="card">
-        <h2>销售汇总</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
-          <div className="stat-card">
-            <div className="stat-value">¥{totalSales.toFixed(2)}</div>
-            <div className="stat-label">总销售额</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-value">{totalOrders}</div>
-            <div className="stat-label">总订单数</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-value">{totalItemsSold}</div>
-            <div className="stat-label">总商品数</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-value">¥{averageOrderValue.toFixed(2)}</div>
-            <div className="stat-label">平均订单金额</div>
+      <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', marginBottom: '20px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+          <h2 style={{ fontSize: '20px', margin: 0 }}>销售数据</h2>
+          <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+            <DatePicker.RangePicker 
+              value={[startDate, endDate]}
+              onChange={handleDateChange}
+            />
           </div>
         </div>
-      </div>
-      
-      <div className="card">
-        <h2>销售趋势</h2>
         <Table
           data={salesData}
           columns={salesColumns}
@@ -145,8 +121,8 @@ export default function SalesReportPage() {
         />
       </div>
       
-      <div className="card">
-        <h2>商品销售排行</h2>
+      <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px' }}>
+        <h2 style={{ fontSize: '20px', marginBottom: '16px' }}>商品销售排行</h2>
         <Table
           data={rankingData}
           columns={rankingColumns}

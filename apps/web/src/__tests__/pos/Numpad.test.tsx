@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import Numpad from '../../components/POS/NumPad';
-import { vi } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 describe('Numpad', () => {
   it('should render all keys', () => {
@@ -23,9 +23,19 @@ describe('Numpad', () => {
 
   it('should trigger onPress', () => {
     const mockFn = vi.fn();
-    render(<Numpad onPress={mockFn} />);
+    render(<div data-testid="numpad-container"><Numpad onPress={mockFn} /></div>);
     
-    fireEvent.click(screen.getByText('5'));
-    expect(mockFn).toHaveBeenCalledWith('5');
+    const container = screen.getByTestId('numpad-container');
+    const buttons = container.querySelectorAll('button');
+    
+    // 找到包含'5'的按钮
+    const button5 = Array.from(buttons).find(button => button.textContent === '5');
+    
+    if (button5) {
+      fireEvent.click(button5);
+      expect(mockFn).toHaveBeenCalledWith('5');
+    } else {
+      throw new Error('Button with text "5" not found');
+    }
   });
 });

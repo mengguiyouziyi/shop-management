@@ -109,7 +109,7 @@ export default function StoresPage() {
       title: '操作',
       colKey: 'actions',
       cell: ({ row }: { row: Store }) => (
-        <div className="flex gap-2">
+        <div style={{ display: 'flex', gap: '8px' }}>
           {(!currentStore || currentStore.id !== row.id) && (
             <Button 
               size="small" 
@@ -139,49 +139,49 @@ export default function StoresPage() {
   ];
 
   return (
-    <div className="page-container">
-      <h1 className="page-title">店铺管理</h1>
+    <div style={{ padding: '20px' }}>
+      <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>店铺管理</h1>
       
-      <div className="card">
-        <h2>{editingStore ? '编辑店铺' : '创建店铺'}</h2>
+      <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', marginBottom: '20px' }}>
+        <h2 style={{ fontSize: '20px', marginBottom: '16px' }}>{editingStore ? '编辑店铺' : '创建店铺'}</h2>
         <Form form={form} onSubmit={handleSubmit} labelWidth={100}>
-          <div className="form-group">
+          <div style={{ marginBottom: '16px' }}>
             <Form.Item label="店铺名称" name="name" rules={[{ required: true }]}>
-              <Input placeholder="请输入店铺名称" className="form-input" />
+              <Input placeholder="请输入店铺名称" />
             </Form.Item>
           </div>
           
-          <div className="form-group">
+          <div style={{ marginBottom: '16px' }}>
             <Form.Item label="店铺编码" name="code" rules={[{ required: true }]}>
-              <Input placeholder="请输入店铺编码" className="form-input" />
+              <Input placeholder="请输入店铺编码" />
             </Form.Item>
           </div>
           
-          <div className="form-group">
+          <div style={{ marginBottom: '16px' }}>
             <Form.Item label="地址" name="address" rules={[{ required: true }]}>
-              <Input placeholder="请输入店铺地址" className="form-input" />
+              <Input placeholder="请输入店铺地址" />
             </Form.Item>
           </div>
           
-          <div className="form-group">
+          <div style={{ marginBottom: '16px' }}>
             <Form.Item label="联系电话" name="phone">
-              <Input placeholder="请输入联系电话" className="form-input" />
+              <Input placeholder="请输入联系电话" />
             </Form.Item>
           </div>
           
-          <div className="form-group">
+          <div style={{ marginBottom: '16px' }}>
             <Form.Item label="负责人" name="manager">
-              <Input placeholder="请输入负责人姓名" className="form-input" />
+              <Input placeholder="请输入负责人姓名" />
             </Form.Item>
           </div>
           
-          <div className="form-group">
+          <div style={{ marginBottom: '16px' }}>
             <Form.Item label="状态" name="isActive" initialValue={true}>
               <Switch label={['启用', '停用']} />
             </Form.Item>
           </div>
           
-          <div className="flex gap-2">
+          <div style={{ display: 'flex', gap: '8px' }}>
             <Button theme="primary" type="submit">
               {editingStore ? '更新店铺' : '创建店铺'}
             </Button>
@@ -197,10 +197,17 @@ export default function StoresPage() {
         </Form>
       </div>
       
-      <div className="card">
-        <h2>店铺列表</h2>
+      <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px' }}>
+        <h2 style={{ fontSize: '20px', marginBottom: '16px' }}>店铺列表</h2>
         {currentStore && (
-          <div className="alert alert-success mb-4">
+          <div style={{ 
+            backgroundColor: '#f6ffed', 
+            border: '1px solid #b7eb8f', 
+            padding: '12px', 
+            borderRadius: '6px', 
+            marginBottom: '16px',
+            color: '#52c41a'
+          }}>
             当前店铺: {currentStore.name}
           </div>
         )}

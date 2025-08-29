@@ -218,13 +218,13 @@ export default function PurchaseOrdersPage() {
   ];
 
   return (
-    <div className="page-container">
-      <h1 className="page-title">采购订单管理</h1>
+    <div style={{ padding: '20px' }}>
+      <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>采购订单</h1>
       
-      <div className="card">
-        <h2>{editingOrder ? '编辑采购订单' : '创建采购订单'}</h2>
+      <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', marginBottom: '20px' }}>
+        <h2 style={{ fontSize: '20px', marginBottom: '16px' }}>{editingOrder ? '编辑采购订单' : '创建采购订单'}</h2>
         <Form form={form} onSubmit={handleSubmit} labelWidth={120}>
-          <div className="form-group">
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
             <Form.Item label="供应商" name="supplierId" rules={[{ required: true }]}>
               <Select>
                 {suppliers.map(supplier => (
@@ -234,52 +234,29 @@ export default function PurchaseOrdersPage() {
                 ))}
               </Select>
             </Form.Item>
-          </div>
-          
-          <div className="form-group">
-            <Form.Item label="下单日期" name="orderDate" rules={[{ required: true }]}>
+            
+            <Form.Item label="订单日期" name="orderDate" rules={[{ required: true }]}>
               <DatePicker />
             </Form.Item>
-          </div>
-          
-          <div className="form-group">
+            
             <Form.Item label="预计到货日期" name="expectedDeliveryDate">
               <DatePicker />
             </Form.Item>
-          </div>
-          
-          <div className="form-group">
-            <Form.Item label="状态" name="status" initialValue="draft">
+            
+            <Form.Item label="状态" name="status" initialValue="pending">
               <Select>
-                <Select.Option value="draft">草稿</Select.Option>
-                <Select.Option value="pending">待审批</Select.Option>
-                <Select.Option value="approved">已审批</Select.Option>
-                <Select.Option value="ordered">已下单</Select.Option>
+                <Select.Option value="pending">待处理</Select.Option>
+                <Select.Option value="confirmed">已确认</Select.Option>
+                <Select.Option value="shipped">已发货</Select.Option>
                 <Select.Option value="received">已收货</Select.Option>
                 <Select.Option value="cancelled">已取消</Select.Option>
               </Select>
             </Form.Item>
           </div>
           
-          <div className="form-group">
-            <Form.Item label="货币" name="currency" initialValue="CNY">
-              <Select>
-                <Select.Option value="CNY">人民币 (CNY)</Select.Option>
-                <Select.Option value="USD">美元 (USD)</Select.Option>
-                <Select.Option value="EUR">欧元 (EUR)</Select.Option>
-              </Select>
-            </Form.Item>
-          </div>
-          
-          <div className="form-group">
-            <Form.Item label="备注" name="notes">
-              <Input placeholder="请输入备注信息" className="form-input" />
-            </Form.Item>
-          </div>
-          
-          <div className="flex gap-2">
+          <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
             <Button theme="primary" type="submit">
-              {editingOrder ? '更新采购订单' : '创建采购订单'}
+              {editingOrder ? '更新订单' : '创建订单'}
             </Button>
             {editingOrder && (
               <Button variant="outline" onClick={() => {
@@ -293,24 +270,12 @@ export default function PurchaseOrdersPage() {
         </Form>
       </div>
       
-      <div className="card">
-        <h2>采购订单列表</h2>
+      <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px' }}>
+        <h2 style={{ fontSize: '20px', marginBottom: '16px' }}>采购订单列表</h2>
         <Table
           data={orders}
           columns={columns}
           rowKey="id"
-          expandedRow={({ row }) => (
-            showItems === row.id && (
-              <div style={{ padding: '16px' }}>
-                <h4>订单项</h4>
-                <Table
-                  data={row.items}
-                  columns={itemColumns}
-                  rowKey="id"
-                />
-              </div>
-            )
-          )}
         />
       </div>
     </div>

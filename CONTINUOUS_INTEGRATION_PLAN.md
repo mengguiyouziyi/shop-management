@@ -68,7 +68,3 @@
 4. 创建了Docker Compose配置文件(docker-compose.yml)：
    - Web服务配置
    - 网络配置
-5. 配置了测试环境：
-   - Jest测试框架配置
-   - 测试覆盖率报告生成
-   - 测试依赖安装

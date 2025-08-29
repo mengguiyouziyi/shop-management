@@ -83,42 +83,19 @@ export default function InventoryReportPage() {
   const overStockProducts = inventoryData.filter(item => item.status === 'over').length;
 
   return (
-    <div className="page-container">
-      <h1 className="page-title">库存报表</h1>
+    <div style={{ padding: '20px' }}>
+      <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>库存报表</h1>
       
-      <div className="card">
-        <h2>库存汇总</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px' }}>
-          <div className="stat-card">
-            <div className="stat-value">{totalProducts}</div>
-            <div className="stat-label">商品总数</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-value" style={{ color: '#ff4d4f' }}>{outOfStockProducts}</div>
-            <div className="stat-label">缺货商品</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-value" style={{ color: '#faad14' }}>{lowStockProducts}</div>
-            <div className="stat-label">低库存商品</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-value" style={{ color: '#1890ff' }}>{overStockProducts}</div>
-            <div className="stat-label">超储商品</div>
-          </div>
-        </div>
-      </div>
-      
-      <div className="card">
-        <div className="flex justify-between items-center mb-4">
-          <h2>库存详情</h2>
+      <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+          <h2 style={{ fontSize: '20px', margin: 0 }}>库存数据</h2>
           <Input 
-            placeholder="搜索商品名称" 
+            placeholder="搜索商品..." 
             value={searchTerm}
-            onChange={setSearchTerm}
+            onChange={(value) => setSearchTerm(value as string)}
             style={{ width: '300px' }}
           />
         </div>
-        
         <Table
           data={filteredData}
           columns={columns}

@@ -191,97 +191,91 @@ export default function MobilePosPage() {
   const totalAmount = calculateTotal();
 
   return (
-    <div className="page-container" style={{ padding: '10px' }}>
-      <h1 className="page-title">移动端POS收银</h1>
+    <div style={{ padding: '20px' }}>
+      <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>移动端POS收银</h1>
       
-      <div className="card">
-        <h2>购物车</h2>
+      <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', marginBottom: '20px' }}>
+        <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
+          <Input 
+            placeholder="搜索商品名称或条码" 
+            value={searchTerm}
+            onChange={(value) => setSearchTerm(value as string)}
+            style={{ flex: 1 }}
+          />
+          <Input 
+            placeholder="会员ID（可选）" 
+            value={memberId}
+            onChange={(value) => setMemberId(value as string)}
+            style={{ width: '200px' }}
+          />
+        </div>
+        
+        <Table
+          data={filteredProducts}
+          columns={productColumns}
+          rowKey="id"
+          onRowClick={(row) => addToCart(row as Product)}
+        />
+      </div>
+      
+      <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px' }}>
+        <h2 style={{ fontSize: '20px', marginBottom: '16px' }}>购物车</h2>
         <Table
           data={cart}
           columns={cartColumns}
           rowKey={(row) => row.product.id}
-          size="small"
         />
         
-        <div style={{ marginTop: '16px', padding: '16px', background: '#f8f9fa', borderRadius: '4px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '18px', fontWeight: 'bold' }}>
-            <span>总计:</span>
-            <span>¥{totalAmount.toFixed(2)}</span>
-          </div>
-        </div>
-      </div>
-      
-      <div className="card">
-        <h2>结账</h2>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <Input 
-            placeholder="会员ID（可选）" 
-            value={memberId}
-            onChange={setMemberId}
-          />
-          
-          <div>
-            <div style={{ marginBottom: '8px' }}>支付方式:</div>
-            <div style={{ display: 'flex', gap: '8px' }}>
+        {cart.length > 0 && (
+          <div style={{ marginTop: '20px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '18px', fontWeight: 'bold' }}>
+              <span>总计:</span>
+              <span>¥{totalAmount.toFixed(2)}</span>
+            </div>
+            
+            <div style={{ marginTop: '16px', padding: '16px', background: '#f8f9fa', borderRadius: '4px' }}>
+              <div style={{ marginBottom: '8px' }}>支付方式:</div>
+              <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+                <Button 
+                  variant={paymentMethod === 'cash' ? 'base' : 'outline'}
+                  onClick={() => setPaymentMethod('cash')}
+                >
+                  现金
+                </Button>
+                <Button 
+                  variant={paymentMethod === 'card' ? 'base' : 'outline'}
+                  onClick={() => setPaymentMethod('card')}
+                >
+                  刷卡
+                </Button>
+                <Button 
+                  variant={paymentMethod === 'mobile' ? 'base' : 'outline'}
+                  onClick={() => setPaymentMethod('mobile')}
+                >
+                  移动支付
+                </Button>
+              </div>
+              
+              {paymentMethod === 'cash' && (
+                <Input 
+                  placeholder="收款金额" 
+                  value={amountReceived}
+                  onChange={setAmountReceived}
+                  type="number"
+                />
+              )}
+              
               <Button 
-                variant={paymentMethod === 'cash' ? 'base' : 'outline'}
-                onClick={() => setPaymentMethod('cash')}
+                theme="primary" 
+                size="large" 
+                onClick={handleCheckout}
+                style={{ height: '48px', width: '100%' }}
               >
-                现金
-              </Button>
-              <Button 
-                variant={paymentMethod === 'card' ? 'base' : 'outline'}
-                onClick={() => setPaymentMethod('card')}
-              >
-                刷卡
-              </Button>
-              <Button 
-                variant={paymentMethod === 'mobile' ? 'base' : 'outline'}
-                onClick={() => setPaymentMethod('mobile')}
-              >
-                移动支付
+                结账 (¥{totalAmount.toFixed(2)})
               </Button>
             </div>
           </div>
-          
-          {paymentMethod === 'cash' && (
-            <Input 
-              placeholder="收款金额" 
-              value={amountReceived}
-              onChange={setAmountReceived}
-              type="number"
-            />
-          )}
-          
-          <Button 
-            theme="primary" 
-            size="large" 
-            onClick={handleCheckout}
-            style={{ height: '48px' }}
-          >
-            结账 (¥{totalAmount.toFixed(2)})
-          </Button>
-        </div>
-      </div>
-      
-      <div className="card">
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <h2>商品列表</h2>
-          <Input 
-            placeholder="搜索商品名称或条码" 
-            value={searchTerm}
-            onChange={setSearchTerm}
-          />
-          
-          <div className="table-container">
-            <Table
-              data={filteredProducts}
-              columns={productColumns}
-              rowKey="id"
-              size="small"
-            />
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );

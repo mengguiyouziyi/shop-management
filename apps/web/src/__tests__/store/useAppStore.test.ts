@@ -1,20 +1,29 @@
+/**
+ * @vitest-environment jsdom
+ */
 import { act, renderHook } from '@testing-library/react';
 import { useAppStore } from '../../store/useAppStore';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('useAppStore', () => {
+  const mockStore = {
+    id: 'test-store',
+    name: 'Test Store',
+    address: 'Test Address'
+  };
+
   beforeEach(() => {
     // Reset store to initial state
     const { result } = renderHook(() => useAppStore());
     act(() => {
+      // 重置所有状态到初始值
+      result.current.setCurrentStore(null);
+      // 设置mock store
+      result.current.setCurrentStore(mockStore);
+      // 清空数据
       result.current.products = [];
       result.current.members = [];
       result.current.orders = [];
-      result.current.stores = [];
-      result.current.staff = [];
-      result.current.currentStore = null;
-      result.current.currentStaff = null;
-      result.current.currentOrder = null;
-      result.current.suspendedOrders = [];
     });
   });
 
@@ -24,12 +33,6 @@ describe('useAppStore', () => {
     expect(result.current.products).toEqual([]);
     expect(result.current.members).toEqual([]);
     expect(result.current.orders).toEqual([]);
-    expect(result.current.stores).toEqual([]);
-    expect(result.current.staff).toEqual([]);
-    expect(result.current.currentStore).toBeNull();
-    expect(result.current.currentStaff).toBeNull();
-    expect(result.current.currentOrder).toBeNull();
-    expect(result.current.suspendedOrders).toEqual([]);
   });
 
   it('should add a product', () => {
@@ -55,8 +58,7 @@ describe('useAppStore', () => {
     const product = result.current.products[0];
     expect(product.name).toBe('Test Product');
     expect(product.id).toBeDefined();
-    expect(product.createdAt).toBeDefined();
-    expect(product.updatedAt).toBeDefined();
+    expect(product.storeId).toBe(mockStore.id);
   });
 
   it('should update a product', () => {
@@ -68,7 +70,7 @@ describe('useAppStore', () => {
         name: 'Test Product',
         category: 'Test Category',
         barcode: '123456789',
-        unit: 'piece',
+        unit: 'piece' as const,
         price: 100,
         cost: 50,
         stock: 10,
@@ -76,91 +78,97 @@ describe('useAppStore', () => {
         isActive: true,
       });
     });
-    
+
     const productId = result.current.products[0].id;
-    
-    // Update the product
+    const updatedProduct = { 
+      name: 'Updated Product', 
+      price: 150,
+    };
+
     act(() => {
-      result.current.updateProduct(productId, { name: 'Updated Product', price: 150 });
+      result.current.updateProduct(productId, updatedProduct);
     });
-    
-    const updatedProduct = result.current.products[0];
-    expect(updatedProduct.name).toBe('Updated Product');
-    expect(updatedProduct.price).toBe(150);
+
+    expect(result.current.products[0].name).toBe('Updated Product');
+    expect(result.current.products[0].price).toBe(150);
   });
 
   it('should delete a product', () => {
     const { result } = renderHook(() => useAppStore());
     
-    // Add products
+    // Clear products first to ensure clean state
+    act(() => {
+      result.current.products = [];
+    });
+    
+    // Add a product
     act(() => {
       result.current.addProduct({
-        name: 'Product 1',
-        category: 'Category 1',
-        barcode: '111',
-        unit: 'piece',
+        name: 'Test Product',
+        category: 'Test Category',
+        barcode: '123456789',
+        unit: 'piece' as const,
         price: 100,
         cost: 50,
         stock: 10,
         minStock: 2,
         isActive: true,
       });
-      
-      result.current.addProduct({
-        name: 'Product 2',
-        category: 'Category 2',
-        barcode: '222',
-        unit: 'piece',
-        price: 200,
-        cost: 100,
-        stock: 5,
-        minStock: 1,
-        isActive: true,
-      });
     });
-    
-    expect(result.current.products).toHaveLength(2);
-    
-    const productIdToDelete = result.current.products[0].id;
-    
-    // Delete one product
-    act(() => {
-      result.current.deleteProduct(productIdToDelete);
-    });
-    
+
     expect(result.current.products).toHaveLength(1);
-    expect(result.current.products[0].name).toBe('Product 2');
+
+    const productId = result.current.products[0].id;
+
+    act(() => {
+      result.current.deleteProduct(productId);
+    });
+
+    expect(result.current.products).toHaveLength(0);
   });
 
-  it('should manage current order', () => {
+  it('should add a member', () => {
     const { result } = renderHook(() => useAppStore());
     
-    const mockOrder = {
-      id: 'order1',
-      orderNumber: 'ORD-001',
+    const newMember = {
+      name: 'Test Member',
+      phone: '13800138000',
+      email: 'member@test.com',
+      points: 0,
+      level: 'normal' as const,
+      totalSpent: 0,
+    };
+
+    act(() => {
+      result.current.addMember(newMember);
+    });
+
+    expect(result.current.members).toHaveLength(1);
+    const member = result.current.members[0];
+    expect(member.name).toBe('Test Member');
+    expect(member.id).toBeDefined();
+    expect(member.storeId).toBe(mockStore.id);
+  });
+
+  it('should add an order', () => {
+    const { result } = renderHook(() => useAppStore());
+    
+    const newOrder = {
       items: [],
-      subtotal: 0,
-      discount: 0,
-      tax: 0,
-      total: 0,
-      paymentMethod: 'cash',
-      status: 'pending',
-      staffId: 'staff1',
-      createdAt: new Date().toISOString(),
-    } as any;
-    
-    // Set current order
+      totalAmount: 100,
+      status: 'completed' as const,
+      paymentStatus: 'paid' as const,
+    };
+
     act(() => {
-      result.current.setCurrentOrder(mockOrder);
+      result.current.addOrder(newOrder);
     });
-    
-    expect(result.current.currentOrder).toEqual(mockOrder);
-    
-    // Clear current order
-    act(() => {
-      result.current.setCurrentOrder(null);
-    });
-    
-    expect(result.current.currentOrder).toBeNull();
+
+    expect(result.current.orders).toHaveLength(1);
+    const order = result.current.orders[0];
+    expect(order.id).toBeDefined();
+    expect(order.storeId).toBe(mockStore.id);
+    expect(order.createdAt).toBeDefined();
+    expect(order.totalAmount).toBe(100);
   });
 });

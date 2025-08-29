@@ -7,9 +7,13 @@ describe('PosPage', () => {
     render(<PosPage />)
     
     // 点击数字键
-    fireEvent.click(screen.getByText('1'))
-    fireEvent.click(screen.getByText('2'))
-    fireEvent.click(screen.getByText('3'))
+    const button1 = screen.getAllByText('1')[0];
+    const button2 = screen.getAllByText('2')[0];
+    const button3 = screen.getAllByText('3')[0];
+    
+    fireEvent.click(button1)
+    fireEvent.click(button2)
+    fireEvent.click(button3)
     
     // 检查金额显示
     expect(screen.getByText('¥ 123.00')).toBeInTheDocument()
@@ -19,13 +23,18 @@ describe('PosPage', () => {
     render(<PosPage />)
     
     // 输入一些数字
-    fireEvent.click(screen.getByText('1'))
-    fireEvent.click(screen.getByText('2'))
+    const button1 = screen.getAllByText('1')[0];
+    const button2 = screen.getAllByText('2')[0];
+    
+    fireEvent.click(button1)
+    fireEvent.click(button2)
     
     // 点击清除按钮
-    fireEvent.click(screen.getByText('清除'))
+    const clearButtons = screen.getAllByText('清除');
+    fireEvent.click(clearButtons[0])
     
     // 检查金额是否被清除
-    expect(screen.getByText('¥ 0.00')).toBeInTheDocument()
+    const amountDisplays = screen.getAllByText('¥ 0.00');
+    expect(amountDisplays[0]).toBeInTheDocument()
   })
 })

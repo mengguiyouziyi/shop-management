@@ -135,53 +135,41 @@ export default function SuppliersPage() {
   ];
 
   return (
-    <div className="page-container">
-      <h1 className="page-title">供应商管理</h1>
+    <div style={{ padding: '20px' }}>
+      <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>供应商管理</h1>
       
-      <div className="card">
-        <h2>{editingSupplier ? '编辑供应商' : '创建供应商'}</h2>
+      <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', marginBottom: '20px' }}>
+        <h2 style={{ fontSize: '20px', marginBottom: '16px' }}>{editingSupplier ? '编辑供应商' : '创建供应商'}</h2>
         <Form form={form} onSubmit={handleSubmit} labelWidth={100}>
-          <div className="form-group">
+          <div style={{ marginBottom: '16px' }}>
             <Form.Item label="供应商名称" name="name" rules={[{ required: true }]}>
-              <Input placeholder="请输入供应商名称" className="form-input" />
+              <Input placeholder="请输入供应商名称" />
             </Form.Item>
           </div>
           
-          <div className="form-group">
-            <Form.Item label="供应商编码" name="code" rules={[{ required: true }]}>
-              <Input placeholder="请输入供应商编码" className="form-input" />
-            </Form.Item>
-          </div>
-          
-          <div className="form-group">
+          <div style={{ marginBottom: '16px' }}>
             <Form.Item label="联系人" name="contactPerson">
-              <Input placeholder="请输入联系人姓名" className="form-input" />
+              <Input placeholder="请输入联系人" />
             </Form.Item>
           </div>
           
-          <div className="form-group">
+          <div style={{ marginBottom: '16px' }}>
             <Form.Item label="联系电话" name="phone">
-              <Input placeholder="请输入联系电话" className="form-input" />
+              <Input placeholder="请输入联系电话" />
             </Form.Item>
           </div>
           
-          <div className="form-group">
-            <Form.Item label="邮箱" name="email">
-              <Input placeholder="请输入邮箱地址" className="form-input" />
-            </Form.Item>
-          </div>
-          
-          <div className="form-group">
+          <div style={{ marginBottom: '16px' }}>
             <Form.Item label="地址" name="address">
-              <Input placeholder="请输入地址" className="form-input" />
+              <Input placeholder="请输入地址" />
             </Form.Item>
           </div>
           
-          <div className="form-group">
-            <Form.Item label="分类" name="category">
+          <div style={{ marginBottom: '16px' }}>
+            <Form.Item label="分类" name="categoryId">
               <Select>
                 {categories.map(category => (
-                  <Select.Option key={category.id} value={category.name}>
+                  <Select.Option key={category.id} value={category.id}>
                     {category.name}
                   </Select.Option>
                 ))}
@@ -189,43 +177,13 @@ export default function SuppliersPage() {
             </Form.Item>
           </div>
           
-          <div className="form-group">
-            <Form.Item label="评分" name="rating" initialValue={5}>
-              <Select>
-                {[1, 2, 3, 4, 5].map(rating => (
-                  <Select.Option key={rating} value={rating}>
-                    {[...Array(rating)].map((_, i) => (
-                      <span key={i} style={{ color: '#faad14' }}>★</span>
-                    ))}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </div>
-          
-          <div className="form-group">
-            <Form.Item label="状态" name="status" initialValue="active">
-              <Select>
-                <Select.Option value="active">启用</Select.Option>
-                <Select.Option value="inactive">停用</Select.Option>
-                <Select.Option value="suspended">已暂停</Select.Option>
-              </Select>
-            </Form.Item>
-          </div>
-          
-          <div className="form-group">
-            <Form.Item label="付款条件" name="paymentTerms">
-              <Input placeholder="请输入付款条件" className="form-input" />
-            </Form.Item>
-          </div>
-          
-          <div className="form-group">
+          <div style={{ marginBottom: '16px' }}>
             <Form.Item label="备注" name="notes">
-              <Input placeholder="请输入备注信息" className="form-input" />
+              <Input placeholder="请输入备注" />
             </Form.Item>
           </div>
           
-          <div className="flex gap-2">
+          <div style={{ display: 'flex', gap: '8px' }}>
             <Button theme="primary" type="submit">
               {editingSupplier ? '更新供应商' : '创建供应商'}
             </Button>
@@ -241,8 +199,8 @@ export default function SuppliersPage() {
         </Form>
       </div>
       
-      <div className="card">
-        <h2>供应商列表</h2>
+      <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px' }}>
+        <h2 style={{ fontSize: '20px', marginBottom: '16px' }}>供应商列表</h2>
         <Table
           data={suppliers}
           columns={columns}

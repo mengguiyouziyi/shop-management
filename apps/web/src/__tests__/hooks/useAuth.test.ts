@@ -1,5 +1,9 @@
+/**
+ * @vitest-environment jsdom
+ */
 import { renderHook, act } from '@testing-library/react';
 import { useAuth } from '../../hooks/useAuth';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('useAuth', () => {
   beforeEach(() => {

@@ -1,16 +1,28 @@
+/**
+ * @vitest-environment jsdom
+ */
 import { describe, it, expect, beforeEach } from 'vitest'
 import { useAppStore } from '../../store/useAppStore'
 import { act, renderHook } from '@testing-library/react'
 
 describe('完整订单流程集成测试', () => {
+  const mockStore = {
+    id: 'test-store',
+    name: 'Test Store',
+    address: 'Test Address'
+  };
+
   beforeEach(() => {
     // Reset store to initial state
     const { result } = renderHook(() => useAppStore())
     act(() => {
-      result.current.products = []
-      result.current.members = []
-      result.current.orders = []
-      result.current.currentOrder = null
+      // 重置所有状态到初始值
+      result.current.setCurrentStore(null);
+      // 设置mock store
+      result.current.setCurrentStore(mockStore);
+      // 清空数据
+      result.current.products = [];
+      result.current.orders = [];
     })
   })
 
@@ -49,45 +61,56 @@ describe('完整订单流程集成测试', () => {
     // 3. 创建订单
     const mockOrder = {
       items: [orderItem],
-      subtotal: 200,
-      discount: 0,
-      tax: 0,
-      total: 200,
-      paymentMethod: 'cash',
-      status: 'pending',
-      staffId: 'staff1',
-    } as any
+      totalAmount: orderItem.totalPrice,
+      status: 'completed' as const,
+      paymentStatus: 'paid' as const,
+    }
     
     act(() => {
-      result.current.createOrder(mockOrder)
+      result.current.addOrder(mockOrder)
     })
     
     expect(result.current.orders).toHaveLength(1)
-    const order = result.current.orders[0]
-    expect(order.total).toBe(200)
-    expect(order.status).toBe('pending')
+    expect(result.current.orders[0].items).toHaveLength(1)
+    expect(result.current.orders[0].totalAmount).toBe(200)
   })
 
   it('应处理商品库存', () => {
     const { result } = renderHook(() => useAppStore())
     
-    // 1. 创建库存较少的商品
+    // 清空产品列表确保没有遗留数据
+    act(() => {
+      result.current.products = [];
+    });
+    
+    // 创建商品，初始库存为10
     act(() => {
       result.current.addProduct({
-        name: '限量商品',
+        name: '库存商品',
         category: '测试分类',
-        barcode: '789012',
+        barcode: '654321',
         unit: 'piece',
         price: 50,
         cost: 25,
-        stock: 1,
-        minStock: 0,
+        stock: 10,
+        minStock: 2,
         isActive: true,
       })
     })
     
     expect(result.current.products).toHaveLength(1)
     const product = result.current.products[0]
-    expect(product.stock).toBe(1)
+    expect(product.stock).toBe(10)
+    
+    // 模拟销售减少库存
+    act(() => {
+      result.current.updateProduct(product.id, {
+        ...product,
+        stock: product.stock - 3, // 减少3个库存
+      })
+    })
+    
+    const updatedProduct = result.current.products[0]
+    expect(updatedProduct.stock).toBe(7)
   })
 })

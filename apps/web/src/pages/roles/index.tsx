@@ -27,29 +27,29 @@ export default function RolesPage() {
   };
 
   return (
-    <div className="page-container">
-      <h1 className="page-title">角色管理</h1>
-      <div className="card">
-        <table className="table">
+    <div style={{ padding: '20px' }}>
+      <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>角色管理</h1>
+      <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
-            <tr>
-              <th>用户ID</th>
-              <th>用户名</th>
-              <th>角色</th>
-              <th>操作</th>
+            <tr style={{ borderBottom: '1px solid #ddd' }}>
+              <th style={{ textAlign: 'left', padding: '12px' }}>用户ID</th>
+              <th style={{ textAlign: 'left', padding: '12px' }}>用户名</th>
+              <th style={{ textAlign: 'left', padding: '12px' }}>角色</th>
+              <th style={{ textAlign: 'left', padding: '12px' }}>操作</th>
             </tr>
           </thead>
           <tbody>
             {users.map(user => (
-              <tr key={user.id}>
-                <td>{user.id}</td>
-                <td>{user.name}</td>
-                <td>
+              <tr key={user.id} style={{ borderBottom: '1px solid #eee' }}>
+                <td style={{ padding: '12px' }}>{user.id}</td>
+                <td style={{ padding: '12px' }}>{user.name}</td>
+                <td style={{ padding: '12px' }}>
                   {editingUser === user.id ? (
                     <select 
                       value={newRole}
                       onChange={(e) => setNewRole(e.target.value as UserRole)}
-                      className="form-input"
+                      style={{ padding: '6px', borderRadius: '4px', border: '1px solid #ddd' }}
                     >
                       {Object.entries(roleNames).map(([role, name]) => (
                         <option key={role} value={role}>{name}</option>
@@ -59,31 +59,52 @@ export default function RolesPage() {
                     roleNames[user.role]
                   )}
                 </td>
-                <td>
+                <td style={{ padding: '12px' }}>
                   {editingUser === user.id ? (
-                    <div className="flex gap-2">
+                    <div style={{ display: 'flex', gap: '8px' }}>
                       <button 
-                        className="btn btn-primary"
                         onClick={() => handleRoleChange(user.id, newRole)}
+                        style={{ 
+                          padding: '6px 12px', 
+                          backgroundColor: '#1890ff', 
+                          color: 'white', 
+                          border: 'none', 
+                          borderRadius: '4px',
+                          cursor: 'pointer'
+                        }}
                       >
                         保存
                       </button>
                       <button 
-                        className="btn btn-outline"
                         onClick={() => setEditingUser(null)}
+                        style={{ 
+                          padding: '6px 12px', 
+                          backgroundColor: '#fff', 
+                          color: '#333', 
+                          border: '1px solid #ddd', 
+                          borderRadius: '4px',
+                          cursor: 'pointer'
+                        }}
                       >
                         取消
                       </button>
                     </div>
                   ) : (
                     <button 
-                      className="btn btn-primary"
                       onClick={() => {
                         setEditingUser(user.id);
                         setNewRole(user.role);
                       }}
+                      style={{ 
+                        padding: '6px 12px', 
+                        backgroundColor: '#1890ff', 
+                        color: 'white', 
+                        border: 'none', 
+                        borderRadius: '4px',
+                        cursor: 'pointer'
+                      }}
                     >
-                      编辑角色
+                      修改角色
                     </button>
                   )}
                 </td>

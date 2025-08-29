@@ -146,20 +146,19 @@ export default function InventoryPage() {
   ];
 
   return (
-    <div className="page-container">
-      <h1 className="page-title">库存管理</h1>
+    <div style={{ padding: '20px' }}>
+      <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>库存管理</h1>
       
-      <div className="card">
-        <div className="flex justify-between items-center mb-4">
-          <h2>库存列表</h2>
+      <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', marginBottom: '20px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+          <h2 style={{ fontSize: '20px', margin: 0 }}>库存列表</h2>
           <Input 
-            placeholder="搜索商品名称或SKU" 
+            placeholder="搜索商品..." 
             value={searchTerm}
-            onChange={setSearchTerm}
+            onChange={(value) => setSearchTerm(value as string)}
             style={{ width: '300px' }}
           />
         </div>
-        
         <Table
           data={filteredItems}
           columns={columns}
