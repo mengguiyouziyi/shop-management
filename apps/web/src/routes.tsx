@@ -26,6 +26,7 @@ const HelpPage = lazy(() => import('./pages/help/index'));
 const SystemSettingsPage = lazy(() => import('./pages/system-settings/index'));
 const ChangelogPage = lazy(() => import('./pages/changelog/index'));
 const AboutPage = lazy(() => import('./pages/about/index'));
+const FeedbackPage = lazy(() => import('./pages/feedback/index'));
 
 // Loading component
 const LoadingComponent = () => (
@@ -255,6 +256,16 @@ export const router = createBrowserRouter([
           <Suspense fallback={<LoadingComponent />}>
             <ProtectedRoute>
               <AboutPage />
+            </ProtectedRoute>
+          </Suspense>
+        )
+      },
+      { 
+        path: 'feedback', 
+        element: (
+          <Suspense fallback={<LoadingComponent />}>
+            <ProtectedRoute>
+              <FeedbackPage />
             </ProtectedRoute>
           </Suspense>
         )
