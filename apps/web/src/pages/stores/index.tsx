@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Form, Input, Table, Message, Switch } from 'tdesign-react';
+import { Button, Form, Input, Table, Message, Switch, Select } from 'tdesign-react';
 import { StoreService } from '../../services/store';
 import { Store } from '../../types/store';
 import { useAppStore } from '../../store/useAppStore';
@@ -27,6 +27,16 @@ export default function StoresPage() {
   const handleSubmit = async () => {
     try {
       const values = await form.validate();
+      
+      // 处理层级关系
+      if (values.parentId) {
+        const parentStore = stores.find(store => store.id === values.parentId);
+        if (parentStore) {
+          values.level = parentStore.level + 1;
+        }
+      } else {
+        values.level = 0; // 总部层级为0
+      }
       
       if (editingStore) {
         // 更新店铺
@@ -91,6 +101,22 @@ export default function StoresPage() {
       colKey: 'code',
     },
     {
+      title: '层级',
+      colKey: 'level',
+      cell: ({ row }: { row: Store }) => (
+        <span>{row.level === 0 ? '总部' : `分店 L${row.level}`}</span>
+      )
+    },
+    {
+      title: '父级店铺',
+      colKey: 'parentId',
+      cell: ({ row }: { row: Store }) => {
+        if (!row.parentId) return <span>无</span>;
+        const parent = stores.find(store => store.id === row.parentId);
+        return <span>{parent ? parent.name : '未知'}</span>;
+      }
+    },
+    {
       title: '地址',
       colKey: 'address',
     },
@@ -130,6 +156,7 @@ export default function StoresPage() {
             theme="danger"
             variant="outline"
             onClick={() => handleDelete(row.id)}
+            disabled={row.level === 0 && stores.some(store => store.parentId === row.id)}
           >
             删除
           </Button>
@@ -137,6 +164,29 @@ export default function StoresPage() {
       )
     }
   ];
+
+  // 获取可选的父级店铺（不能选择自己或自己的子店铺作为父级）
+  const getParentStoreOptions = () => {
+    if (!editingStore) {
+      return stores;
+    }
+    
+    // 排除当前编辑的店铺及其所有子店铺
+    const excludeIds = [editingStore.id];
+    
+    // 简单的递归排除子店铺（实际项目中可能需要更复杂的逻辑）
+    const addChildStores = (parentId: string) => {
+      const children = stores.filter(store => store.parentId === parentId);
+      children.forEach(child => {
+        excludeIds.push(child.id);
+        addChildStores(child.id);
+      });
+    };
+    
+    addChildStores(editingStore.id);
+    
+    return stores.filter(store => !excludeIds.includes(store.id));
+  };
 
   return (
     <div style={{ padding: '20px' }}>
@@ -154,6 +204,19 @@ export default function StoresPage() {
           <div style={{ marginBottom: '16px' }}>
             <Form.Item label="店铺编码" name="code" rules={[{ required: true }]}>
               <Input placeholder="请输入店铺编码" />
+            </Form.Item>
+          </div>
+          
+          <div style={{ marginBottom: '16px' }}>
+            <Form.Item label="父级店铺" name="parentId">
+              <Select placeholder="请选择父级店铺">
+                <Select.Option key="" value="">无（总部）</Select.Option>
+                {getParentStoreOptions().map(store => (
+                  <Select.Option key={store.id} value={store.id}>
+                    {store.name} ({store.level === 0 ? '总部' : `分店 L${store.level}`})
+                  </Select.Option>
+                ))}
+              </Select>
             </Form.Item>
           </div>
           

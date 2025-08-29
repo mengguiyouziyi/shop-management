@@ -12,6 +12,7 @@ const DailyFinancePage = lazy(() => import('./pages/finance/daily'));
 const RolesPage = lazy(() => import('./pages/roles/index'));
 const DataExportPage = lazy(() => import('./pages/data-export/index'));
 const StoresPage = lazy(() => import('./pages/stores/index'));
+const StoreHierarchyPage = lazy(() => import('./pages/stores/hierarchy'));
 const SuppliersPage = lazy(() => import('./pages/suppliers/index'));
 const PurchaseOrdersPage = lazy(() => import('./pages/purchase-orders/index'));
 const InventoryPage = lazy(() => import('./pages/inventory/index'));
@@ -107,6 +108,16 @@ export const router = createBrowserRouter([
           <Suspense fallback={<LoadingComponent />}>
             <ProtectedRoute requiredRole="admin">
               <StoresPage />
+            </ProtectedRoute>
+          </Suspense>
+        )
+      },
+      { 
+        path: 'stores/hierarchy', 
+        element: (
+          <Suspense fallback={<LoadingComponent />}>
+            <ProtectedRoute requiredRole="admin">
+              <StoreHierarchyPage />
             </ProtectedRoute>
           </Suspense>
         )

@@ -1,4 +1,4 @@
-import { Store, StoreSettings } from '../types/store';
+import { Store, StoreSettings, StorePermission } from '../types/store';
 import { StorageService } from './storage';
 
 export class StoreService {
@@ -40,7 +40,8 @@ export class StoreService {
       ...storeData,
       id: `store_${Date.now()}`,
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
+      level: storeData.parentId ? storeData.level : 0 // 如果有父级店铺，则层级为父级层级+1，否则为0（总部）
     };
 
     stores.push(newStore);
@@ -89,6 +90,11 @@ export class StoreService {
     if (currentStore && currentStore.id === storeId) {
       this.storageService.remove(this.currentStoreKey);
     }
+    
+    // 同时删除该店铺的权限设置
+    const permissions = this.storageService.get<StorePermission[]>('store_permissions') || [];
+    const filteredPermissions = permissions.filter(p => p.storeId !== storeId);
+    this.storageService.set('store_permissions', filteredPermissions);
   }
 
   // 获取店铺设置
@@ -125,5 +131,76 @@ export class StoreService {
     
     this.storageService.set('store_settings', allSettings);
     return updatedSettings;
+  }
+  
+  // 获取店铺权限
+  async getStorePermissions(storeId: string): Promise<StorePermission[]> {
+    const permissions = this.storageService.get<StorePermission[]>('store_permissions') || [];
+    return permissions.filter(p => p.storeId === storeId);
+  }
+  
+  // 设置用户在店铺中的权限
+  async setStorePermission(storeId: string, userId: string, role: 'admin' | 'manager' | 'staff', permissions: string[]): Promise<StorePermission> {
+    const allPermissions = this.storageService.get<StorePermission[]>('store_permissions') || [];
+    
+    // 检查是否已存在该用户的权限设置
+    const existingIndex = allPermissions.findIndex(p => p.storeId === storeId && p.userId === userId);
+    
+    const permission: StorePermission = {
+      id: existingIndex === -1 ? `perm_${storeId}_${userId}_${Date.now()}` : allPermissions[existingIndex].id,
+      storeId,
+      userId,
+      role,
+      permissions,
+      createdAt: existingIndex === -1 ? new Date().toISOString() : allPermissions[existingIndex].createdAt,
+      updatedAt: new Date().toISOString()
+    };
+    
+    if (existingIndex === -1) {
+      allPermissions.push(permission);
+    } else {
+      allPermissions[existingIndex] = permission;
+    }
+    
+    this.storageService.set('store_permissions', allPermissions);
+    return permission;
+  }
+  
+  // 获取用户在所有店铺中的权限
+  async getUserPermissions(userId: string): Promise<StorePermission[]> {
+    const permissions = this.storageService.get<StorePermission[]>('store_permissions') || [];
+    return permissions.filter(p => p.userId === userId);
+  }
+  
+  // 获取子店铺
+  async getChildStores(parentStoreId: string): Promise<Store[]> {
+    const stores = await this.getAllStores();
+    return stores.filter(store => store.parentId === parentStoreId);
+  }
+  
+  // 获取店铺层级路径
+  async getStoreHierarchy(storeId: string): Promise<Store[]> {
+    const stores = await this.getAllStores();
+    const store = stores.find(s => s.id === storeId);
+    
+    if (!store) {
+      return [];
+    }
+    
+    const hierarchy: Store[] = [store];
+    let currentStore = store;
+    
+    // 向上追溯父级店铺
+    while (currentStore.parentId) {
+      const parentStore = stores.find(s => s.id === currentStore.parentId);
+      if (parentStore) {
+        hierarchy.unshift(parentStore);
+        currentStore = parentStore;
+      } else {
+        break;
+      }
+    }
+    
+    return hierarchy;
   }
 }

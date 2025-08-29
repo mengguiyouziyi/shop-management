@@ -27,6 +27,7 @@ export default function SimpleLayout() {
     menuItems.push({ path: '/roles', label: '角色管理' });
     menuItems.push({ path: '/data', label: '数据管理' });
     menuItems.push({ path: '/stores', label: '店铺管理' });
+    menuItems.push({ path: '/stores/hierarchy', label: '店铺层级' });
     menuItems.push({ path: '/reports/sales', label: '销售报表' });
     menuItems.push({ path: '/reports/inventory', label: '库存报表' });
   }
@@ -85,13 +86,17 @@ export default function SimpleLayout() {
       
       {/* 移动端菜单按钮 */}
       <button 
-        className="mobile-menu-button"
         onClick={toggleMobileMenu}
         style={{ 
           position: 'fixed', 
           top: '70px', 
           left: '20px', 
-          zIndex: 1000 
+          zIndex: 1000,
+          padding: '8px 12px',
+          backgroundColor: '#fff',
+          border: '1px solid #ddd',
+          borderRadius: '4px',
+          cursor: 'pointer'
         }}
       >
         ☰ 菜单
@@ -99,12 +104,34 @@ export default function SimpleLayout() {
       
       <div style={{ display: 'flex' }}>
         {/* 桌面端菜单 */}
-        <div className="desktop-menu">
+        <div style={{ 
+          width: '200px', 
+          backgroundColor: '#fff', 
+          borderRight: '1px solid #eee',
+          minHeight: 'calc(100vh - 60px)',
+          padding: '20px 0'
+        }}>
           {menuItems.map(item => (
             <div 
               key={item.path}
-              className={`menu-item ${location.pathname === item.path ? 'active' : ''}`}
               onClick={() => handleNavigation(item.path)}
+              style={{
+                padding: '12px 20px',
+                cursor: 'pointer',
+                backgroundColor: location.pathname === item.path ? '#e6f7ff' : 'transparent',
+                borderLeft: location.pathname === item.path ? '3px solid #1890ff' : '3px solid transparent',
+                transition: 'all 0.3s'
+              }}
+              onMouseEnter={(e) => {
+                if (location.pathname !== item.path) {
+                  (e.target as HTMLDivElement).style.backgroundColor = '#f5f7fa';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (location.pathname !== item.path) {
+                  (e.target as HTMLDivElement).style.backgroundColor = 'transparent';
+                }
+              }}
             >
               {item.label}
             </div>
@@ -112,12 +139,28 @@ export default function SimpleLayout() {
         </div>
         
         {/* 移动端菜单 */}
-        <div className={`mobile-menu ${mobileMenuOpen ? 'open' : ''}`}>
+        <div style={{ 
+          position: 'fixed',
+          left: mobileMenuOpen ? '0' : '-250px',
+          top: '120px',
+          width: '250px',
+          height: 'calc(100vh - 120px)',
+          backgroundColor: '#fff',
+          borderRight: '1px solid #eee',
+          zIndex: 999,
+          transition: 'left 0.3s ease-in-out',
+          overflowY: 'auto'
+        }}>
           {menuItems.map(item => (
             <div 
               key={item.path}
-              className={`mobile-menu-item ${location.pathname === item.path ? 'active' : ''}`}
               onClick={() => handleNavigation(item.path)}
+              style={{
+                padding: '12px 20px',
+                cursor: 'pointer',
+                backgroundColor: location.pathname === item.path ? '#e6f7ff' : 'transparent',
+                borderLeft: location.pathname === item.path ? '3px solid #1890ff' : '3px solid transparent'
+              }}
             >
               {item.label}
             </div>
