@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { ProductAPI } from '@shop/core/product/api';
 import { Button, Form, Input, Message, InputNumber } from 'tdesign-react';
+import { useAppStore } from '../../store/useAppStore';
 
 export function CreateProductForm({ onCreated }: { onCreated: () => void }) {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const { addProduct } = useAppStore();
 
   const handleSubmit = async () => {
     try {
@@ -24,14 +25,12 @@ export function CreateProductForm({ onCreated }: { onCreated: () => void }) {
         throw new Error('商品库存不能为负数');
       }
       
-      const api = new ProductAPI();
-      await api.createSPU({
-        tenantId: 'default',
-        spuId: `spu_${Date.now()}`,
+      addProduct({
         name: values.name.trim(),
-        categoryId: values.category?.trim() || 'default',
+        category: values.category?.trim() || 'default',
         price: values.price,
-        stock: values.stock
+        stock: values.stock,
+        description: values.description?.trim() || ''
       });
       
       Message.success('商品创建成功');
@@ -95,6 +94,18 @@ export function CreateProductForm({ onCreated }: { onCreated: () => void }) {
           ]}
         >
           <InputNumber placeholder="请输入商品库存" className="form-input" min={0} step={1} />
+        </Form.Item>
+      </div>
+      
+      <div className="form-group">
+        <Form.Item 
+          label="商品描述" 
+          name="description"
+          rules={[
+            { max: 200, message: '商品描述不能超过200个字符' }
+          ]}
+        >
+          <Input placeholder="请输入商品描述" className="form-input" />
         </Form.Item>
       </div>
       

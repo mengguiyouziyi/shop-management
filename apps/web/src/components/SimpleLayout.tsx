@@ -19,6 +19,7 @@ export default function SimpleLayout() {
   // 管理员额外菜单项
   if (currentUser?.role === 'admin') {
     menuItems.push({ path: '/roles', label: '角色管理' });
+    menuItems.push({ path: '/data', label: '数据管理' });
   }
 
   return (

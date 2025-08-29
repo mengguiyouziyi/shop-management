@@ -10,6 +10,7 @@ const ProductsPage = lazy(() => import('./pages/products/final'));
 const POSPage = lazy(() => import('./pages/orders/pos'));
 const DailyFinancePage = lazy(() => import('./pages/finance/daily'));
 const RolesPage = lazy(() => import('./pages/roles/index'));
+const DataExportPage = lazy(() => import('./pages/data-export/index'));
 
 export const router = createBrowserRouter([
   {
@@ -67,6 +68,15 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute requiredRole="admin">
             <RolesPage />
+          </ProtectedRoute>
+        ), 
+        errorElement: <div>页面加载失败，请刷新重试</div> 
+      },
+      { 
+        path: 'data', 
+        element: (
+          <ProtectedRoute requiredRole="admin">
+            <DataExportPage />
           </ProtectedRoute>
         ), 
         errorElement: <div>页面加载失败，请刷新重试</div> 
