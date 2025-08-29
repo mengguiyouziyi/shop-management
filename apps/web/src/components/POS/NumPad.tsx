@@ -1,16 +1,26 @@
-import React from 'react';
-import { Button } from 'tdesign-react';
+import { Button, Space } from 'tdesign-react';
+import type { Props } from './types';
 
-export const NumPad = () => {
-  const keys = ['7', '8', '9', '4', '5', '6', '1', '2', '3', '0', '.', '清空'];
-  
+export default function Numpad({ onPress }: Props) {
+  const keys = [
+    '7', '8', '9',
+    '4', '5', '6', 
+    '1', '2', '3',
+    '0', '.', '清除'
+  ];
+
   return (
-    <div className="grid grid-cols-3 gap-2 p-2">
+    <Space size={10} wrap>
       {keys.map(key => (
-        <Button key={key} shape="square" block>
+        <Button 
+          key={key}
+          theme="primary"
+          shape="square"
+          onClick={() => onPress(key)}
+        >
           {key}
         </Button>
       ))}
-    </div>
+    </Space>
   );
-};
+}

@@ -18,9 +18,12 @@ export const useAuth = () => {
         const parsedUser = JSON.parse(storedUser);
         if (parsedUser && parsedUser.id) {
           setUser(parsedUser);
+        } else {
+          setUser(mockUser);
         }
       } catch (e) {
         console.warn('Failed to parse stored user data:', e);
+        setUser(mockUser);
       }
     } else {
       setUser(mockUser);

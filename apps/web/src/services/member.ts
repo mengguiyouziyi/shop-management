@@ -7,7 +7,8 @@ export interface Member {
 
 export function calculatePoints(member: Member, pointsToAdd: number) {
   const newPoints = member.points + pointsToAdd
-  const newLevel = newPoints >= 200 ? 2 : member.level
+  // 升级阈值为200分
+  const newLevel = newPoints >= 200 ? 2 : 1
   
   return {
     ...member,

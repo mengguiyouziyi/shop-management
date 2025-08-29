@@ -1,9 +1,11 @@
-import { Store } from '../types/shop';
+import { Store } from '../types/shop'
 
-let currentStore: Store | null = null;
+let currentStore: Store | null = null
 
-export const switchStore = (store: Store) => {
-  currentStore = store;
-};
+export function switchStore(store: Store) {
+  currentStore = store
+}
 
-export { currentStore };
+export function getCurrentStore() {
+  return currentStore
+}
