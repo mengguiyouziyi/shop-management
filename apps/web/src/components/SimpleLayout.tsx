@@ -32,6 +32,7 @@ export default function SimpleLayout() {
   if (currentUser?.role === 'inventory') {
     menuItems.push({ path: '/suppliers', label: '供应商管理' });
     menuItems.push({ path: '/purchase-orders', label: '采购订单' });
+    menuItems.push({ path: '/inventory', label: '库存管理' });
   }
 
   return (
