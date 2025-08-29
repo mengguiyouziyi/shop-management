@@ -29,13 +29,21 @@ export function CreateProductForm({ onCreated }: { onCreated: () => void }) {
 
   return (
     <Form form={form} layout="vertical">
-      <Form.Item label="商品名称" name="name" rules={[{ required: true }]}>
-        <Input placeholder="请输入商品名称" />
-      </Form.Item>
-      <Form.Item label="商品分类" name="category">
-        <Input placeholder="请输入商品分类" />
-      </Form.Item>
-      <Button loading={loading} onClick={handleSubmit}>
+      <div className="form-group">
+        <Form.Item label="商品名称" name="name" rules={[{ required: true }]}>
+          <Input placeholder="请输入商品名称" className="form-input" />
+        </Form.Item>
+      </div>
+      <div className="form-group">
+        <Form.Item label="商品分类" name="category">
+          <Input placeholder="请输入商品分类" className="form-input" />
+        </Form.Item>
+      </div>
+      <Button 
+        loading={loading} 
+        onClick={handleSubmit}
+        className="btn btn-primary"
+      >
         创建商品
       </Button>
     </Form>

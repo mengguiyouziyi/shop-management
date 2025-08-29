@@ -52,25 +52,28 @@ export default function PosPage() {
   };
 
   return (
-    <Card bordered title="POS收银台">
-      <Space direction="vertical" size={24} style={{ width: '100%' }}>
-        <div className="amount-display">
-          <div style={{ textAlign: 'center', fontSize: '24px', fontWeight: 'bold' }}>
-            ¥ {formatAmount(amount)}
+    <div className="page-container">
+      <h1 className="page-title">POS收银台</h1>
+      <Card bordered className="card">
+        <Space direction="vertical" size={24} style={{ width: '100%' }}>
+          <div className="amount-display">
+            <div style={{ textAlign: 'center', fontSize: '32px', fontWeight: 'bold', color: '#1890ff' }}>
+              ¥ {formatAmount(amount)}
+            </div>
           </div>
-        </div>
-        
-        <Numpad onPress={handlePress} />
+          
+          <Numpad onPress={handlePress} />
 
-        <Space size={16} style={{ width: '100%', justifyContent: 'center' }}>
-          <Button theme="primary" style={{ width: '120px' }}>
-            确认收款
-          </Button>
-          <Button variant="outline" style={{ width: '120px' }}>
-            挂单
-          </Button>
+          <Space size={16} style={{ width: '100%', justifyContent: 'center' }}>
+            <Button theme="primary" className="btn btn-primary" style={{ width: '120px' }}>
+              确认收款
+            </Button>
+            <Button variant="outline" className="btn btn-outline" style={{ width: '120px' }}>
+              挂单
+            </Button>
+          </Space>
         </Space>
-      </Space>
-    </Card>
+      </Card>
+    </div>
   );
 }

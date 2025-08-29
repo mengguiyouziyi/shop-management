@@ -40,11 +40,13 @@ export function ProductList() {
   ];
 
   return (
-    <Table
-      data={products}
-      columns={columns}
-      loading={loading}
-      rowKey="spuId"
-    />
+    <div className="card">
+      <Table
+        data={products}
+        columns={columns}
+        loading={loading}
+        rowKey="spuId"
+      />
+    </div>
   );
 }

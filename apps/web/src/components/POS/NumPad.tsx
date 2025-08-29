@@ -17,6 +17,8 @@ export default function Numpad({ onPress }: Props) {
           theme="primary"
           shape="square"
           onClick={() => onPress(key)}
+          className="btn btn-primary"
+          style={{ width: '80px', height: '80px', fontSize: '24px' }}
         >
           {key}
         </Button>
