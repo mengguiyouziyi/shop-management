@@ -18,6 +18,7 @@ const PurchaseOrdersPage = lazy(() => import('./pages/purchase-orders/index'));
 const InventoryPage = lazy(() => import('./pages/inventory/index'));
 const SalesReportPage = lazy(() => import('./pages/reports/sales'));
 const InventoryReportPage = lazy(() => import('./pages/reports/inventory'));
+const CrossStoreReportPage = lazy(() => import('./pages/reports/crossStore'));
 const MobilePosPage = lazy(() => import('./pages/mobile-pos/index'));
 
 // Loading component
@@ -168,6 +169,16 @@ export const router = createBrowserRouter([
           <Suspense fallback={<LoadingComponent />}>
             <ProtectedRoute requiredRole="admin">
               <InventoryReportPage />
+            </ProtectedRoute>
+          </Suspense>
+        )
+      },
+      { 
+        path: 'reports/cross-store', 
+        element: (
+          <Suspense fallback={<LoadingComponent />}>
+            <ProtectedRoute requiredRole="admin">
+              <CrossStoreReportPage />
             </ProtectedRoute>
           </Suspense>
         )
