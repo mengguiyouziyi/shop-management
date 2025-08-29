@@ -6,12 +6,16 @@ import { useAppStore } from './store/useAppStore';
 import { SyncService } from './services/sync';
 import { NetworkService } from './services/network';
 import { IndexedDBService } from './services/indexedDB';
+import { StoreService } from './services/store';
 
 // 初始化存储
 useAppStore.getState().initializeStore();
 
 // 初始化网络服务
 NetworkService.getInstance();
+
+// 初始化店铺服务
+StoreService.getInstance();
 
 // 初始化IndexedDB
 IndexedDBService.getInstance().init().catch(error => {

@@ -3,6 +3,7 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { PermissionService } from '../services/permission';
 import OfflineIndicator from './OfflineIndicator';
 import { useNetworkStore } from '../services/network';
+import { useAppStore } from '../store/useAppStore';
 
 export default function SimpleLayout() {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ export default function SimpleLayout() {
   const permissionService = PermissionService.getInstance();
   const currentUser = permissionService.getCurrentUser();
   const { isOnline } = useNetworkStore();
+  const { currentStore } = useAppStore();
 
   const menuItems = [
     { path: '/', label: '首页' },
@@ -23,6 +25,7 @@ export default function SimpleLayout() {
   if (currentUser?.role === 'admin') {
     menuItems.push({ path: '/roles', label: '角色管理' });
     menuItems.push({ path: '/data', label: '数据管理' });
+    menuItems.push({ path: '/stores', label: '店铺管理' });
   }
 
   return (
@@ -39,7 +42,19 @@ export default function SimpleLayout() {
         justifyContent: 'space-between',
         marginTop: !location.pathname.startsWith('/login') && !isOnline ? '36px' : '0'
       }}>
-        <h1 style={{ margin: 0, fontSize: '20px', fontWeight: '600' }}>店铺管理系统</h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+          <h1 style={{ margin: 0, fontSize: '20px', fontWeight: '600' }}>店铺管理系统</h1>
+          {currentStore && (
+            <div style={{ 
+              fontSize: '12px', 
+              background: '#1890ff', 
+              padding: '2px 8px', 
+              borderRadius: '4px' 
+            }}>
+              {currentStore.name}
+            </div>
+          )}
+        </div>
         {currentUser && (
           <div style={{ fontSize: '14px' }}>
             欢迎, {currentUser.role === 'admin' ? '管理员' : 
