@@ -1,86 +1,76 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { ProductAPI } from './api';
-import { ProductService } from './service';
 
 describe('ProductAPI', () => {
-  it('should fetch products list', async () => {
-    const productService = new ProductService();
-    const api = new ProductAPI(productService);
-    
-    // Create some test products
-    const spu1 = productService.createSPU({
-      tenantId: 't1',
-      spuId: 'p1',
-      name: 'Product 1'
+  it('should create SPU with valid data', async () => {
+    const api = new ProductAPI();
+    await api.createSPU({
+      tenantId: 'test',
+      spuId: 'spu1',
+      name: 'Test Product',
+      categoryId: 'cat1'
     });
     
-    const spu2 = productService.createSPU({
-      tenantId: 't1',
-      spuId: 'p2',
-      name: 'Product 2'
-    });
-    
-    productService.createSKU({
-      spuId: spu1.id,
-      price: 100,
-      barcode: '123'
-    });
-    
-    productService.createSKU({
-      spuId: spu2.id,
-      price: 200,
-      barcode: '456'
-    });
-    
-    const products = await api.getProducts('t1');
-    
-    expect(products).toHaveLength(2);
-    expect(products[0].name).toBe('Product 1');
-    expect(products[1].name).toBe('Product 2');
+    const products = await api.list();
+    expect(products).toHaveLength(1);
+    expect(products[0].name).toBe('Test Product');
   });
 
-  it('should handle empty products list', async () => {
-    const productService = new ProductService();
-    const api = new ProductAPI(productService);
-    
-    const products = await api.getProducts('t1');
-    
-    expect(products).toHaveLength(0);
+  it('should throw error for empty product name', async () => {
+    const api = new ProductAPI();
+    await expect(api.createSPU({
+      tenantId: 'test',
+      spuId: 'spu1',
+      name: '',
+      categoryId: 'cat1'
+    })).rejects.toThrow('商品名称不能为空');
   });
 
-  it('should create a new product', async () => {
-    const productService = new ProductService();
-    const api = new ProductAPI(productService);
-    
-    const productData = {
-      tenantId: 't1',
-      spuId: 'p1',
-      name: 'New Product',
-      price: 150,
-      barcode: '789'
-    };
-    
-    const result = await api.createProduct(productData);
-    
-    expect(result.spu.name).toBe('New Product');
-    expect(result.skus).toHaveLength(1);
-    expect(result.skus[0].price).toBe(150);
-    expect(result.skus[0].barcode).toBe('789');
+  it('should throw error for name exceeding 50 characters', async () => {
+    const api = new ProductAPI();
+    const longName = 'a'.repeat(51);
+    await expect(api.createSPU({
+      tenantId: 'test',
+      spuId: 'spu1',
+      name: longName,
+      categoryId: 'cat1'
+    })).rejects.toThrow('商品名称不能超过50个字符');
   });
 
-  it('should handle product creation with missing data', async () => {
-    const productService = new ProductService();
-    const api = new ProductAPI(productService);
-    
-    const productData = {
-      tenantId: 't1',
-      spuId: 'p1',
-      name: 'New Product'
-      // Missing price and barcode
-    };
-    
-    await expect(api.createProduct(productData as any))
-      .rejects
-      .toThrow();
+  it('should throw error for category exceeding 30 characters', async () => {
+    const api = new ProductAPI();
+    const longCategory = 'a'.repeat(31);
+    await expect(api.createSPU({
+      tenantId: 'test',
+      spuId: 'spu1',
+      name: 'Test Product',
+      categoryId: longCategory
+    })).rejects.toThrow('商品分类不能超过30个字符');
+  });
+
+  it('should throw error for negative stock', async () => {
+    const api = new ProductAPI();
+    await expect(
+      api.createSPU({
+        tenantId: 'test',
+        spuId: 'spu1',
+        name: 'Test Product',
+        categoryId: 'cat1',
+        stock: -1
+      })
+    ).rejects.toThrow('商品库存不能为负数');
+  });
+
+  it('should throw error for zero or negative price', async () => {
+    const api = new ProductAPI();
+    await expect(
+      api.createSPU({
+        tenantId: 'test',
+        spuId: 'spu1',
+        name: 'Test Product',
+        categoryId: 'cat1',
+        price: 0
+      })
+    ).rejects.toThrow('商品价格必须大于0');
   });
 });

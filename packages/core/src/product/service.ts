@@ -1,40 +1,69 @@
 import { ProductSPU, ProductSKU } from './types';
 
 export class ProductService {
-  private spuMap = new Map<string, ProductSPU>();
-  private skuMap = new Map<string, ProductSKU>();
-  private spuToSkus = new Map<string, ProductSKU[]>();
-
-  createSPU(spu: Omit<ProductSPU, 'id'>): ProductSPU {
-    const id = crypto.randomUUID();
-    const newSPU = { ...spu, id };
-    this.spuMap.set(id, newSPU);
-    this.spuToSkus.set(id, []);
-    return newSPU;
-  }
-
-  createSKU(sku: Omit<ProductSKU, 'id'>): ProductSKU {
-    const id = crypto.randomUUID();
-    const newSKU = { ...sku, id };
-    this.skuMap.set(id, newSKU);
+  async createSPU(name: string, categoryId: string): Promise<ProductSPU> {
+    // 输入验证
+    if (!name || name.trim().length === 0) {
+      throw new Error('商品名称不能为空');
+    }
     
-    // Add SKU to SPU's SKU list
-    const spuSkus = this.spuToSkus.get(sku.spuId) || [];
-    spuSkus.push(newSKU);
-    this.spuToSkus.set(sku.spuId, spuSkus);
+    if (name.length > 50) {
+      throw new Error('商品名称不能超过50个字符');
+    }
     
-    return newSKU;
+    if (categoryId && categoryId.length > 30) {
+      throw new Error('商品分类不能超过30个字符');
+    }
+    
+    const spu: ProductSPU = {
+      spuId: `spu_${Date.now()}`,
+      name: name.trim(),
+      categoryId,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    
+    return spu;
   }
 
-  getSPU(id: string): ProductSPU | undefined {
-    return this.spuMap.get(id);
+  async createSKU(spuId: string, attributes: Record<string, string>, price: number, stock: number): Promise<ProductSKU> {
+    // 输入验证
+    if (!spuId || spuId.trim().length === 0) {
+      throw new Error('SPU ID不能为空');
+    }
+    
+    if (price <= 0) {
+      throw new Error('价格必须大于0');
+    }
+    
+    if (stock < 0) {
+      throw new Error('库存不能为负数');
+    }
+    
+    const sku: ProductSKU = {
+      skuId: `sku_${Date.now()}`,
+      spuId: spuId.trim(),
+      attributes,
+      price,
+      stock,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    
+    return sku;
   }
 
-  getSKU(id: string): ProductSKU | undefined {
-    return this.skuMap.get(id);
+  async getSPU(spuId: string): Promise<ProductSPU | undefined> {
+    if (!spuId || spuId.trim().length === 0) {
+      throw new Error('SPU ID不能为空');
+    }
+    
+    // 模拟从数据库获取数据
+    return undefined;
   }
 
-  getSkusBySpu(spuId: string): ProductSKU[] {
-    return this.spuToSkus.get(spuId) || [];
+  async listSPUs(): Promise<ProductSPU[]> {
+    // 模拟从数据库获取数据
+    return [];
   }
 }

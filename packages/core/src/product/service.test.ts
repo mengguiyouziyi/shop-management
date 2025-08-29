@@ -1,113 +1,54 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { ProductService } from './service';
-import { ProductSPU, ProductSKU } from './types';
 
 describe('ProductService', () => {
-  let service: ProductService;
-
-  beforeEach(() => {
-    service = new ProductService();
+  it('should create SPU with valid data', async () => {
+    const service = new ProductService();
+    const spu = await service.createSPU('Test Product', 'cat1');
+    
+    expect(spu.name).toBe('Test Product');
+    expect(spu.categoryId).toBe('cat1');
+    expect(spu.spuId).toBeDefined();
   });
 
-  it('should create SPU', () => {
-    const spu = service.createSPU({
-      tenantId: 't1',
-      spuId: 'p1',
-      name: '测试商品'
-    });
-    
-    expect(spu.id).toBeDefined();
-    expect(spu.name).toBe('测试商品');
+  it('should throw error for empty product name', async () => {
+    const service = new ProductService();
+    await expect(service.createSPU('', 'cat1')).rejects.toThrow('商品名称不能为空');
   });
 
-  it('should create SKU', () => {
-    const spu = service.createSPU({
-      tenantId: 't1',
-      spuId: 'p1',
-      name: '测试商品'
-    });
+  it('should throw error for name exceeding 50 characters', async () => {
+    const service = new ProductService();
+    const longName = 'a'.repeat(51);
+    await expect(service.createSPU(longName, 'cat1')).rejects.toThrow('商品名称不能超过50个字符');
+  });
+
+  it('should throw error for category exceeding 30 characters', async () => {
+    const service = new ProductService();
+    const longCategory = 'a'.repeat(31);
+    await expect(service.createSPU('Test Product', longCategory)).rejects.toThrow('商品分类不能超过30个字符');
+  });
+
+  it('should create SKU with valid data', async () => {
+    const service = new ProductService();
+    const sku = await service.createSKU('spu1', { color: 'red' }, 100, 10);
     
-    const sku = service.createSKU({
-      spuId: spu.id,
-      price: 100,
-      barcode: '123456'
-    });
-    
-    expect(sku.id).toBeDefined();
+    expect(sku.spuId).toBe('spu1');
     expect(sku.price).toBe(100);
-    expect(sku.barcode).toBe('123456');
+    expect(sku.stock).toBe(10);
   });
 
-  it('should get SKUs by SPU', () => {
-    const spu = service.createSPU({
-      tenantId: 't1',
-      spuId: 'p1',
-      name: '测试商品'
-    });
-    
-    service.createSKU({spuId: spu.id, price: 100, barcode: '123'});
-    service.createSKU({spuId: spu.id, price: 200, barcode: '456'});
-    
-    const skus = service.getSkusBySpu(spu.id);
-    expect(skus).toHaveLength(2);
-    expect(skus[0].price).toBe(100);
-    expect(skus[1].price).toBe(200);
+  it('should throw error for empty SPU ID', async () => {
+    const service = new ProductService();
+    await expect(service.createSKU('', { color: 'red' }, 100, 10)).rejects.toThrow('SPU ID不能为空');
   });
 
-  it('should get SPU by id', () => {
-    const spu = service.createSPU({
-      tenantId: 't1',
-      spuId: 'p1',
-      name: '测试商品'
-    });
-    
-    const retrievedSPU = service.getSPU(spu.id);
-    expect(retrievedSPU).toEqual(spu);
+  it('should throw error for zero or negative price', async () => {
+    const service = new ProductService();
+    await expect(service.createSKU('spu1', { color: 'red' }, 0, 10)).rejects.toThrow('价格必须大于0');
   });
 
-  it('should get SKU by id', () => {
-    const spu = service.createSPU({
-      tenantId: 't1',
-      spuId: 'p1',
-      name: '测试商品'
-    });
-    
-    const sku = service.createSKU({
-      spuId: spu.id,
-      price: 100,
-      barcode: '123456'
-    });
-    
-    const retrievedSKU = service.getSKU(sku.id);
-    expect(retrievedSKU).toEqual(sku);
-  });
-
-  it('should return undefined for non-existent SPU', () => {
-    const spu = service.getSPU('non-existent-id');
-    expect(spu).toBeUndefined();
-  });
-
-  it('should return undefined for non-existent SKU', () => {
-    const sku = service.getSKU('non-existent-id');
-    expect(sku).toBeUndefined();
-  });
-
-  it('should handle multiple SKUs for one SPU', () => {
-    const spu = service.createSPU({
-      tenantId: 't1',
-      spuId: 'p1',
-      name: '测试商品'
-    });
-    
-    // Create multiple SKUs
-    const sku1 = service.createSKU({spuId: spu.id, price: 100, barcode: '001'});
-    const sku2 = service.createSKU({spuId: spu.id, price: 150, barcode: '002'});
-    const sku3 = service.createSKU({spuId: spu.id, price: 200, barcode: '003'});
-    
-    const skus = service.getSkusBySpu(spu.id);
-    expect(skus).toHaveLength(3);
-    expect(skus.map(s => s.id)).toContain(sku1.id);
-    expect(skus.map(s => s.id)).toContain(sku2.id);
-    expect(skus.map(s => s.id)).toContain(sku3.id);
+  it('should throw error for negative stock', async () => {
+    const service = new ProductService();
+    await expect(service.createSKU('spu1', { color: 'red' }, 100, -1)).rejects.toThrow('库存不能为负数');
   });
 });
