@@ -1,9 +1,12 @@
 import React from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { PermissionService } from '../services/permission';
 
 export default function SimpleLayout() {
   const navigate = useNavigate();
   const location = useLocation();
+  const permissionService = PermissionService.getInstance();
+  const currentUser = permissionService.getCurrentUser();
 
   const menuItems = [
     { path: '/', label: '首页' },
@@ -12,6 +15,11 @@ export default function SimpleLayout() {
     { path: '/orders/pos', label: 'POS收银' },
     { path: '/finance/daily', label: '财务日报' }
   ];
+
+  // 管理员额外菜单项
+  if (currentUser?.role === 'admin') {
+    menuItems.push({ path: '/roles', label: '角色管理' });
+  }
 
   return (
     <div>
@@ -22,9 +30,17 @@ export default function SimpleLayout() {
         display: 'flex',
         alignItems: 'center',
         padding: '0 20px',
-        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+        justifyContent: 'space-between'
       }}>
         <h1 style={{ margin: 0, fontSize: '20px', fontWeight: '600' }}>店铺管理系统</h1>
+        {currentUser && (
+          <div style={{ fontSize: '14px' }}>
+            欢迎, {currentUser.role === 'admin' ? '管理员' : 
+                   currentUser.role === 'cashier' ? '收银员' :
+                   currentUser.role === 'inventory' ? '库存管理员' : '财务人员'}
+          </div>
+        )}
       </div>
       <div style={{ display: 'flex' }}>
         <div style={{ 
