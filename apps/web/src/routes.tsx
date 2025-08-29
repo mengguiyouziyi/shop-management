@@ -19,6 +19,7 @@ const InventoryPage = lazy(() => import('./pages/inventory/index'));
 const SalesReportPage = lazy(() => import('./pages/reports/sales'));
 const InventoryReportPage = lazy(() => import('./pages/reports/inventory'));
 const CrossStoreReportPage = lazy(() => import('./pages/reports/crossStore'));
+const ResourceSharingPage = lazy(() => import('./pages/resource-sharing/index'));
 const MobilePosPage = lazy(() => import('./pages/mobile-pos/index'));
 
 // Loading component
@@ -179,6 +180,16 @@ export const router = createBrowserRouter([
           <Suspense fallback={<LoadingComponent />}>
             <ProtectedRoute requiredRole="admin">
               <CrossStoreReportPage />
+            </ProtectedRoute>
+          </Suspense>
+        )
+      },
+      { 
+        path: 'resource-sharing', 
+        element: (
+          <Suspense fallback={<LoadingComponent />}>
+            <ProtectedRoute requiredRole="admin">
+              <ResourceSharingPage />
             </ProtectedRoute>
           </Suspense>
         )
