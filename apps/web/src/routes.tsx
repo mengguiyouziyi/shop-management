@@ -22,6 +22,7 @@ const CrossStoreReportPage = lazy(() => import('./pages/reports/crossStore'));
 const ResourceSharingPage = lazy(() => import('./pages/resource-sharing/index'));
 const MobilePosPage = lazy(() => import('./pages/mobile-pos/index'));
 const HeadquartersBranchPage = lazy(() => import('./pages/headquarters-branch/index'));
+const HelpPage = lazy(() => import('./pages/help/index'));
 
 // Loading component
 const LoadingComponent = () => (
@@ -211,6 +212,16 @@ export const router = createBrowserRouter([
           <Suspense fallback={<LoadingComponent />}>
             <ProtectedRoute requiredRole="cashier">
               <MobilePosPage />
+            </ProtectedRoute>
+          </Suspense>
+        )
+      },
+      { 
+        path: 'help', 
+        element: (
+          <Suspense fallback={<LoadingComponent />}>
+            <ProtectedRoute>
+              <HelpPage />
             </ProtectedRoute>
           </Suspense>
         )
