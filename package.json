@@ -4,11 +4,16 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run apps/web/src/__tests__/**/*.test.ts",
-    "test:unit": "vitest run apps/web/src/__tests__/services/*.test.ts",
+    "test:unit": "vitest run apps/web/src/__tests__/services/*.test.ts apps/web/src/__tests__/store/*.test.ts apps/web/src/__tests__/hooks/*.test.ts",
     "test:integration": "vitest run apps/web/src/__tests__/integration/*.test.ts",
+    "test:e2e": "playwright test",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
-    "test:e2e": "playwright test"
+    "test:ci": "npm run test:unit && npm run test:integration && npm run test:coverage",
+    "lint": "eslint . --ext .ts,.tsx",
+    "lint:fix": "eslint . --ext .ts,.tsx --fix",
+    "deploy:staging": "echo 'Deploying to staging environment'",
+    "deploy:prod": "echo 'Deploying to production environment'"
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0",
