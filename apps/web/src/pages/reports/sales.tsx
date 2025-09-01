@@ -60,7 +60,7 @@ export default function SalesReportPage() {
       title: '销售金额',
       colKey: 'totalSales',
       cell: ({ row }: { row: SalesReportData }) => (
-        `¥${row.totalSales.toFixed(2)}`
+        <span>¥{row.totalSales.toFixed(2)}</span>
       )
     },
     {
@@ -89,7 +89,7 @@ export default function SalesReportPage() {
       title: '销售金额',
       colKey: 'totalRevenue',
       cell: ({ row }: { row: ProductSalesRanking }) => (
-        `¥${row.totalRevenue.toFixed(2)}`
+        <span>¥{row.totalRevenue.toFixed(2)}</span>
       )
     }
   ];
