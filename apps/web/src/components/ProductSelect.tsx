@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Select } from 'tdesign-react';
-import { Product } from '../types/shop';
+import type { Product } from '../types/shop';
 
 interface ProductSelectProps {
   value: string;

@@ -1,6 +1,6 @@
 import { StoreService } from './store';
 import { StorageService } from './storage';
-import { Order, Product, Member } from '../types';
+import type { Order, Product, Member } from '../types';
 import { SalesReportData, ProductSalesRanking, InventoryReportData, ReportingService } from './reporting';
 
 export interface CrossStoreSalesReport {

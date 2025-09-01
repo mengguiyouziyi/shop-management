@@ -20,7 +20,59 @@ export class StoreService {
   // 获取所有店铺
   async getAllStores(): Promise<Store[]> {
     const stores = this.storageService.get<Store[]>('stores');
-    return stores || [];
+    
+    // 如果没有店铺数据，创建默认店铺
+    if (!stores || stores.length === 0) {
+      const defaultStores: Store[] = [
+        {
+          id: 'store_hq_001',
+          name: '示例总部',
+          code: 'HQ001',
+          address: '北京市朝阳区示例街道123号',
+          phone: '010-12345678',
+          manager: '张经理',
+          level: 0,
+          isActive: true,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        },
+        {
+          id: 'store_branch_001',
+          name: '示例分店1',
+          code: 'B001',
+          address: '北京市海淀区示例大街456号',
+          phone: '010-87654321',
+          manager: '李经理',
+          level: 1,
+          parentId: 'store_hq_001',
+          isActive: true,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        },
+        {
+          id: 'store_branch_002',
+          name: '示例分店2',
+          code: 'B002',
+          address: '北京市西城区示例胡同789号',
+          phone: '010-11223344',
+          manager: '王经理',
+          level: 1,
+          parentId: 'store_hq_001',
+          isActive: true,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        }
+      ];
+      
+      this.storageService.set('stores', defaultStores);
+      
+      // 设置第一个店铺为当前店铺
+      this.setCurrentStore(defaultStores[0]);
+      
+      return defaultStores;
+    }
+    
+    return stores;
   }
 
   // 获取当前店铺

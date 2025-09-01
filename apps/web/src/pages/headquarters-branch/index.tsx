@@ -10,7 +10,7 @@ import {
   MessagePlugin,
   Tabs
 } from 'tdesign-react';
-import type { Store } from '../../types';
+import type { Store } from '../../types/store';
 import type { TableProps } from 'tdesign-react/es/table';
 
 interface HeadquartersBranchSettings {
@@ -49,20 +49,24 @@ const HeadquartersBranchPage: React.FC = () => {
   const storeService = StoreService.getInstance();
 
   React.useEffect(() => {
-    if (!currentStore) return;
-    
     const fetchData = async () => {
       try {
         setLoading(true);
-        const [childStoresData, settingsData, allStoresData] = await Promise.all([
-          headquartersBranchService.getChildStores(currentStore.id),
-          headquartersBranchService.getSettings(currentStore.id),
-          headquartersBranchService.getAllStores()
-        ]);
         
-        setChildStores(childStoresData);
-        setSettings(settingsData);
+        // 先获取所有店铺
+        const allStoresData = await storeService.getAllStores();
         setAllStores(allStoresData);
+        
+        // 如果有当前店铺，获取相关数据
+        if (currentStore) {
+          const [childStoresData, settingsData] = await Promise.all([
+            headquartersBranchService.getChildStores(currentStore.id),
+            headquartersBranchService.getHeadquartersBranchSettings(currentStore.id)
+          ]);
+          
+          setChildStores(childStoresData);
+          setSettings(settingsData);
+        }
       } catch (error) {
         MessagePlugin.error('加载数据失败');
       } finally {
@@ -102,6 +106,55 @@ const HeadquartersBranchPage: React.FC = () => {
 
   if (loading) {
     return <div style={{ padding: '20px', textAlign: 'center' }}><p>加载中...</p></div>;
+  }
+
+  if (!currentStore) {
+    return (
+      <div style={{ padding: '20px' }}>
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          marginBottom: '20px'
+        }}>
+          <h1 style={{ fontSize: '24px', fontWeight: 'bold' }}>
+            总部-分店管理
+          </h1>
+        </div>
+        
+        <Card>
+          <div style={{ textAlign: 'center', padding: '40px' }}>
+            <h3 style={{ marginBottom: '16px' }}>请选择一个总部店铺</h3>
+            <p style={{ color: '#666', marginBottom: '20px' }}>
+              需要先选择一个总部店铺才能管理总部-分店设置
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px' }}>
+              {allStores.filter(store => store.level === 0).map(store => (
+                <div 
+                  key={store.id} 
+                  style={{ 
+                    border: '1px solid #d9d9d9', 
+                    borderRadius: '8px', 
+                    padding: '16px',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s'
+                  }}
+                  onClick={() => {
+                    storeService.setCurrentStore(store);
+                    window.location.reload(); // 简单刷新页面以更新状态
+                  }}
+                >
+                  <h4 style={{ margin: '0 0 8px 0', color: '#1890ff' }}>{store.name}</h4>
+                  <p style={{ margin: '0 0 4px 0', fontSize: '14px', color: '#666' }}>编码: {store.code}</p>
+                  <p style={{ margin: '0 0 4px 0', fontSize: '14px', color: '#666' }}>地址: {store.address}</p>
+                  <p style={{ margin: '0', fontSize: '14px', color: '#666' }}>经理: {store.manager}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Card>
+      </div>
+    );
   }
 
   const columns: TableProps<Store>['columns'] = [

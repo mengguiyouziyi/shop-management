@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Input, Message } from 'tdesign-react';
+import { Table, Input, MessagePlugin } from 'tdesign-react';
 import { useAppStore } from '../../store/useAppStore';
 import { ReportingService, InventoryReportData } from '../../services/reporting';
 
@@ -16,7 +16,7 @@ export default function InventoryReportPage() {
       const inventoryReport = reportingService.getInventoryReportData(products);
       setInventoryData(inventoryReport);
     } catch (error) {
-      Message.error('生成库存报表数据失败');
+      MessagePlugin.error('生成库存报表数据失败');
     }
   }, [products]);
 

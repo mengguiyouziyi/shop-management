@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Form, Input, Table, Message, Select } from 'tdesign-react';
+import { Button, Form, Input, Table, MessagePlugin, Select } from 'tdesign-react';
 import { SupplierService } from '../../services/supplier';
 import { Supplier, SupplierCategory } from '../../types/supplier';
 
@@ -20,7 +20,7 @@ export default function SuppliersPage() {
       const supplierList = await supplierService.getAllSuppliers();
       setSuppliers(supplierList);
     } catch (error) {
-      Message.error('加载供应商列表失败');
+      MessagePlugin.error('加载供应商列表失败');
     }
   };
 
@@ -29,7 +29,7 @@ export default function SuppliersPage() {
       const categoryList = await supplierService.getAllCategories();
       setCategories(categoryList);
     } catch (error) {
-      Message.error('加载供应商分类失败');
+      MessagePlugin.error('加载供应商分类失败');
     }
   };
 
@@ -40,18 +40,18 @@ export default function SuppliersPage() {
       if (editingSupplier) {
         // 更新供应商
         await supplierService.updateSupplier(editingSupplier.id, values);
-        Message.success('供应商更新成功');
+        MessagePlugin.success('供应商更新成功');
       } else {
         // 创建供应商
         await supplierService.createSupplier(values);
-        Message.success('供应商创建成功');
+        MessagePlugin.success('供应商创建成功');
       }
       
       form.reset();
       setEditingSupplier(null);
       loadSuppliers();
     } catch (error) {
-      Message.error(editingSupplier ? '供应商更新失败' : '供应商创建失败');
+      MessagePlugin.error(editingSupplier ? '供应商更新失败' : '供应商创建失败');
     }
   };
 
@@ -67,10 +67,10 @@ export default function SuppliersPage() {
     
     try {
       await supplierService.deleteSupplier(id);
-      Message.success('供应商删除成功');
+      MessagePlugin.success('供应商删除成功');
       loadSuppliers();
     } catch (error) {
-      Message.error('供应商删除失败');
+      MessagePlugin.error('供应商删除失败');
     }
   };
 
@@ -142,31 +142,31 @@ export default function SuppliersPage() {
         <h2 style={{ fontSize: '20px', marginBottom: '16px' }}>{editingSupplier ? '编辑供应商' : '创建供应商'}</h2>
         <Form form={form} onSubmit={handleSubmit} labelWidth={100}>
           <div style={{ marginBottom: '16px' }}>
-            <Form.Item label="供应商名称" name="name" rules={[{ required: true }]}>
+            <Form.FormItem label="供应商名称" name="name" rules={[{ required: true }]}>
               <Input placeholder="请输入供应商名称" />
-            </Form.Item>
+            </Form.FormItem>
           </div>
           
           <div style={{ marginBottom: '16px' }}>
-            <Form.Item label="联系人" name="contactPerson">
+            <Form.FormItem label="联系人" name="contactPerson">
               <Input placeholder="请输入联系人" />
-            </Form.Item>
+            </Form.FormItem>
           </div>
           
           <div style={{ marginBottom: '16px' }}>
-            <Form.Item label="联系电话" name="phone">
+            <Form.FormItem label="联系电话" name="phone">
               <Input placeholder="请输入联系电话" />
-            </Form.Item>
+            </Form.FormItem>
           </div>
           
           <div style={{ marginBottom: '16px' }}>
-            <Form.Item label="地址" name="address">
+            <Form.FormItem label="地址" name="address">
               <Input placeholder="请输入地址" />
-            </Form.Item>
+            </Form.FormItem>
           </div>
           
           <div style={{ marginBottom: '16px' }}>
-            <Form.Item label="分类" name="categoryId">
+            <Form.FormItem label="分类" name="categoryId">
               <Select>
                 {categories.map(category => (
                   <Select.Option key={category.id} value={category.id}>
@@ -174,13 +174,13 @@ export default function SuppliersPage() {
                   </Select.Option>
                 ))}
               </Select>
-            </Form.Item>
+            </Form.FormItem>
           </div>
           
           <div style={{ marginBottom: '16px' }}>
-            <Form.Item label="备注" name="notes">
+            <Form.FormItem label="备注" name="notes">
               <Input placeholder="请输入备注" />
-            </Form.Item>
+            </Form.FormItem>
           </div>
           
           <div style={{ display: 'flex', gap: '8px' }}>

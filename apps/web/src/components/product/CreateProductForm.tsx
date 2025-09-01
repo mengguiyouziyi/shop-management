@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Form, Input, Message, InputNumber } from 'tdesign-react';
+import { Button, Form, Input, MessagePlugin, InputNumber } from 'tdesign-react';
 import { useAppStore } from '../../store/useAppStore';
 
 export function CreateProductForm({ onCreated }: { onCreated: () => void }) {
@@ -33,11 +33,11 @@ export function CreateProductForm({ onCreated }: { onCreated: () => void }) {
         description: values.description?.trim() || ''
       });
       
-      Message.success('商品创建成功');
+      MessagePlugin.success('商品创建成功');
       form.reset();
       onCreated();
     } catch (err: any) {
-      Message.error(err.message || '商品创建失败');
+      MessagePlugin.error(err.message || '商品创建失败');
     } finally {
       setLoading(false);
     }
@@ -46,7 +46,7 @@ export function CreateProductForm({ onCreated }: { onCreated: () => void }) {
   return (
     <Form form={form} layout="vertical">
       <div className="form-group">
-        <Form.Item 
+        <Form.FormItem 
           label="商品名称" 
           name="name" 
           rules={[
@@ -56,11 +56,11 @@ export function CreateProductForm({ onCreated }: { onCreated: () => void }) {
           ]}
         >
           <Input placeholder="请输入商品名称" className="form-input" />
-        </Form.Item>
+        </Form.FormItem>
       </div>
       
       <div className="form-group">
-        <Form.Item 
+        <Form.FormItem 
           label="商品分类" 
           name="category"
           rules={[
@@ -68,11 +68,11 @@ export function CreateProductForm({ onCreated }: { onCreated: () => void }) {
           ]}
         >
           <Input placeholder="请输入商品分类" className="form-input" />
-        </Form.Item>
+        </Form.FormItem>
       </div>
       
       <div className="form-group">
-        <Form.Item 
+        <Form.FormItem 
           label="商品价格" 
           name="price"
           rules={[
@@ -81,11 +81,11 @@ export function CreateProductForm({ onCreated }: { onCreated: () => void }) {
           ]}
         >
           <InputNumber placeholder="请输入商品价格" className="form-input" min={0} step={0.01} />
-        </Form.Item>
+        </Form.FormItem>
       </div>
       
       <div className="form-group">
-        <Form.Item 
+        <Form.FormItem 
           label="商品库存" 
           name="stock"
           rules={[
@@ -94,11 +94,11 @@ export function CreateProductForm({ onCreated }: { onCreated: () => void }) {
           ]}
         >
           <InputNumber placeholder="请输入商品库存" className="form-input" min={0} step={1} />
-        </Form.Item>
+        </Form.FormItem>
       </div>
       
       <div className="form-group">
-        <Form.Item 
+        <Form.FormItem 
           label="商品描述" 
           name="description"
           rules={[
@@ -106,7 +106,7 @@ export function CreateProductForm({ onCreated }: { onCreated: () => void }) {
           ]}
         >
           <Input placeholder="请输入商品描述" className="form-input" />
-        </Form.Item>
+        </Form.FormItem>
       </div>
       
       <Button 

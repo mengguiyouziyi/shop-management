@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Card, Message, Tag, Button, Space } from 'tdesign-react';
+import { useState, useEffect } from 'react';
+import { Card, MessagePlugin, Tag, Button } from 'tdesign-react';
 import { HealthCheckService, SystemHealth } from '../../services/healthCheck';
 
 export default function HealthCheckPage() {
@@ -17,7 +17,7 @@ export default function HealthCheckPage() {
       const health = await healthCheckService.checkSystemHealth();
       setHealthData(health);
     } catch (error) {
-      Message.error('加载健康检查数据失败');
+      MessagePlugin.error('加载健康检查数据失败');
     } finally {
       setLoading(false);
     }
@@ -44,7 +44,7 @@ export default function HealthCheckPage() {
   if (loading) {
     return (
       <div style={{ padding: '20px', textAlign: 'center' }}>
-        <Spin size="large" />
+        <div>加载中...</div>
         <p style={{ marginTop: '10px' }}>正在检查系统健康状态...</p>
       </div>
     );

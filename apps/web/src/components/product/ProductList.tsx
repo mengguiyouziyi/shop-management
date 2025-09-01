@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Table, Message } from 'tdesign-react';
+import { Table, MessagePlugin } from 'tdesign-react';
 import { useAppStore } from '../../store/useAppStore';
 
 export function ProductList() {

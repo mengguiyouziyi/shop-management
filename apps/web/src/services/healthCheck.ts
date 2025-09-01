@@ -74,7 +74,7 @@ export class HealthCheckService {
   private async checkNetworkHealth(): Promise<HealthStatus> {
     try {
       const networkStore = useNetworkStore.getState();
-    const isOnline = networkStore.isOnline;
+      const isOnline = networkStore.isOnline;
       
       if (isOnline) {
         return {
@@ -181,87 +181,7 @@ export class HealthCheckService {
     }
   }
 
-  // 检查商品服务健康状态
-  private async checkProductsHealth(): Promise<HealthStatus> {
-    try {
-      const products = await this.productService.getAllProducts();
-      
-      if (products && Array.isArray(products)) {
-        return {
-          status: 'healthy',
-          message: `商品服务正常 (${products.length} 个商品)`,
-          timestamp: new Date().toISOString()
-        };
-      } else {
-        return {
-          status: 'warning',
-          message: '商品数据格式异常',
-          timestamp: new Date().toISOString()
-        };
-      }
-    } catch (error) {
-      return {
-        status: 'error',
-        message: `商品服务错误: ${error instanceof Error ? error.message : '未知错误'}`,
-        timestamp: new Date().toISOString()
-      };
-    }
-  }
-
-  // 检查会员服务健康状态
-  private async checkMembersHealth(): Promise<HealthStatus> {
-    try {
-      const members = await this.memberService.getAllMembers();
-      
-      if (members && Array.isArray(members)) {
-        return {
-          status: 'healthy',
-          message: `会员服务正常 (${members.length} 个会员)`,
-          timestamp: new Date().toISOString()
-        };
-      } else {
-        return {
-          status: 'warning',
-          message: '会员数据格式异常',
-          timestamp: new Date().toISOString()
-        };
-      }
-    } catch (error) {
-      return {
-        status: 'error',
-        message: `会员服务错误: ${error instanceof Error ? error.message : '未知错误'}`,
-        timestamp: new Date().toISOString()
-      };
-    }
-  }
-
-  // 检查订单服务健康状态
-  private async checkOrdersHealth(): Promise<HealthStatus> {
-    try {
-      const orders = await this.orderService.getAllOrders();
-      
-      if (orders && Array.isArray(orders)) {
-        return {
-          status: 'healthy',
-          message: `订单服务正常 (${orders.length} 个订单)`,
-          timestamp: new Date().toISOString()
-        };
-      } else {
-        return {
-          status: 'warning',
-          message: '订单数据格式异常',
-          timestamp: new Date().toISOString()
-        };
-      }
-    } catch (error) {
-      return {
-        status: 'error',
-        message: `订单服务错误: ${error instanceof Error ? error.message : '未知错误'}`,
-        timestamp: new Date().toISOString()
-      };
-    }
-  }
-
+  
   // 获取整体系统健康状态
   private calculateOverallHealth(services: SystemHealth['services']): HealthStatus {
     const statuses = Object.values(services).map(service => service.status);

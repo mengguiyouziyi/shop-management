@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Select, Button, Message, Card, Tabs, Tag, Timeline } from 'tdesign-react';
+import { Form, Input, Select, Button, MessagePlugin, Card, Tabs, Tag, Timeline, Textarea } from 'tdesign-react';
 import { FeedbackService, Feedback } from '../../services/feedback';
 import { PermissionService } from '../../services/permission';
 
@@ -23,7 +23,7 @@ export default function FeedbackPage() {
       const userFeedbacks = await feedbackService.getFeedbacksByUser(currentUser?.id || '');
       setFeedbacks(userFeedbacks);
     } catch (error) {
-      Message.error('加载反馈列表失败');
+      MessagePlugin.error('加载反馈列表失败');
     } finally {
       setLoading(false);
     }
@@ -42,11 +42,11 @@ export default function FeedbackPage() {
         priority: values.priority
       });
       
-      Message.success('反馈提交成功');
+      MessagePlugin.success('反馈提交成功');
       form.reset();
       loadFeedbacks();
     } catch (error) {
-      Message.error('提交反馈失败');
+      MessagePlugin.error('提交反馈失败');
     } finally {
       setSubmitting(false);
     }
@@ -126,7 +126,7 @@ export default function FeedbackPage() {
               </Form.FormItem>
               
               <Form.FormItem label="详细描述" name="description" rules={[{ required: true, message: '请输入详细描述' }]}>
-                <TextArea placeholder="请详细描述您的反馈内容" />
+                <Textarea placeholder="请详细描述您的反馈内容" />
               </Form.FormItem>
               
               <Form.FormItem style={{ textAlign: 'center' }}>

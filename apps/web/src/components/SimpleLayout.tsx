@@ -4,15 +4,35 @@ import { PermissionService } from '../services/permission';
 import OfflineIndicator from './OfflineIndicator';
 import { useNetworkStore } from '../services/network';
 import { useAppStore } from '../store/useAppStore';
+import { useAuth } from '../hooks/useAuth';
 
 export default function SimpleLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const permissionService = PermissionService.getInstance();
   const currentUser = permissionService.getCurrentUser();
+  const { user } = useAuth();
   const { isOnline } = useNetworkStore();
   const { currentStore } = useAppStore();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // 如果用户未登录且不在登录页面，重定向到登录页面
+  React.useEffect(() => {
+    if (!currentUser && !location.pathname.startsWith('/login')) {
+      navigate('/login', { replace: true });
+    }
+  }, [currentUser, location.pathname, navigate]);
+
+  const handleLogout = () => {
+    // 清除权限服务中的用户数据
+    permissionService.logout();
+    
+    // 清除 localStorage 中的用户数据
+    localStorage.removeItem('user');
+    
+    // 跳转到登录页面
+    navigate('/login');
+  };
 
   const menuItems = [
     { path: '/', label: '首页' },
@@ -89,10 +109,27 @@ export default function SimpleLayout() {
           )}
         </div>
         {currentUser && (
-          <div style={{ fontSize: '14px' }}>
-            欢迎, {currentUser.role === 'admin' ? '管理员' : 
-                   currentUser.role === 'cashier' ? '收银员' :
-                   currentUser.role === 'inventory' ? '库存管理员' : '财务人员'}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <div style={{ fontSize: '14px', color: 'white' }}>
+              欢迎, {user?.name || currentUser.role === 'admin' ? '管理员' : 
+                     currentUser.role === 'cashier' ? '收银员' :
+                     currentUser.role === 'inventory' ? '库存管理员' : '财务人员'}
+            </div>
+            <button 
+              onClick={handleLogout}
+              style={{
+                backgroundColor: '#ff4d4f',
+                color: 'white',
+                border: 'none',
+                padding: '6px 12px',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '12px'
+              }}
+              title="退出登录"
+            >
+              退出登录
+            </button>
           </div>
         )}
       </div>

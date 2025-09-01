@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, MessagePlugin, Select } from 'tdesign-react';
-import { Member } from '../types/shop';
+import type { Member } from '../types/shop';
 
 interface MemberFormProps {
   onSuccess: () => void;
@@ -33,23 +33,23 @@ export default function MemberForm({ onSuccess }: MemberFormProps) {
 
   return (
     <Form form={form} onSubmit={handleSubmit} layout="vertical">
-      <Form.Item label="会员姓名" name="name" rules={[{ required: true }]}>
+      <Form.FormItem label="会员姓名" name="name" rules={[{ required: true }]}>
         <Input placeholder="请输入会员姓名" />
-      </Form.Item>
+      </Form.FormItem>
       
-      <Form.Item label="手机号码" name="mobile" rules={[{ required: true, pattern: /^1\d{10}$/ }]}>
+      <Form.FormItem label="手机号码" name="mobile" rules={[{ required: true, pattern: /^1\d{10}$/ }]}>
         <Input placeholder="请输入手机号码" />
-      </Form.Item>
+      </Form.FormItem>
       
-      <Form.Item label="会员等级" name="levelId">
+      <Form.FormItem label="会员等级" name="levelId">
         <Select options={levels.map(l => ({ label: l.name, value: l.id }))} />
-      </Form.Item>
+      </Form.FormItem>
       
-      <Form.Item>
+      <Form.FormItem>
         <Button type="submit" theme="primary">
           添加会员
         </Button>
-      </Form.Item>
+      </Form.FormItem>
     </Form>
   );
 }

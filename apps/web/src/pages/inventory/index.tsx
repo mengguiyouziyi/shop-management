@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Message, Input } from 'tdesign-react';
+import { Button, Table, MessagePlugin, Input } from 'tdesign-react';
 import { InventoryService } from '../../services/inventory';
 import { InventoryItem } from '../../types/inventory';
 
@@ -22,7 +22,7 @@ export default function InventoryPage() {
       const items = await inventoryService.getAllInventoryItems();
       setInventoryItems(items);
     } catch (error) {
-      Message.error('加载库存数据失败');
+      MessagePlugin.error('加载库存数据失败');
     }
   };
 
@@ -45,7 +45,7 @@ export default function InventoryPage() {
     try {
       const item = inventoryItems.find(i => i.id === itemId);
       if (!item) {
-        Message.error('库存项不存在');
+        MessagePlugin.error('库存项不存在');
         return;
       }
 
@@ -58,10 +58,10 @@ export default function InventoryPage() {
         notes: `${type === 'in' ? '入库' : '出库'}调整`
       });
 
-      Message.success(`${type === 'in' ? '入库' : '出库'}操作成功`);
+      MessagePlugin.success(`${type === 'in' ? '入库' : '出库'}操作成功`);
       loadInventoryItems(); // 重新加载数据
     } catch (error) {
-      Message.error(`${type === 'in' ? '入库' : '出库'}操作失败`);
+      MessagePlugin.error(`${type === 'in' ? '入库' : '出库'}操作失败`);
     }
   };
 
@@ -72,10 +72,10 @@ export default function InventoryPage() {
     
     try {
       await inventoryService.deleteInventoryItem(id);
-      Message.success('库存记录删除成功');
+      MessagePlugin.success('库存记录删除成功');
       loadInventoryItems();
     } catch (error) {
-      Message.error('库存记录删除失败');
+      MessagePlugin.error('库存记录删除失败');
     }
   };
 

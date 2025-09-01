@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, Message } from 'tdesign-react';
+import { Button, Table, MessagePlugin } from 'tdesign-react';
 import { StoreService } from '../../services/store';
-import { Store } from '../../types/store';
+import type { Store } from '../../types/store';
 import { useAppStore } from '../../store/useAppStore';
 
 export default function StoreHierarchyPage() {
@@ -18,7 +18,7 @@ export default function StoreHierarchyPage() {
       const storeList = await storeService.getAllStores();
       setStores(storeList);
     } catch (error) {
-      Message.error('加载店铺列表失败');
+      MessagePlugin.error('加载店铺列表失败');
     }
   };
 

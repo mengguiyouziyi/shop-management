@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Table, DatePicker, Message, Tabs } from 'tdesign-react';
+import { Button, Table, DatePicker, MessagePlugin, Tabs } from 'tdesign-react';
 import { CrossStoreReportingService, CrossStoreSalesReport, CrossStoreInventoryReport, AggregatedSalesReport } from '../../services/crossStoreReporting';
 
 export default function CrossStoreReportPage() {
@@ -47,17 +47,12 @@ export default function CrossStoreReportPage() {
       setAggregatedSalesData(aggregatedData);
       setProductRanking(rankingData);
     } catch (error) {
-      Message.error('加载跨店铺报表数据失败');
+      MessagePlugin.error('加载跨店铺报表数据失败');
       console.error('Error loading cross-store report data:', error);
     }
   };
 
-  const handleDateChange = (dates: string[]) => {
-    if (dates.length === 2) {
-      setStartDate(dates[0]);
-      setEndDate(dates[1]);
-    }
-  };
+  // handleDateChange 函数已移除，现在直接使用 onChange
 
   const aggregatedSalesColumns = [
     {
@@ -72,7 +67,7 @@ export default function CrossStoreReportPage() {
       title: '销售金额',
       colKey: 'sales',
       render: ({ row }: { row: any }) => (
-        <span>¥{row.sales.toFixed(2)}</span>
+        <span>¥{(row.sales || 0).toFixed(2)}</span>
       )
     },
     {
@@ -84,7 +79,7 @@ export default function CrossStoreReportPage() {
       colKey: 'percentage',
       render: ({ row, rowIndex }: { row: any, rowIndex: number }) => {
         const totalSales = aggregatedSalesData[rowIndex]?.totalSales || 1;
-        const percentage = ((row.sales / totalSales) * 100).toFixed(1);
+        const percentage = ((row.sales || 0) / totalSales * 100).toFixed(1);
         return <span>{percentage}%</span>;
       }
     }
@@ -103,7 +98,7 @@ export default function CrossStoreReportPage() {
       title: '销售金额',
       colKey: 'totalSales',
       render: ({ row }: { row: CrossStoreSalesReport }) => (
-        <span>¥{row.totalSales.toFixed(2)}</span>
+        <span>¥{(row.totalSales || 0).toFixed(2)}</span>
       )
     }
   ];
@@ -151,15 +146,15 @@ export default function CrossStoreReportPage() {
       title: '销售金额',
       colKey: 'totalRevenue',
       render: ({ row }: { row: any }) => (
-        <span>¥{row.totalRevenue.toFixed(2)}</span>
+        <span>¥{(row.totalRevenue || 0).toFixed(2)}</span>
       )
     }
   ];
 
   // 计算汇总数据
-  const totalAggregatedSales = aggregatedSalesData.reduce((sum, day) => sum + day.totalSales, 0);
-  const totalAggregatedOrders = aggregatedSalesData.reduce((sum, day) => sum + day.totalOrders, 0);
-  const totalAggregatedItems = aggregatedSalesData.reduce((sum, day) => sum + day.totalItemsSold, 0);
+  const totalAggregatedSales = aggregatedSalesData.reduce((sum, day) => sum + (day.totalSales || 0), 0);
+  const totalAggregatedOrders = aggregatedSalesData.reduce((sum, day) => sum + (day.totalOrders || 0), 0);
+  const totalAggregatedItems = aggregatedSalesData.reduce((sum, day) => sum + (day.totalItemsSold || 0), 0);
 
   return (
     <div style={{ padding: '20px' }}>
@@ -169,9 +164,15 @@ export default function CrossStoreReportPage() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
           <h2 style={{ fontSize: '20px', margin: 0 }}>数据筛选</h2>
           <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-            <DatePicker.RangePicker 
-              value={[startDate, endDate]}
-              onChange={handleDateChange}
+            <DatePicker 
+              value={startDate}
+              onChange={(value: string) => setStartDate(value)}
+              placeholder="开始日期"
+            />
+            <DatePicker 
+              value={endDate}
+              onChange={(value: string) => setEndDate(value)}
+              placeholder="结束日期"
             />
             <Button onClick={loadData}>刷新数据</Button>
           </div>
@@ -209,16 +210,9 @@ export default function CrossStoreReportPage() {
               </div>
               
               <Table
-                data={aggregatedSalesData}
+                data={aggregatedSalesData || []}
                 columns={aggregatedSalesColumns}
                 rowKey="date"
-                expandedRow={({ row }: { row: AggregatedSalesReport }) => (
-                  <Table 
-                    data={row.storeBreakdown} 
-                    columns={storeBreakdownColumns} 
-                    rowKey="storeId" 
-                  />
-                )}
               />
             </div>
           </Tabs.TabPanel>
@@ -226,7 +220,7 @@ export default function CrossStoreReportPage() {
           <Tabs.TabPanel value="stores" label="各店铺销售数据">
             <div style={{ marginTop: '20px' }}>
               <Table
-                data={salesReports}
+                data={salesReports || []}
                 columns={storeSalesColumns}
                 rowKey="storeId"
               />
@@ -236,7 +230,7 @@ export default function CrossStoreReportPage() {
           <Tabs.TabPanel value="inventory" label="各店铺库存数据">
             <div style={{ marginTop: '20px' }}>
               <Table
-                data={inventoryReports}
+                data={inventoryReports || []}
                 columns={storeInventoryColumns}
                 rowKey="storeId"
               />
@@ -246,7 +240,7 @@ export default function CrossStoreReportPage() {
           <Tabs.TabPanel value="ranking" label="跨店铺商品排行">
             <div style={{ marginTop: '20px' }}>
               <Table
-                data={productRanking}
+                data={productRanking || []}
                 columns={productRankingColumns}
                 rowKey="productId"
               />

@@ -1,4 +1,5 @@
 // 统一的数据模型定义
+export type { Store } from './store';
 
 export interface Product {
   id: string;
@@ -87,14 +88,6 @@ export enum OrderStatus {
   REFUNDED = 'refunded'
 }
 
-export interface Store {
-  id: string;
-  name: string;
-  address: string;
-  phone: string;
-  email?: string;
-  isActive: boolean;
-}
 
 export interface Staff {
   id: string;

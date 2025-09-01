@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Input, Table, Message } from 'tdesign-react';
+import { Button, Input, Table, MessagePlugin } from 'tdesign-react';
 import { useAppStore } from '../../store/useAppStore';
-import { Product } from '../../types';
+import type { Product } from '../../types';
 
 export default function MobilePosPage() {
   const { products, addOrder } = useAppStore();
@@ -65,7 +65,7 @@ export default function MobilePosPage() {
 
   const handleCheckout = () => {
     if (cart.length === 0) {
-      Message.warning('购物车为空');
+      MessagePlugin.warning('购物车为空');
       return;
     }
 
@@ -75,7 +75,7 @@ export default function MobilePosPage() {
     if (paymentMethod === 'cash') {
       amountReceivedNum = parseFloat(amountReceived);
       if (isNaN(amountReceivedNum) || amountReceivedNum < totalAmount) {
-        Message.warning('收款金额不足');
+        MessagePlugin.warning('收款金额不足');
         return;
       }
     }
@@ -101,7 +101,7 @@ export default function MobilePosPage() {
     setMemberId('');
     setAmountReceived('');
     
-    Message.success('结账成功');
+    MessagePlugin.success('结账成功');
   };
 
   const cartColumns = [

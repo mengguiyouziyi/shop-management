@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Form, Input, Table, Message, Select, DatePicker } from 'tdesign-react';
+import { Button, Form, Input, Table, MessagePlugin, Select, DatePicker } from 'tdesign-react';
 import { PurchaseService } from '../../services/purchase';
 import { SupplierService } from '../../services/supplier';
 import { PurchaseOrder, PurchaseOrderItem } from '../../types/purchase';
@@ -24,7 +24,7 @@ export default function PurchaseOrdersPage() {
       const orderList = await purchaseService.getAllPurchaseOrders();
       setOrders(orderList);
     } catch (error) {
-      Message.error('加载采购订单列表失败');
+      MessagePlugin.error('加载采购订单列表失败');
     }
   };
 
@@ -33,7 +33,7 @@ export default function PurchaseOrdersPage() {
       const supplierList = await supplierService.getAllSuppliers();
       setSuppliers(supplierList);
     } catch (error) {
-      Message.error('加载供应商列表失败');
+      MessagePlugin.error('加载供应商列表失败');
     }
   };
 
@@ -51,18 +51,18 @@ export default function PurchaseOrdersPage() {
       if (editingOrder) {
         // 更新采购订单
         await purchaseService.updatePurchaseOrder(editingOrder.id, orderData);
-        Message.success('采购订单更新成功');
+        MessagePlugin.success('采购订单更新成功');
       } else {
         // 创建采购订单
         await purchaseService.createPurchaseOrder(orderData);
-        Message.success('采购订单创建成功');
+        MessagePlugin.success('采购订单创建成功');
       }
       
       form.reset();
       setEditingOrder(null);
       loadOrders();
     } catch (error) {
-      Message.error(editingOrder ? '采购订单更新失败' : '采购订单创建失败');
+      MessagePlugin.error(editingOrder ? '采购订单更新失败' : '采购订单创建失败');
     }
   };
 
@@ -82,10 +82,10 @@ export default function PurchaseOrdersPage() {
     
     try {
       await purchaseService.deletePurchaseOrder(id);
-      Message.success('采购订单删除成功');
+      MessagePlugin.success('采购订单删除成功');
       loadOrders();
     } catch (error) {
-      Message.error('采购订单删除失败');
+      MessagePlugin.error('采购订单删除失败');
     }
   };
 
@@ -225,7 +225,7 @@ export default function PurchaseOrdersPage() {
         <h2 style={{ fontSize: '20px', marginBottom: '16px' }}>{editingOrder ? '编辑采购订单' : '创建采购订单'}</h2>
         <Form form={form} onSubmit={handleSubmit} labelWidth={120}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
-            <Form.Item label="供应商" name="supplierId" rules={[{ required: true }]}>
+            <Form.FormItem label="供应商" name="supplierId" rules={[{ required: true }]}>
               <Select>
                 {suppliers.map(supplier => (
                   <Select.Option key={supplier.id} value={supplier.id}>
@@ -233,17 +233,17 @@ export default function PurchaseOrdersPage() {
                   </Select.Option>
                 ))}
               </Select>
-            </Form.Item>
+            </Form.FormItem>
             
-            <Form.Item label="订单日期" name="orderDate" rules={[{ required: true }]}>
+            <Form.FormItem label="订单日期" name="orderDate" rules={[{ required: true }]}>
               <DatePicker />
-            </Form.Item>
+            </Form.FormItem>
             
-            <Form.Item label="预计到货日期" name="expectedDeliveryDate">
+            <Form.FormItem label="预计到货日期" name="expectedDeliveryDate">
               <DatePicker />
-            </Form.Item>
+            </Form.FormItem>
             
-            <Form.Item label="状态" name="status" initialValue="pending">
+            <Form.FormItem label="状态" name="status" initialValue="pending">
               <Select>
                 <Select.Option value="pending">待处理</Select.Option>
                 <Select.Option value="confirmed">已确认</Select.Option>
@@ -251,7 +251,7 @@ export default function PurchaseOrdersPage() {
                 <Select.Option value="received">已收货</Select.Option>
                 <Select.Option value="cancelled">已取消</Select.Option>
               </Select>
-            </Form.Item>
+            </Form.FormItem>
           </div>
           
           <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>

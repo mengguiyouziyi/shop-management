@@ -8,8 +8,11 @@ export interface UserPermission {
 export class PermissionService {
   private static instance: PermissionService;
   private currentUser: UserPermission | null = null;
+  private storageKey = 'current_user_permission';
 
-  private constructor() {}
+  private constructor() {
+    this.loadUserFromStorage();
+  }
 
   static getInstance(): PermissionService {
     if (!PermissionService.instance) {
@@ -18,12 +21,41 @@ export class PermissionService {
     return PermissionService.instance;
   }
 
+  private loadUserFromStorage(): void {
+    try {
+      const stored = localStorage.getItem(this.storageKey);
+      if (stored) {
+        this.currentUser = JSON.parse(stored);
+      }
+    } catch (error) {
+      console.warn('Failed to load user from storage:', error);
+    }
+  }
+
+  private saveUserToStorage(): void {
+    try {
+      if (this.currentUser) {
+        localStorage.setItem(this.storageKey, JSON.stringify(this.currentUser));
+      } else {
+        localStorage.removeItem(this.storageKey);
+      }
+    } catch (error) {
+      console.warn('Failed to save user to storage:', error);
+    }
+  }
+
   setCurrentUser(user: UserPermission): void {
     this.currentUser = user;
+    this.saveUserToStorage();
   }
 
   getCurrentUser(): UserPermission | null {
     return this.currentUser;
+  }
+
+  logout(): void {
+    this.currentUser = null;
+    this.saveUserToStorage();
   }
 
   hasPermission(permission: string): boolean {

@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { StoreService } from '../../services/store';
-import { Store } from '../../types/store';
+import type { Store } from '../../types/store';
 
 describe('StoreService', () => {
   let storeService: StoreService;

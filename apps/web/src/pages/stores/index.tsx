@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Form, Input, Table, Message, Switch, Select } from 'tdesign-react';
+import { Button, Form, Input, Table, MessagePlugin, Switch, Select } from 'tdesign-react';
 import { StoreService } from '../../services/store';
-import { Store } from '../../types/store';
+import type { Store } from '../../types/store';
 import { useAppStore } from '../../store/useAppStore';
 import type { TableColumns } from 'tdesign-react';
 
@@ -21,7 +21,7 @@ export default function StoresPage() {
       const storeList = await storeService.getAllStores();
       setStores(storeList);
     } catch (error) {
-      Message.error('加载店铺列表失败');
+      MessagePlugin.error('加载店铺列表失败');
     }
   };
 
@@ -42,18 +42,18 @@ export default function StoresPage() {
       if (editingStore) {
         // 更新店铺
         await storeService.updateStore(editingStore.id, values);
-        Message.success('店铺更新成功');
+        MessagePlugin.success('店铺更新成功');
       } else {
         // 创建店铺
         await storeService.createStore(values);
-        Message.success('店铺创建成功');
+        MessagePlugin.success('店铺创建成功');
       }
       
       form.reset();
       setEditingStore(null);
       loadStores();
     } catch (error) {
-      Message.error(editingStore ? '店铺更新失败' : '店铺创建失败');
+      MessagePlugin.error(editingStore ? '店铺更新失败' : '店铺创建失败');
     }
   };
 
@@ -69,7 +69,7 @@ export default function StoresPage() {
     
     try {
       await storeService.deleteStore(storeId);
-      Message.success('店铺删除成功');
+      MessagePlugin.success('店铺删除成功');
       loadStores();
       
       // 如果删除的是当前店铺，切换到其他店铺或清除当前店铺
@@ -82,14 +82,14 @@ export default function StoresPage() {
         }
       }
     } catch (error) {
-      Message.error('店铺删除失败');
+      MessagePlugin.error('店铺删除失败');
     }
   };
 
   const handleSetCurrentStore = (store: Store) => {
     storeService.setCurrentStore(store);
     setCurrentStore(store);
-    Message.success(`已切换到店铺: ${store.name}`);
+    MessagePlugin.success(`已切换到店铺: ${store.name}`);
   };
 
   const columns: Array<TableColumns<Store>> = [
@@ -197,19 +197,19 @@ export default function StoresPage() {
         <h2 style={{ fontSize: '20px', marginBottom: '16px' }}>{editingStore ? '编辑店铺' : '创建店铺'}</h2>
         <Form form={form} onSubmit={handleSubmit} labelWidth={100}>
           <div style={{ marginBottom: '16px' }}>
-            <Form.Item label="店铺名称" name="name" rules={[{ required: true }]}>
+            <Form.FormItem label="店铺名称" name="name" rules={[{ required: true }]}>
               <Input placeholder="请输入店铺名称" />
-            </Form.Item>
+            </Form.FormItem>
           </div>
           
           <div style={{ marginBottom: '16px' }}>
-            <Form.Item label="店铺编码" name="code" rules={[{ required: true }]}>
+            <Form.FormItem label="店铺编码" name="code" rules={[{ required: true }]}>
               <Input placeholder="请输入店铺编码" />
-            </Form.Item>
+            </Form.FormItem>
           </div>
           
           <div style={{ marginBottom: '16px' }}>
-            <Form.Item label="父级店铺" name="parentId">
+            <Form.FormItem label="父级店铺" name="parentId">
               <Select placeholder="请选择父级店铺">
                 <Select.Option key="" value="">无（总部）</Select.Option>
                 {getParentStoreOptions().map(store => (
@@ -218,31 +218,31 @@ export default function StoresPage() {
                   </Select.Option>
                 ))}
               </Select>
-            </Form.Item>
+            </Form.FormItem>
           </div>
           
           <div style={{ marginBottom: '16px' }}>
-            <Form.Item label="地址" name="address" rules={[{ required: true }]}>
+            <Form.FormItem label="地址" name="address" rules={[{ required: true }]}>
               <Input placeholder="请输入店铺地址" />
-            </Form.Item>
+            </Form.FormItem>
           </div>
           
           <div style={{ marginBottom: '16px' }}>
-            <Form.Item label="联系电话" name="phone">
+            <Form.FormItem label="联系电话" name="phone">
               <Input placeholder="请输入联系电话" />
-            </Form.Item>
+            </Form.FormItem>
           </div>
           
           <div style={{ marginBottom: '16px' }}>
-            <Form.Item label="负责人" name="manager">
+            <Form.FormItem label="负责人" name="manager">
               <Input placeholder="请输入负责人姓名" />
-            </Form.Item>
+            </Form.FormItem>
           </div>
           
           <div style={{ marginBottom: '16px' }}>
-            <Form.Item label="状态" name="isActive" initialValue={true}>
+            <Form.FormItem label="状态" name="isActive">
               <Switch label={['启用', '停用']} />
-            </Form.Item>
+            </Form.FormItem>
           </div>
           
           <div style={{ display: 'flex', gap: '8px' }}>

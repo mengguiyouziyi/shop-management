@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Card, 
   Button, 
-  Message, 
+  MessagePlugin, 
   Table, 
   Dialog, 
   Form, 
@@ -49,8 +49,8 @@ export default function ResourceSharingPage() {
       setShareRequests(requestsData);
       setStores(storesData);
     } catch (error) {
-      if (typeof Message !== 'undefined' && Message.error) {
-        Message.error('加载数据失败');
+      if (typeof Message !== 'undefined' && MessagePlugin.error) {
+        MessagePlugin.error('加载数据失败');
       }
     }
   };
@@ -64,14 +64,14 @@ export default function ResourceSharingPage() {
       );
       setStores(otherStores);
     } catch (error) {
-      Message.error('加载店铺数据失败');
+      MessagePlugin.error('加载店铺数据失败');
     }
   };
 
   const handleShare = async () => {
     if (!formData.resourceName || !formData.targetStoreId) {
-      if (typeof Message !== 'undefined' && Message.warning) {
-        Message.warning('请填写完整信息');
+      if (typeof Message !== 'undefined' && MessagePlugin.warning) {
+        MessagePlugin.warning('请填写完整信息');
       }
       return;
     }
@@ -81,8 +81,8 @@ export default function ResourceSharingPage() {
         ...formData,
         sourceStoreId: currentStore?.id || ''
       });
-      if (typeof Message !== 'undefined' && Message.success) {
-        Message.success('资源共享请求已发送');
+      if (typeof Message !== 'undefined' && MessagePlugin.success) {
+        MessagePlugin.success('资源共享请求已发送');
       }
       setFormVisible(false);
       setFormData({
@@ -93,8 +93,8 @@ export default function ResourceSharingPage() {
       });
       loadData();
     } catch (error) {
-      if (typeof Message !== 'undefined' && Message.error) {
-        Message.error('资源共享失败');
+      if (typeof Message !== 'undefined' && MessagePlugin.error) {
+        MessagePlugin.error('资源共享失败');
       }
     }
   };
@@ -102,13 +102,13 @@ export default function ResourceSharingPage() {
   const handleApprove = async (requestId: string) => {
     try {
       await resourceSharingService.approveShareRequest(requestId);
-      if (typeof Message !== 'undefined' && Message.success) {
-        Message.success('已批准资源共享请求');
+      if (typeof Message !== 'undefined' && MessagePlugin.success) {
+        MessagePlugin.success('已批准资源共享请求');
       }
       loadData();
     } catch (error) {
-      if (typeof Message !== 'undefined' && Message.error) {
-        Message.error('操作失败');
+      if (typeof Message !== 'undefined' && MessagePlugin.error) {
+        MessagePlugin.error('操作失败');
       }
     }
   };
@@ -116,13 +116,13 @@ export default function ResourceSharingPage() {
   const handleReject = async (requestId: string) => {
     try {
       await resourceSharingService.rejectShareRequest(requestId);
-      if (typeof Message !== 'undefined' && Message.success) {
-        Message.success('已拒绝资源共享请求');
+      if (typeof Message !== 'undefined' && MessagePlugin.success) {
+        MessagePlugin.success('已拒绝资源共享请求');
       }
       loadData();
     } catch (error) {
-      if (typeof Message !== 'undefined' && Message.error) {
-        Message.error('操作失败');
+      if (typeof Message !== 'undefined' && MessagePlugin.error) {
+        MessagePlugin.error('操作失败');
       }
     }
   };

@@ -30,11 +30,24 @@ export default function LoginPage() {
       role = 'finance';
     }
     
-    // 设置当前用户
-    permissionService.setCurrentUser({
+    // 创建用户对象
+    const user = {
       role,
       permissions: []
-    });
+    };
+    
+    // 设置当前用户
+    permissionService.setCurrentUser(user);
+    
+    // 同时保存用户信息到 localStorage 供 useAuth hook 使用
+    const authUser = {
+      id: `user_${username}`,
+      name: username,
+      email: `${username}@example.com`,
+      role,
+      permissions: []
+    };
+    localStorage.setItem('user', JSON.stringify(authUser));
     
     // 重定向到之前尝试访问的页面或首页
     const from = location.state?.from?.pathname || '/';
