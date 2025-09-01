@@ -44,6 +44,11 @@ export class PermissionService {
       return false;
     }
 
+    // 管理员可以扮演所有角色
+    if (this.currentUser.role === 'admin') {
+      return true;
+    }
+
     return this.currentUser.role === role;
   }
 
