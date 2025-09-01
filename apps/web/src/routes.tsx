@@ -5,8 +5,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 
 const LoginPage = lazy(() => import('./pages/login'));
 const DashboardPage = lazy(() => import('./pages/dashboard'));
-const MembersPage = lazy(() => import('./pages/members/final'));
-const ProductsPage = lazy(() => import('./pages/products/final'));
+const MembersPage = lazy(() => import('./pages/members/index'));
+const ProductsPage = lazy(() => import('./pages/products/index'));
 const POSPage = lazy(() => import('./pages/orders/pos'));
 const DailyFinancePage = lazy(() => import('./pages/finance/daily'));
 const RolesPage = lazy(() => import('./pages/roles/index'));
