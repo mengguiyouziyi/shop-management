@@ -55,7 +55,7 @@ export const router = createBrowserRouter([
         path: '/members', 
         element: (
           <Suspense fallback={<LoadingComponent />}>
-            <ProtectedRoute requiredRole="cashier">
+            <ProtectedRoute requiredRole="admin">
               <MembersPage />
             </ProtectedRoute>
           </Suspense>
@@ -65,7 +65,7 @@ export const router = createBrowserRouter([
         path: '/products', 
         element: (
           <Suspense fallback={<LoadingComponent />}>
-            <ProtectedRoute requiredRole="inventory">
+            <ProtectedRoute requiredRole="admin">
               <ProductsPage />
             </ProtectedRoute>
           </Suspense>
@@ -195,7 +195,7 @@ export const router = createBrowserRouter([
         path: '/resource-sharing', 
         element: (
           <Suspense fallback={<LoadingComponent />}>
-            <ProtectedRoute requiredRole="admin">
+            <ProtectedRoute requiredRole="inventory">
               <ResourceSharingPage />
             </ProtectedRoute>
           </Suspense>
