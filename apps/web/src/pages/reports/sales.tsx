@@ -74,7 +74,7 @@ export default function SalesReportPage() {
       title: '排名',
       colKey: 'rank',
       cell: ({ rowIndex }: { rowIndex: number }) => (
-        rowIndex + 1
+        <span>{rowIndex + 1}</span>
       )
     },
     {
