@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Switch, Button, Message, Row, Col, InputNumber } from 'tdesign-react';
+import { Form, Input, Switch, Button, Message, Card } from 'tdesign-react';
 import { SystemSettingsService, SystemSettings } from '../../services/systemSettings';
 
-export default function SystemSettingsPage() {
+const { FormItem } = Form;
+
+const SystemSettingsPage: React.FC = () => {
   const [form] = Form.useForm();
+  const [settings, setSettings] = useState<SystemSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const systemSettingsService = SystemSettingsService.getInstance();
@@ -14,202 +17,124 @@ export default function SystemSettingsPage() {
 
   const loadSettings = async () => {
     try {
-      setLoading(true);
-      const settings = await systemSettingsService.getSystemSettings();
-      
-      if (settings) {
-        form.setFieldsValue(settings);
-      } else {
-        // 如果没有设置，使用默认值
-        const defaultSettings = systemSettingsService.getDefaultSettings();
-        form.setFieldsValue(defaultSettings);
-      }
+      const currentSettings = await systemSettingsService.getSystemSettings();
+      setSettings(currentSettings);
+      form.setFieldsValue(currentSettings);
     } catch (error) {
-      Message.error('加载系统设置失败');
+      if (typeof Message !== 'undefined' && Message.error) {
+        Message.error('加载系统设置失败');
+      }
     } finally {
       setLoading(false);
     }
   };
 
-  const onSubmit = async (values: SystemSettings) => {
+  const onSubmit = async () => {
+    setSaving(true);
     try {
-      setSaving(true);
+      const values = await form.validate();
       await systemSettingsService.updateSystemSettings(values);
-      Message.success('系统设置已保存');
+      if (typeof Message !== 'undefined' && Message.success) {
+        Message.success('系统设置已保存');
+      }
     } catch (error) {
-      Message.error('保存系统设置失败');
+      if (error instanceof Error) {
+        if (typeof Message !== 'undefined' && Message.error) {
+          Message.error(error.message || '保存系统设置失败');
+        }
+      } else {
+        if (typeof Message !== 'undefined' && Message.error) {
+          Message.error('保存系统设置失败');
+        }
+      }
     } finally {
       setSaving(false);
     }
   };
 
+  if (loading) {
+    return (
+      <div style={{ padding: '20px', textAlign: 'center' }}>
+        <p>加载中...</p>
+      </div>
+    );
+  }
+
   return (
     <div style={{ padding: '20px' }}>
-      <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>
-        系统设置
-      </h1>
-      
-      <Form 
-        form={form} 
-        onSubmit={onSubmit}
-        labelWidth={120}
-        disabled={loading}
-      >
-        <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', marginBottom: '20px' }}>
-          <h2 style={{ fontSize: '20px', marginBottom: '16px' }}>公司信息</h2>
-          
-          <Row gutter={20}>
-            <Col span={6}>
-              <Form.FormItem label="公司名称" name="companyName">
-                <Input placeholder="请输入公司名称" />
-              </Form.FormItem>
-            </Col>
-            
-            <Col span={6}>
-              <Form.FormItem label="公司地址" name="companyAddress">
-                <Input placeholder="请输入公司地址" />
-              </Form.FormItem>
-            </Col>
-            
-            <Col span={6}>
-              <Form.FormItem label="联系电话" name="companyPhone">
-                <Input placeholder="请输入联系电话" />
-              </Form.FormItem>
-            </Col>
-            
-            <Col span={6}>
-              <Form.FormItem label="电子邮箱" name="companyEmail">
-                <Input placeholder="请输入电子邮箱" />
-              </Form.FormItem>
-            </Col>
-          </Row>
-        </div>
-        
-        <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', marginBottom: '20px' }}>
-          <h2 style={{ fontSize: '20px', marginBottom: '16px' }}>货币设置</h2>
-          
-          <Row gutter={20}>
-            <Col span={6}>
-              <Form.FormItem label="货币单位" name="currency">
-                <Input placeholder="例如: CNY" />
-              </Form.FormItem>
-            </Col>
-            
-            <Col span={6}>
-              <Form.FormItem label="货币符号" name="currencySymbol">
-                <Input placeholder="例如: ¥" />
-              </Form.FormItem>
-            </Col>
-          </Row>
-        </div>
-        
-        <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', marginBottom: '20px' }}>
-          <h2 style={{ fontSize: '20px', marginBottom: '16px' }}>打印设置</h2>
-          
-          <Row gutter={20}>
-            <Col span={6}>
-              <Form.FormItem label="打印小票" name="printReceipt" valueType="boolean">
-                <Switch />
-              </Form.FormItem>
-            </Col>
-            
-            <Col span={6}>
-              <Form.FormItem label="打印发票" name="printInvoice" valueType="boolean">
-                <Switch />
-              </Form.FormItem>
-            </Col>
-          </Row>
-        </div>
-        
-        <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', marginBottom: '20px' }}>
-          <h2 style={{ fontSize: '20px', marginBottom: '16px' }}>税收设置</h2>
-          
-          <Row gutter={20}>
-            <Col span={6}>
-              <Form.FormItem label="启用税收" name="taxEnabled" valueType="boolean">
-                <Switch />
-              </Form.FormItem>
-            </Col>
-            
-            <Col span={6}>
-              <Form.FormItem label="税率 (%)" name="taxRate">
-                <InputNumber min={0} max={100} step={0.1} />
-              </Form.FormItem>
-            </Col>
-          </Row>
-        </div>
-        
-        <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', marginBottom: '20px' }}>
-          <h2 style={{ fontSize: '20px', marginBottom: '16px' }}>库存设置</h2>
-          
-          <Row gutter={20}>
-            <Col span={6}>
-              <Form.FormItem label="启用库存跟踪" name="enableStockTracking" valueType="boolean">
-                <Switch />
-              </Form.FormItem>
-            </Col>
-            
-            <Col span={6}>
-              <Form.FormItem label="低库存阈值" name="lowStockThreshold">
-                <InputNumber min={0} step={1} />
-              </Form.FormItem>
-            </Col>
-          </Row>
-        </div>
-        
-        <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', marginBottom: '20px' }}>
-          <h2 style={{ fontSize: '20px', marginBottom: '16px' }}>会员设置</h2>
-          
-          <Row gutter={20}>
-            <Col span={6}>
-              <Form.FormItem label="启用会员计划" name="enableLoyaltyProgram" valueType="boolean">
-                <Switch />
-              </Form.FormItem>
-            </Col>
-            
-            <Col span={6}>
-              <Form.FormItem label="积分兑换比例" name="pointsPerCurrency">
-                <InputNumber min={0} step={1} />
-              </Form.FormItem>
-            </Col>
-            
-            <Col span={6}>
-              <Form.FormItem label="货币兑换比例" name="currencyPerPoint">
-                <InputNumber min={0} step={1} />
-              </Form.FormItem>
-            </Col>
-          </Row>
-        </div>
-        
-        <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px', marginBottom: '20px' }}>
-          <h2 style={{ fontSize: '20px', marginBottom: '16px' }}>多店铺设置</h2>
-          
-          <Row gutter={20}>
-            <Col span={6}>
-              <Form.FormItem label="启用多店铺" name="enableMultiStore" valueType="boolean">
-                <Switch />
-              </Form.FormItem>
-            </Col>
-          </Row>
-        </div>
-        
-        <div style={{ textAlign: 'center' }}>
-          <Button 
-            theme="primary" 
-            type="submit" 
-            loading={saving}
-            style={{ marginRight: '10px' }}
-          >
-            保存设置
-          </Button>
-          <Button 
-            variant="outline" 
-            onClick={loadSettings}
-          >
-            重置
-          </Button>
-        </div>
-      </Form>
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center',
+        marginBottom: '20px'
+      }}>
+        <h1 style={{ fontSize: '24px', fontWeight: 'bold' }}>
+          系统设置
+        </h1>
+      </div>
+
+      <Card>
+        <Form 
+          form={form} 
+          labelWidth={120}
+          onSubmit={onSubmit}
+        >
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(2, 1fr)', 
+            gap: '20px',
+            marginBottom: '30px'
+          }}>
+            <FormItem label="公司名称" name="companyName">
+              <Input placeholder="请输入公司名称" />
+            </FormItem>
+            <FormItem label="公司地址" name="companyAddress">
+              <Input placeholder="请输入公司地址" />
+            </FormItem>
+            <FormItem label="联系电话" name="companyPhone">
+              <Input placeholder="请输入联系电话" />
+            </FormItem>
+            <FormItem label="默认税率 (%)" name="defaultTaxRate">
+              <Input type="number" placeholder="请输入默认税率" />
+            </FormItem>
+          </div>
+
+          <div style={{ 
+            display: 'grid', 
+            gridTemplateColumns: 'repeat(2, 1fr)', 
+            gap: '20px',
+            marginBottom: '30px'
+          }}>
+            <FormItem label="打印小票" name="printReceipt" valuePropName="checked">
+              <Switch />
+            </FormItem>
+            <FormItem label="启用会员积分" name="enableMemberPoints" valuePropName="checked">
+              <Switch />
+            </FormItem>
+            <FormItem label="启用库存预警" name="enableInventoryAlert" valuePropName="checked">
+              <Switch />
+            </FormItem>
+            <FormItem label="启用离线模式" name="enableOfflineMode" valuePropName="checked">
+              <Switch />
+            </FormItem>
+          </div>
+
+          <FormItem label="小票标题" name="receiptTitle">
+            <Input placeholder="请输入小票标题" />
+          </FormItem>
+          <FormItem label="小票底部信息" name="receiptFooter">
+            <Input.Textarea placeholder="请输入小票底部信息" rows={3} />
+          </FormItem>
+
+          <FormItem style={{ textAlign: 'right' }}>
+            <Button theme="primary" type="submit" loading={saving}>
+              保存设置
+            </Button>
+          </FormItem>
+        </Form>
+      </Card>
     </div>
   );
-}
+};
+
+export default SystemSettingsPage;

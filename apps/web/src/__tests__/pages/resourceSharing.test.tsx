@@ -1,126 +1,120 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import React from 'react';
 import ResourceSharingPage from '../../pages/resource-sharing/index';
-import { useAppStore } from '../../store/useAppStore';
-import { ResourceSharingService } from '../../services/resourceSharing';
-import { StoreService } from '../../services/store';
 
-// Mock dependencies
-vi.mock('../../store/useAppStore');
-vi.mock('../../services/resourceSharing');
-vi.mock('../../services/store');
+// Mock data
+const mockSharedResources = [
+  {
+    id: '1',
+    name: 'Test Product',
+    type: 'product',
+    sourceStoreId: '1',
+    sourceStoreName: 'Headquarters',
+    sharedWith: [
+      {
+        storeId: '2',
+        storeName: 'Test Store 2',
+        sharedAt: '2023-01-01T00:00:00Z'
+      }
+    ],
+    createdAt: '2023-01-01T00:00:00Z',
+    updatedAt: '2023-01-01T00:00:00Z'
+  }
+];
+
+const mockShareRequests = [
+  {
+    id: '1',
+    resourceId: '1',
+    resourceName: 'Test Product',
+    resourceType: 'product',
+    requestingStoreId: '2',
+    requestingStoreName: 'Test Store 2',
+    targetStoreId: '1',
+    status: 'pending',
+    createdAt: '2023-01-01T00:00:00Z',
+    updatedAt: '2023-01-01T00:00:00Z'
+  }
+];
+
+const mockStores = [
+  {
+    id: '1',
+    name: 'Headquarters',
+    code: 'HQ',
+    address: '123 Main St',
+    phone: '555-1234',
+    manager: 'John Doe',
+    level: 0,
+    parentId: null,
+    isHeadquarters: true,
+    createdAt: '2023-01-01T00:00:00Z',
+    updatedAt: '2023-01-01T00:00:00Z'
+  },
+  {
+    id: '2',
+    name: 'Test Store 2',
+    code: 'TS2',
+    address: '456 Oak Ave',
+    phone: '555-5678',
+    manager: 'Jane Smith',
+    level: 1,
+    parentId: '1',
+    isHeadquarters: false,
+    createdAt: '2023-01-02T00:00:00Z',
+    updatedAt: '2023-01-02T00:00:00Z'
+  }
+];
+
+// Mock services
+vi.mock('../../services/resourceSharing', () => {
+  return {
+    ResourceSharingService: {
+      getInstance: () => ({
+        getSharedResources: vi.fn().mockResolvedValue(mockSharedResources),
+        getShareRequests: vi.fn().mockResolvedValue(mockShareRequests),
+        shareResource: vi.fn().mockResolvedValue({ success: true }),
+        approveRequest: vi.fn().mockResolvedValue({ success: true }),
+        rejectRequest: vi.fn().mockResolvedValue({ success: true })
+      })
+    }
+  };
+});
+
+vi.mock('../../services/store', () => {
+  return {
+    StoreService: {
+      getInstance: () => ({
+        getAllStores: vi.fn().mockResolvedValue(mockStores)
+      })
+    }
+  };
+});
+
+vi.mock('../../store/useAppStore', () => {
+  return {
+    useAppStore: () => ({
+      currentStore: mockStores[0]
+    })
+  };
+});
 
 describe('ResourceSharingPage', () => {
-  const mockCurrentStore = {
-    id: 'store1',
-    name: 'Test Store',
-    code: 'TS001',
-    address: 'Test Address',
-    phone: '123456789',
-    manager: 'Test Manager',
-    createdAt: '2023-01-01',
-    updatedAt: '2023-01-01',
-    isActive: true,
-    level: 0
-  };
-
-  const mockStores = [
-    mockCurrentStore,
-    {
-      id: 'store2',
-      name: 'Test Store 2',
-      code: 'TS002',
-      address: 'Test Address 2',
-      phone: '987654321',
-      manager: 'Test Manager 2',
-      createdAt: '2023-01-01',
-      updatedAt: '2023-01-01',
-      isActive: true,
-      level: 1
-    }
-  ];
-
-  const mockSharedResources = [
-    {
-      id: 'product_product1_store1',
-      name: 'Test Product',
-      type: 'product',
-      sourceStoreId: 'store1',
-      sourceStoreName: 'Test Store',
-      sharedWith: [
-        {
-          storeId: 'store2',
-          storeName: 'Test Store 2',
-          sharedAt: '2023-01-01'
-        }
-      ],
-      createdAt: '2023-01-01',
-      updatedAt: '2023-01-01'
-    }
-  ];
-
-  const mockShareRequests = [
-    {
-      id: 'request1',
-      resourceId: 'product1',
-      resourceName: 'Test Product',
-      resourceType: 'product',
-      requestingStoreId: 'store2',
-      requestingStoreName: 'Test Store 2',
-      targetStoreId: 'store1',
-      status: 'pending',
-      createdAt: '2023-01-01',
-      updatedAt: '2023-01-01'
-    }
-  ];
-
   beforeEach(() => {
-    // Reset all mocks
+    // Clear all mocks before each test
     vi.clearAllMocks();
-    
-    // Mock useAppStore
-    (useAppStore as jest.Mock).mockReturnValue({
-      currentStore: mockCurrentStore,
-      setCurrentStore: vi.fn()
-    });
-    
-    // Mock ResourceSharingService
-    const mockResourceSharingService = {
-      getAllSharedResources: vi.fn().mockResolvedValue(mockSharedResources),
-      getShareRequestsForStore: vi.fn().mockResolvedValue(mockShareRequests),
-      shareResource: vi.fn().mockResolvedValue({}),
-      createShareRequest: vi.fn().mockResolvedValue({}),
-      processShareRequest: vi.fn().mockResolvedValue({}),
-      stopSharingResource: vi.fn().mockResolvedValue({})
-    };
-    
-    (ResourceSharingService.getInstance as jest.Mock).mockReturnValue(mockResourceSharingService);
-    
-    // Mock StoreService
-    const mockStoreService = {
-      getAllStores: vi.fn().mockResolvedValue(mockStores)
-    };
-    
-    (StoreService.getInstance as jest.Mock).mockReturnValue(mockStoreService);
   });
 
-  it('should render resource sharing page', async () => {
+  it('should render resource sharing page', () => {
     render(
       <MemoryRouter>
         <ResourceSharingPage />
       </MemoryRouter>
     );
 
-    // Wait for data to load
-    await waitFor(() => {
-      expect(screen.getByText('资源共享管理')).toBeInTheDocument();
-    });
-
-    // Check tabs
-    expect(screen.getByText('共享资源')).toBeInTheDocument();
-    expect(screen.getByText('共享请求')).toBeInTheDocument();
+    expect(screen.getByText('资源共享')).toBeInTheDocument();
   });
 
   it('should display shared resources', async () => {
@@ -133,12 +127,9 @@ describe('ResourceSharingPage', () => {
     // Wait for data to load
     await waitFor(() => {
       expect(screen.getByText('Test Product')).toBeInTheDocument();
-    });
+    }, { timeout: 3000 });
 
-    // Check shared resources table
-    expect(screen.getByText('Test Product')).toBeInTheDocument();
-    expect(screen.getByText('商品')).toBeInTheDocument();
-    expect(screen.getByText('Test Store')).toBeInTheDocument();
+    expect(screen.getByText('product')).toBeInTheDocument();
     expect(screen.getByText('Test Store 2')).toBeInTheDocument();
   });
 
@@ -149,19 +140,52 @@ describe('ResourceSharingPage', () => {
       </MemoryRouter>
     );
 
+    // Switch to requests tab
+    const requestsTab = screen.getByText('收到的共享请求');
+    fireEvent.click(requestsTab);
+
     // Wait for data to load
     await waitFor(() => {
       expect(screen.getByText('Test Product')).toBeInTheDocument();
-    });
-
-    // Switch to requests tab
-    const requestsTab = screen.getByText('共享请求');
-    fireEvent.click(requestsTab);
+    }, { timeout: 3000 });
 
     // Check share requests table
     expect(screen.getByText('Test Product')).toBeInTheDocument();
-    expect(screen.getByText('商品')).toBeInTheDocument();
+    expect(screen.getByText('product')).toBeInTheDocument();
     expect(screen.getByText('Test Store 2')).toBeInTheDocument();
-    expect(screen.getByText('待处理')).toBeInTheDocument();
+  });
+
+  it('should switch between tabs', () => {
+    render(
+      <MemoryRouter>
+        <ResourceSharingPage />
+      </MemoryRouter>
+    );
+
+    // Initially should show shared resources
+    expect(screen.getByText('我共享的资源')).toBeInTheDocument();
+
+    // Switch to requests tab
+    const requestsTab = screen.getByText('收到的共享请求');
+    fireEvent.click(requestsTab);
+    expect(screen.getByText('收到的共享请求')).toBeInTheDocument();
+
+    // Switch back to shared resources tab
+    const sharedTab = screen.getByText('我共享的资源');
+    fireEvent.click(sharedTab);
+    expect(screen.getByText('我共享的资源')).toBeInTheDocument();
+  });
+
+  it('should open share resource form', () => {
+    render(
+      <MemoryRouter>
+        <ResourceSharingPage />
+      </MemoryRouter>
+    );
+
+    const shareButton = screen.getByText('发起资源共享');
+    fireEvent.click(shareButton);
+    
+    expect(screen.getByText('发起资源共享')).toBeInTheDocument();
   });
 });

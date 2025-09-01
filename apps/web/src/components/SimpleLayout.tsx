@@ -55,7 +55,9 @@ export default function SimpleLayout() {
   };
 
   const handleNavigation = (path: string) => {
-    navigate(path);
+    // 确保路径以 / 开头
+    const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+    navigate(normalizedPath);
     setMobileMenuOpen(false); // 关闭移动端菜单
   };
 

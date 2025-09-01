@@ -52,7 +52,7 @@ export const router = createBrowserRouter([
         )
       },
       { 
-        path: 'members', 
+        path: '/members', 
         element: (
           <Suspense fallback={<LoadingComponent />}>
             <ProtectedRoute requiredRole="cashier">
@@ -62,7 +62,7 @@ export const router = createBrowserRouter([
         )
       },
       { 
-        path: 'products', 
+        path: '/products', 
         element: (
           <Suspense fallback={<LoadingComponent />}>
             <ProtectedRoute requiredRole="inventory">
@@ -72,7 +72,7 @@ export const router = createBrowserRouter([
         )
       },
       { 
-        path: 'orders/pos', 
+        path: '/orders/pos', 
         element: (
           <Suspense fallback={<LoadingComponent />}>
             <ProtectedRoute requiredRole="cashier">
@@ -82,7 +82,7 @@ export const router = createBrowserRouter([
         )
       },
       { 
-        path: 'finance/daily', 
+        path: '/finance/daily', 
         element: (
           <Suspense fallback={<LoadingComponent />}>
             <ProtectedRoute requiredRole="finance">
@@ -92,7 +92,7 @@ export const router = createBrowserRouter([
         )
       },
       { 
-        path: 'roles', 
+        path: '/roles', 
         element: (
           <Suspense fallback={<LoadingComponent />}>
             <ProtectedRoute requiredRole="admin">
@@ -102,7 +102,7 @@ export const router = createBrowserRouter([
         )
       },
       { 
-        path: 'data', 
+        path: '/data', 
         element: (
           <Suspense fallback={<LoadingComponent />}>
             <ProtectedRoute requiredRole="admin">
@@ -112,7 +112,7 @@ export const router = createBrowserRouter([
         )
       },
       { 
-        path: 'stores', 
+        path: '/stores', 
         element: (
           <Suspense fallback={<LoadingComponent />}>
             <ProtectedRoute requiredRole="admin">
@@ -122,7 +122,7 @@ export const router = createBrowserRouter([
         )
       },
       { 
-        path: 'stores/hierarchy', 
+        path: '/stores/hierarchy', 
         element: (
           <Suspense fallback={<LoadingComponent />}>
             <ProtectedRoute requiredRole="admin">
@@ -132,7 +132,7 @@ export const router = createBrowserRouter([
         )
       },
       { 
-        path: 'suppliers', 
+        path: '/suppliers', 
         element: (
           <Suspense fallback={<LoadingComponent />}>
             <ProtectedRoute requiredRole="inventory">
@@ -142,7 +142,7 @@ export const router = createBrowserRouter([
         )
       },
       { 
-        path: 'purchase-orders', 
+        path: '/purchase-orders', 
         element: (
           <Suspense fallback={<LoadingComponent />}>
             <ProtectedRoute requiredRole="inventory">
@@ -152,7 +152,7 @@ export const router = createBrowserRouter([
         )
       },
       { 
-        path: 'inventory', 
+        path: '/inventory', 
         element: (
           <Suspense fallback={<LoadingComponent />}>
             <ProtectedRoute requiredRole="inventory">
@@ -162,7 +162,7 @@ export const router = createBrowserRouter([
         )
       },
       { 
-        path: 'reports/sales', 
+        path: '/reports/sales', 
         element: (
           <Suspense fallback={<LoadingComponent />}>
             <ProtectedRoute requiredRole="admin">
@@ -172,7 +172,7 @@ export const router = createBrowserRouter([
         )
       },
       { 
-        path: 'reports/inventory', 
+        path: '/reports/inventory', 
         element: (
           <Suspense fallback={<LoadingComponent />}>
             <ProtectedRoute requiredRole="admin">
@@ -182,7 +182,7 @@ export const router = createBrowserRouter([
         )
       },
       { 
-        path: 'reports/cross-store', 
+        path: '/reports/cross-store', 
         element: (
           <Suspense fallback={<LoadingComponent />}>
             <ProtectedRoute requiredRole="admin">
@@ -192,7 +192,7 @@ export const router = createBrowserRouter([
         )
       },
       { 
-        path: 'resource-sharing', 
+        path: '/resource-sharing', 
         element: (
           <Suspense fallback={<LoadingComponent />}>
             <ProtectedRoute requiredRole="admin">
@@ -202,7 +202,7 @@ export const router = createBrowserRouter([
         )
       },
       { 
-        path: 'headquarters-branch', 
+        path: '/headquarters-branch', 
         element: (
           <Suspense fallback={<LoadingComponent />}>
             <ProtectedRoute requiredRole="admin">
@@ -212,7 +212,7 @@ export const router = createBrowserRouter([
         )
       },
       { 
-        path: 'mobile-pos', 
+        path: '/mobile-pos', 
         element: (
           <Suspense fallback={<LoadingComponent />}>
             <ProtectedRoute requiredRole="cashier">
@@ -222,7 +222,7 @@ export const router = createBrowserRouter([
         )
       },
       { 
-        path: 'help', 
+        path: '/help', 
         element: (
           <Suspense fallback={<LoadingComponent />}>
             <ProtectedRoute>
@@ -232,7 +232,7 @@ export const router = createBrowserRouter([
         )
       },
       { 
-        path: 'system-settings', 
+        path: '/system-settings', 
         element: (
           <Suspense fallback={<LoadingComponent />}>
             <ProtectedRoute requiredRole="admin">
@@ -242,7 +242,7 @@ export const router = createBrowserRouter([
         )
       },
       { 
-        path: 'changelog', 
+        path: '/changelog', 
         element: (
           <Suspense fallback={<LoadingComponent />}>
             <ProtectedRoute>
@@ -252,7 +252,7 @@ export const router = createBrowserRouter([
         )
       },
       { 
-        path: 'about', 
+        path: '/about', 
         element: (
           <Suspense fallback={<LoadingComponent />}>
             <ProtectedRoute>
@@ -262,7 +262,7 @@ export const router = createBrowserRouter([
         )
       },
       { 
-        path: 'feedback', 
+        path: '/feedback', 
         element: (
           <Suspense fallback={<LoadingComponent />}>
             <ProtectedRoute>
@@ -272,7 +272,7 @@ export const router = createBrowserRouter([
         )
       },
       { 
-        path: 'health-check', 
+        path: '/health-check', 
         element: (
           <Suspense fallback={<LoadingComponent />}>
             <ProtectedRoute requiredRole="admin">
