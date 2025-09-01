@@ -186,45 +186,120 @@ export const useAppStore = create<AppState>((set, get) => ({
         const sampleProducts = [
           {
             id: `prod_${currentStore.id}_1`,
-            name: '示例商品1',
-            description: '这是一个示例商品',
+            name: 'iPhone 15 Pro',
+            description: '苹果最新款智能手机，配备A17 Pro芯片',
             category: '电子产品',
             barcode: '1234567890123',
             unit: 'piece' as const,
-            price: 99.99,
-            cost: 50.00,
-            stock: 100,
-            minStock: 10,
+            price: 8999.00,
+            cost: 7200.00,
+            stock: 25,
+            minStock: 5,
             isActive: true,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
           },
           {
             id: `prod_${currentStore.id}_2`,
-            name: '示例商品2',
-            description: '这是另一个示例商品',
-            category: '日用品',
+            name: '小米电视 65寸',
+            description: '4K超高清智能电视，支持HDR',
+            category: '家电',
             barcode: '2345678901234',
             unit: 'piece' as const,
-            price: 29.99,
-            cost: 15.00,
-            stock: 200,
-            minStock: 20,
+            price: 3299.00,
+            cost: 2600.00,
+            stock: 12,
+            minStock: 3,
             isActive: true,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
           },
           {
             id: `prod_${currentStore.id}_3`,
-            name: '示例商品3',
-            description: '这是第三个示例商品',
-            category: '食品',
+            name: '可口可乐 330ml',
+            description: '经典碳酸饮料',
+            category: '食品饮料',
             barcode: '3456789012345',
             unit: 'piece' as const,
-            price: 15.99,
-            cost: 8.00,
-            stock: 150,
-            minStock: 30,
+            price: 3.50,
+            cost: 2.00,
+            stock: 200,
+            minStock: 50,
+            isActive: true,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          },
+          {
+            id: `prod_${currentStore.id}_4`,
+            name: '耐克运动鞋',
+            description: '透气舒适运动鞋，适合跑步健身',
+            category: '服装鞋帽',
+            barcode: '4567890123456',
+            unit: 'piece' as const,
+            price: 599.00,
+            cost: 380.00,
+            stock: 45,
+            minStock: 10,
+            isActive: true,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          },
+          {
+            id: `prod_${currentStore.id}_5`,
+            name: '兰蔻小黑瓶精华',
+            description: '抗衰老精华液，修复肌肤',
+            category: '美妆护肤',
+            barcode: '5678901234567',
+            unit: 'piece' as const,
+            price: 1280.00,
+            cost: 890.00,
+            stock: 18,
+            minStock: 5,
+            isActive: true,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          },
+          {
+            id: `prod_${currentStore.id}_6`,
+            name: '乐高积木城市系列',
+            description: '儿童益智积木玩具',
+            category: '玩具文具',
+            barcode: '6789012345678',
+            unit: 'piece' as const,
+            price: 299.00,
+            cost: 180.00,
+            stock: 32,
+            minStock: 8,
+            isActive: true,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          },
+          {
+            id: `prod_${currentStore.id}_7`,
+            name: '戴森吸尘器V15',
+            description: '无绳吸尘器，强劲吸力',
+            category: '家居用品',
+            barcode: '7890123456789',
+            unit: 'piece' as const,
+            price: 4590.00,
+            cost: 3200.00,
+            stock: 8,
+            minStock: 2,
+            isActive: true,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString()
+          },
+          {
+            id: `prod_${currentStore.id}_8`,
+            name: '三只松鼠坚果礼盒',
+            description: '混合坚果礼盒，营养健康',
+            category: '食品饮料',
+            barcode: '8901234567890',
+            unit: 'piece' as const,
+            price: 89.90,
+            cost: 55.00,
+            stock: 65,
+            minStock: 15,
             isActive: true,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString()
@@ -234,28 +309,80 @@ export const useAppStore = create<AppState>((set, get) => ({
         const sampleMembers = [
           {
             id: `member_${currentStore.id}_1`,
-            name: '张三',
+            name: '王晓明',
             phone: '13800138001',
-            email: 'zhangsan@example.com',
-            level: 'bronze' as const,
-            points: 100,
-            balance: 50.00,
-            totalSpent: 500.00,
-            joinDate: new Date().toISOString(),
-            lastVisit: new Date().toISOString(),
+            email: 'wangxiaoming@example.com',
+            level: 'gold' as const,
+            points: 2580,
+            balance: 580.00,
+            totalSpent: 15800.00,
+            joinDate: new Date(Date.now() - 180 * 24 * 60 * 60 * 1000).toISOString(),
+            lastVisit: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
             isActive: true
           },
           {
             id: `member_${currentStore.id}_2`,
-            name: '李四',
+            name: '李美丽',
             phone: '13800138002',
-            email: 'lisi@example.com',
+            email: 'limeili@example.com',
+            level: 'diamond' as const,
+            points: 5600,
+            balance: 1200.00,
+            totalSpent: 32600.00,
+            joinDate: new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString(),
+            lastVisit: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+            isActive: true
+          },
+          {
+            id: `member_${currentStore.id}_3`,
+            name: '张志强',
+            phone: '13800138003',
+            email: 'zhangzhiqiang@example.com',
             level: 'silver' as const,
-            points: 500,
-            balance: 200.00,
-            totalSpent: 2000.00,
-            joinDate: new Date().toISOString(),
-            lastVisit: new Date().toISOString(),
+            points: 980,
+            balance: 320.00,
+            totalSpent: 6800.00,
+            joinDate: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString(),
+            lastVisit: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+            isActive: true
+          },
+          {
+            id: `member_${currentStore.id}_4`,
+            name: '刘小芳',
+            phone: '13800138004',
+            email: 'liuxiaofang@example.com',
+            level: 'bronze' as const,
+            points: 280,
+            balance: 85.00,
+            totalSpent: 1200.00,
+            joinDate: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+            lastVisit: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+            isActive: true
+          },
+          {
+            id: `member_${currentStore.id}_5`,
+            name: '陈大华',
+            phone: '13800138005',
+            email: 'chendahua@example.com',
+            level: 'silver' as const,
+            points: 1200,
+            balance: 450.00,
+            totalSpent: 8900.00,
+            joinDate: new Date(Date.now() - 120 * 24 * 60 * 60 * 1000).toISOString(),
+            lastVisit: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+            isActive: true
+          },
+          {
+            id: `member_${currentStore.id}_6`,
+            name: '赵雅婷',
+            phone: '13800138006',
+            email: 'zhaoyating@example.com',
+            level: 'gold' as const,
+            points: 3200,
+            balance: 780.00,
+            totalSpent: 18900.00,
+            joinDate: new Date(Date.now() - 200 * 24 * 60 * 60 * 1000).toISOString(),
+            lastVisit: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
             isActive: true
           }
         ];
@@ -263,56 +390,185 @@ export const useAppStore = create<AppState>((set, get) => ({
         const sampleOrders = [
           {
             id: `order_${currentStore.id}_1`,
-            orderNumber: `ORD${Date.now()}001`,
-            memberId: `member_${currentStore.id}_1`,
+            orderNumber: `ORD${Date.now() - 5 * 24 * 60 * 60 * 1000}001`,
+            memberId: `member_${currentStore.id}_2`,
             items: [
               {
                 id: `item_${currentStore.id}_1_1`,
                 productId: `prod_${currentStore.id}_1`,
-                quantity: 2,
-                unitPrice: 99.99,
-                totalPrice: 199.98
+                quantity: 1,
+                unitPrice: 8999.00,
+                totalPrice: 8999.00
               },
               {
                 id: `item_${currentStore.id}_1_2`,
-                productId: `prod_${currentStore.id}_2`,
-                quantity: 1,
-                unitPrice: 29.99,
-                totalPrice: 29.99
+                productId: `prod_${currentStore.id}_5`,
+                quantity: 2,
+                unitPrice: 1280.00,
+                totalPrice: 2560.00
               }
             ],
-            subtotal: 229.97,
-            discount: 10.00,
+            subtotal: 11559.00,
+            discount: 500.00,
             tax: 0.00,
-            total: 219.97,
-            paymentMethod: 'cash' as const,
-            status: 'completed' as const,
-            staffId: 'staff_001',
-            createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2天前
-            completedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
-          },
-          {
-            id: `order_${currentStore.id}_2`,
-            orderNumber: `ORD${Date.now()}002`,
-            memberId: `member_${currentStore.id}_2`,
-            items: [
-              {
-                id: `item_${currentStore.id}_2_1`,
-                productId: `prod_${currentStore.id}_3`,
-                quantity: 3,
-                unitPrice: 15.99,
-                totalPrice: 47.97
-              }
-            ],
-            subtotal: 47.97,
-            discount: 0.00,
-            tax: 0.00,
-            total: 47.97,
+            total: 11059.00,
             paymentMethod: 'card' as const,
             status: 'completed' as const,
             staffId: 'staff_001',
-            createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(), // 1天前
+            createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+            completedAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString()
+          },
+          {
+            id: `order_${currentStore.id}_2`,
+            orderNumber: `ORD${Date.now() - 3 * 24 * 60 * 60 * 1000}002`,
+            memberId: `member_${currentStore.id}_1`,
+            items: [
+              {
+                id: `item_${currentStore.id}_2_1`,
+                productId: `prod_${currentStore.id}_2`,
+                quantity: 1,
+                unitPrice: 3299.00,
+                totalPrice: 3299.00
+              }
+            ],
+            subtotal: 3299.00,
+            discount: 200.00,
+            tax: 0.00,
+            total: 3099.00,
+            paymentMethod: 'card' as const,
+            status: 'completed' as const,
+            staffId: 'staff_002',
+            createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+            completedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString()
+          },
+          {
+            id: `order_${currentStore.id}_3`,
+            orderNumber: `ORD${Date.now() - 2 * 24 * 60 * 60 * 1000}003`,
+            memberId: `member_${currentStore.id}_6`,
+            items: [
+              {
+                id: `item_${currentStore.id}_3_1`,
+                productId: `prod_${currentStore.id}_4`,
+                quantity: 2,
+                unitPrice: 599.00,
+                totalPrice: 1198.00
+              },
+              {
+                id: `item_${currentStore.id}_3_2`,
+                productId: `prod_${currentStore.id}_8`,
+                quantity: 3,
+                unitPrice: 89.90,
+                totalPrice: 269.70
+              }
+            ],
+            subtotal: 1467.70,
+            discount: 67.70,
+            tax: 0.00,
+            total: 1400.00,
+            paymentMethod: 'cash' as const,
+            status: 'completed' as const,
+            staffId: 'staff_001',
+            createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+            completedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+          },
+          {
+            id: `order_${currentStore.id}_4`,
+            orderNumber: `ORD${Date.now() - 1 * 24 * 60 * 60 * 1000}004`,
+            memberId: `member_${currentStore.id}_3`,
+            items: [
+              {
+                id: `item_${currentStore.id}_4_1`,
+                productId: `prod_${currentStore.id}_7`,
+                quantity: 1,
+                unitPrice: 4590.00,
+                totalPrice: 4590.00
+              }
+            ],
+            subtotal: 4590.00,
+            discount: 300.00,
+            tax: 0.00,
+            total: 4290.00,
+            paymentMethod: 'card' as const,
+            status: 'completed' as const,
+            staffId: 'staff_002',
+            createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
             completedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
+          },
+          {
+            id: `order_${currentStore.id}_5`,
+            orderNumber: `ORD${Date.now() - 6 * 60 * 60 * 1000}005`,
+            memberId: `member_${currentStore.id}_5`,
+            items: [
+              {
+                id: `item_${currentStore.id}_5_1`,
+                productId: `prod_${currentStore.id}_3`,
+                quantity: 24,
+                unitPrice: 3.50,
+                totalPrice: 84.00
+              },
+              {
+                id: `item_${currentStore.id}_5_2`,
+                productId: `prod_${currentStore.id}_6`,
+                quantity: 1,
+                unitPrice: 299.00,
+                totalPrice: 299.00
+              }
+            ],
+            subtotal: 383.00,
+            discount: 12.00,
+            tax: 0.00,
+            total: 371.00,
+            paymentMethod: 'member_balance' as const,
+            status: 'completed' as const,
+            staffId: 'staff_001',
+            createdAt: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
+            completedAt: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString()
+          },
+          {
+            id: `order_${currentStore.id}_6`,
+            orderNumber: `ORD${Date.now() - 2 * 60 * 60 * 1000}006`,
+            memberId: `member_${currentStore.id}_2`,
+            items: [
+              {
+                id: `item_${currentStore.id}_6_1`,
+                productId: `prod_${currentStore.id}_5`,
+                quantity: 1,
+                unitPrice: 1280.00,
+                totalPrice: 1280.00
+              }
+            ],
+            subtotal: 1280.00,
+            discount: 80.00,
+            tax: 0.00,
+            total: 1200.00,
+            paymentMethod: 'cash' as const,
+            status: 'completed' as const,
+            staffId: 'staff_002',
+            createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+            completedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+          },
+          {
+            id: `order_${currentStore.id}_7`,
+            orderNumber: `ORD${Date.now() - 30 * 60 * 1000}007`,
+            memberId: undefined,
+            items: [
+              {
+                id: `item_${currentStore.id}_7_1`,
+                productId: `prod_${currentStore.id}_3`,
+                quantity: 6,
+                unitPrice: 3.50,
+                totalPrice: 21.00
+              }
+            ],
+            subtotal: 21.00,
+            discount: 0.00,
+            tax: 0.00,
+            total: 21.00,
+            paymentMethod: 'cash' as const,
+            status: 'completed' as const,
+            staffId: 'staff_001',
+            createdAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
+            completedAt: new Date(Date.now() - 30 * 60 * 1000).toISOString()
           }
         ];
         

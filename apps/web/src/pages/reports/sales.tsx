@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Card, Table, DatePicker, MessagePlugin, Tag } from 'tdesign-react';
 import { useAppStore } from '../../store/useAppStore';
 
 interface SalesData {
@@ -106,56 +105,9 @@ export default function SalesReportPage() {
       
       setTopProducts(topProductsArray);
     } catch (error) {
-      MessagePlugin.error('加载销售数据失败');
+      console.error('加载销售数据失败:', error);
     }
   };
-
-  const salesColumns = [
-    {
-      title: '日期',
-      colKey: 'date',
-    },
-    {
-      title: '销售额',
-      colKey: 'totalSales',
-      render: ({ row }: { row: SalesData }) => (
-        <span>¥{(row.totalSales || 0).toFixed(2)}</span>
-      )
-    },
-    {
-      title: '订单数',
-      colKey: 'totalOrders',
-    },
-    {
-      title: '商品数',
-      colKey: 'totalItemsSold',
-    },
-    {
-      title: '平均订单价值',
-      colKey: 'averageOrderValue',
-      render: ({ row }: { row: SalesData }) => (
-        <span>¥{(row.averageOrderValue || 0).toFixed(2)}</span>
-      )
-    }
-  ];
-
-  const productColumns = [
-    {
-      title: '商品名称',
-      colKey: 'name',
-    },
-    {
-      title: '销售数量',
-      colKey: 'quantitySold',
-    },
-    {
-      title: '销售额',
-      colKey: 'revenue',
-      render: ({ row }: { row: TopProduct }) => (
-        <span>¥{(row.revenue || 0).toFixed(2)}</span>
-      )
-    }
-  ];
 
   // 计算汇总数据
   const totalSales = salesData.reduce((sum, day) => sum + day.totalSales, 0);
@@ -165,97 +117,369 @@ export default function SalesReportPage() {
 
   if (!currentStore) {
     return (
-      <div style={{ padding: '20px', textAlign: 'center' }}>
-        <Tag theme="warning">请先选择一个店铺</Tag>
+      <div style={{ 
+        padding: '20px',
+        fontFamily: 'Arial, sans-serif'
+      }}>
+        <div style={{ 
+          backgroundColor: '#fff',
+          border: '1px solid #e8e8e8',
+          borderRadius: '8px',
+          padding: '40px',
+          textAlign: 'center',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+        }}>
+          <div style={{ fontSize: '48px', marginBottom: '16px' }}>⚠️</div>
+          <h2 style={{ margin: '0 0 8px 0', color: '#333' }}>请先选择一个店铺</h2>
+          <p style={{ margin: '0', color: '#666' }}>
+            请先在系统中选择一个店铺来查看销售报表
+          </p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div style={{ padding: '20px' }}>
+    <div style={{ 
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif'
+    }}>
+      {/* 页面标题 */}
       <div style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center',
-        marginBottom: '20px'
+        backgroundColor: '#fff',
+        border: '1px solid #e8e8e8',
+        borderRadius: '8px',
+        padding: '24px',
+        marginBottom: '20px',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
       }}>
-        <h1 style={{ fontSize: '24px', fontWeight: 'bold' }}>
-          销售报表 - {currentStore.name}
-        </h1>
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          marginBottom: '16px'
+        }}>
+          <h1 style={{ margin: '0', color: '#333', fontSize: '24px', fontWeight: 'bold' }}>
+            📊 销售报表 - {currentStore.name}
+          </h1>
+        </div>
+        
         <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-          <DatePicker 
-            value={startDate}
-            onChange={(value: string) => setStartDate(value)}
-            placeholder="开始日期"
-          />
-          <DatePicker 
-            value={endDate}
-            onChange={(value: string) => setEndDate(value)}
-            placeholder="结束日期"
-          />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <label style={{ color: '#666', fontSize: '14px', fontWeight: '500' }}>开始日期:</label>
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              style={{
+                padding: '8px 12px',
+                border: '1px solid #d9d9d9',
+                borderRadius: '6px',
+                fontSize: '14px'
+              }}
+            />
+          </div>
+          
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <label style={{ color: '#666', fontSize: '14px', fontWeight: '500' }}>结束日期:</label>
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              style={{
+                padding: '8px 12px',
+                border: '1px solid #d9d9d9',
+                borderRadius: '6px',
+                fontSize: '14px'
+              }}
+            />
+          </div>
+          
+          <button
+            onClick={loadSalesData}
+            style={{
+              backgroundColor: '#1890ff',
+              color: 'white',
+              border: 'none',
+              padding: '8px 16px',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontSize: '14px',
+              fontWeight: '500'
+            }}
+          >
+            刷新数据
+          </button>
         </div>
       </div>
 
       {/* 汇总数据 */}
       <div style={{ 
         display: 'grid', 
-        gridTemplateColumns: 'repeat(4, 1fr)', 
+        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
         gap: '16px',
         marginBottom: '20px'
       }}>
-        <Card>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '14px', color: '#666', marginBottom: '8px' }}>总销售额</div>
-            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#1890ff' }}>
-              ¥{(totalSales || 0).toFixed(2)}
+        <div style={{ 
+          backgroundColor: '#fff',
+          border: '1px solid #e8e8e8',
+          borderRadius: '8px',
+          padding: '20px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          borderTop: '4px solid #1890ff'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div>
+              <p style={{ margin: '0 0 8px 0', color: '#666', fontSize: '14px' }}>总销售额</p>
+              <p style={{ margin: '0', color: '#333', fontSize: '28px', fontWeight: 'bold' }}>
+                ¥{(totalSales || 0).toFixed(2)}
+              </p>
             </div>
+            <div style={{ fontSize: '32px' }}>💰</div>
           </div>
-        </Card>
-        <Card>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '14px', color: '#666', marginBottom: '8px' }}>总订单数</div>
-            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#52c41a' }}>
-              {totalOrders}
+        </div>
+
+        <div style={{ 
+          backgroundColor: '#fff',
+          border: '1px solid #e8e8e8',
+          borderRadius: '8px',
+          padding: '20px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          borderTop: '4px solid #52c41a'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div>
+              <p style={{ margin: '0 0 8px 0', color: '#666', fontSize: '14px' }}>总订单数</p>
+              <p style={{ margin: '0', color: '#333', fontSize: '28px', fontWeight: 'bold' }}>
+                {totalOrders}
+              </p>
             </div>
+            <div style={{ fontSize: '32px' }}>📋</div>
           </div>
-        </Card>
-        <Card>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '14px', color: '#666', marginBottom: '8px' }}>总商品数</div>
-            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#722ed1' }}>
-              {totalItems}
+        </div>
+
+        <div style={{ 
+          backgroundColor: '#fff',
+          border: '1px solid #e8e8e8',
+          borderRadius: '8px',
+          padding: '20px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          borderTop: '4px solid #722ed1'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div>
+              <p style={{ margin: '0 0 8px 0', color: '#666', fontSize: '14px' }}>总商品数</p>
+              <p style={{ margin: '0', color: '#333', fontSize: '28px', fontWeight: 'bold' }}>
+                {totalItems}
+              </p>
             </div>
+            <div style={{ fontSize: '32px' }}>📦</div>
           </div>
-        </Card>
-        <Card>
-          <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '14px', color: '#666', marginBottom: '8px' }}>平均订单价值</div>
-            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#fa8c16' }}>
-              ¥{(avgOrderValue || 0).toFixed(2)}
+        </div>
+
+        <div style={{ 
+          backgroundColor: '#fff',
+          border: '1px solid #e8e8e8',
+          borderRadius: '8px',
+          padding: '20px',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          borderTop: '4px solid #fa8c16'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div>
+              <p style={{ margin: '0 0 8px 0', color: '#666', fontSize: '14px' }}>平均订单价值</p>
+              <p style={{ margin: '0', color: '#333', fontSize: '28px', fontWeight: 'bold' }}>
+                ¥{(avgOrderValue || 0).toFixed(2)}
+              </p>
             </div>
+            <div style={{ fontSize: '32px' }}>📈</div>
           </div>
-        </Card>
+        </div>
       </div>
 
-      {/* 销售数据表格 */}
-      <Card title="每日销售数据" style={{ marginBottom: '20px' }}>
-        <Table
-          data={salesData}
-          columns={salesColumns}
-          rowKey="date"
-          pagination={{ defaultPageSize: 10 }}
-        />
-      </Card>
+      {/* 每日销售数据 */}
+      <div style={{ 
+        backgroundColor: '#fff',
+        border: '1px solid #e8e8e8',
+        borderRadius: '8px',
+        padding: '24px',
+        marginBottom: '20px',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+      }}>
+        <h2 style={{ margin: '0 0 20px 0', color: '#333', fontSize: '20px', fontWeight: 'bold' }}>
+          📅 每日销售数据
+        </h2>
+        
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ backgroundColor: '#fafafa' }}>
+                <th style={{ 
+                  padding: '12px', 
+                  textAlign: 'left', 
+                  borderBottom: '1px solid #e8e8e8',
+                  fontWeight: 'bold',
+                  color: '#333'
+                }}>日期</th>
+                <th style={{ 
+                  padding: '12px', 
+                  textAlign: 'left', 
+                  borderBottom: '1px solid #e8e8e8',
+                  fontWeight: 'bold',
+                  color: '#333'
+                }}>销售额</th>
+                <th style={{ 
+                  padding: '12px', 
+                  textAlign: 'left', 
+                  borderBottom: '1px solid #e8e8e8',
+                  fontWeight: 'bold',
+                  color: '#333'
+                }}>订单数</th>
+                <th style={{ 
+                  padding: '12px', 
+                  textAlign: 'left', 
+                  borderBottom: '1px solid #e8e8e8',
+                  fontWeight: 'bold',
+                  color: '#333'
+                }}>商品数</th>
+                <th style={{ 
+                  padding: '12px', 
+                  textAlign: 'left', 
+                  borderBottom: '1px solid #e8e8e8',
+                  fontWeight: 'bold',
+                  color: '#333'
+                }}>平均订单价值</th>
+              </tr>
+            </thead>
+            <tbody>
+              {salesData.map((data, index) => (
+                <tr key={data.date} style={{ 
+                  borderBottom: '1px solid #f0f0f0',
+                  backgroundColor: index % 2 === 0 ? '#fff' : '#fafafa'
+                }}>
+                  <td style={{ padding: '12px', color: '#666' }}>
+                    {new Date(data.date).toLocaleDateString('zh-CN')}
+                  </td>
+                  <td style={{ padding: '12px', color: '#52c41a', fontWeight: 'bold' }}>
+                    ¥{(data.totalSales || 0).toFixed(2)}
+                  </td>
+                  <td style={{ padding: '12px', color: '#666' }}>
+                    {data.totalOrders}
+                  </td>
+                  <td style={{ padding: '12px', color: '#666' }}>
+                    {data.totalItemsSold}
+                  </td>
+                  <td style={{ padding: '12px', color: '#1890ff', fontWeight: 'bold' }}>
+                    ¥{(data.averageOrderValue || 0).toFixed(2)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-      {/* 热门商品 */}
-      <Card title="热门商品排行">
-        <Table
-          data={topProducts}
-          columns={productColumns}
-          rowKey="id"
-          pagination={{ defaultPageSize: 10 }}
-        />
-      </Card>
+        {salesData.length === 0 && (
+          <div style={{ 
+            textAlign: 'center', 
+            padding: '40px',
+            color: '#999'
+          }}>
+            <div style={{ fontSize: '48px', marginBottom: '16px' }}>📊</div>
+            <p>在选定的时间段内没有销售数据</p>
+          </div>
+        )}
+      </div>
+
+      {/* 热门商品排行 */}
+      <div style={{ 
+        backgroundColor: '#fff',
+        border: '1px solid #e8e8e8',
+        borderRadius: '8px',
+        padding: '24px',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+      }}>
+        <h2 style={{ margin: '0 0 20px 0', color: '#333', fontSize: '20px', fontWeight: 'bold' }}>
+          🔥 热门商品排行
+        </h2>
+        
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ backgroundColor: '#fafafa' }}>
+                <th style={{ 
+                  padding: '12px', 
+                  textAlign: 'left', 
+                  borderBottom: '1px solid #e8e8e8',
+                  fontWeight: 'bold',
+                  color: '#333'
+                }}>排名</th>
+                <th style={{ 
+                  padding: '12px', 
+                  textAlign: 'left', 
+                  borderBottom: '1px solid #e8e8e8',
+                  fontWeight: 'bold',
+                  color: '#333'
+                }}>商品名称</th>
+                <th style={{ 
+                  padding: '12px', 
+                  textAlign: 'left', 
+                  borderBottom: '1px solid #e8e8e8',
+                  fontWeight: 'bold',
+                  color: '#333'
+                }}>销售数量</th>
+                <th style={{ 
+                  padding: '12px', 
+                  textAlign: 'left', 
+                  borderBottom: '1px solid #e8e8e8',
+                  fontWeight: 'bold',
+                  color: '#333'
+                }}>销售额</th>
+              </tr>
+            </thead>
+            <tbody>
+              {topProducts.map((product, index) => (
+                <tr key={product.id} style={{ 
+                  borderBottom: '1px solid #f0f0f0',
+                  backgroundColor: index % 2 === 0 ? '#fff' : '#fafafa'
+                }}>
+                  <td style={{ padding: '12px' }}>
+                    <span style={{ 
+                      backgroundColor: index < 3 ? '#ffd700' : '#f0f0f0',
+                      color: index < 3 ? '#333' : '#666',
+                      padding: '4px 8px',
+                      borderRadius: '12px',
+                      fontSize: '12px',
+                      fontWeight: 'bold'
+                    }}>
+                      #{index + 1}
+                    </span>
+                  </td>
+                  <td style={{ padding: '12px', color: '#333', fontWeight: '500' }}>
+                    {product.name}
+                  </td>
+                  <td style={{ padding: '12px', color: '#666' }}>
+                    {product.quantitySold}
+                  </td>
+                  <td style={{ padding: '12px', color: '#52c41a', fontWeight: 'bold' }}>
+                    ¥{(product.revenue || 0).toFixed(2)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {topProducts.length === 0 && (
+          <div style={{ 
+            textAlign: 'center', 
+            padding: '40px',
+            color: '#999'
+          }}>
+            <div style={{ fontSize: '48px', marginBottom: '16px' }}>🏆</div>
+            <p>在选定的时间段内没有商品销售数据</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
