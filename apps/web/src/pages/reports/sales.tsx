@@ -47,53 +47,6 @@ export default function SalesReportPage() {
     }
   };
 
-  const salesColumns = [
-    {
-      title: '日期',
-      colKey: 'date',
-    },
-    {
-      title: '订单数',
-      colKey: 'totalOrders',
-    },
-    {
-      title: '销售金额',
-      colKey: 'totalSales',
-      cell: ({ row }: { row: SalesReportData }) => (
-        <span>¥{row.totalSales.toFixed(2)}</span>
-      )
-    },
-    {
-      title: '商品数量',
-      colKey: 'totalItemsSold',
-    }
-  ];
-
-  const rankingColumns = [
-    {
-      title: '排名',
-      colKey: 'rank',
-      cell: ({ rowIndex }: { rowIndex: number }) => (
-        <span>{rowIndex + 1}</span>
-      )
-    },
-    {
-      title: '商品名称',
-      colKey: 'productName',
-    },
-    {
-      title: '销售数量',
-      colKey: 'quantitySold',
-    },
-    {
-      title: '销售金额',
-      colKey: 'totalRevenue',
-      cell: ({ row }: { row: ProductSalesRanking }) => (
-        <span>¥{row.totalRevenue.toFixed(2)}</span>
-      )
-    }
-  ];
-
   // 计算汇总数据
   const totalSales = salesData.reduce((sum, day) => sum + day.totalSales, 0);
   const totalOrders = salesData.reduce((sum, day) => sum + day.totalOrders, 0);
@@ -116,16 +69,80 @@ export default function SalesReportPage() {
         </div>
         <Table
           data={salesData}
-          columns={salesColumns}
+          columns={[
+            {
+              title: '日期',
+              colKey: 'date',
+            },
+            {
+              title: '订单数',
+              colKey: 'totalOrders',
+            },
+            {
+              title: '销售金额',
+              colKey: 'totalSales',
+              render: ({ row }: { row: SalesReportData }) => (
+                <span>¥{row.totalSales.toFixed(2)}</span>
+              )
+            },
+            {
+              title: '商品数量',
+              colKey: 'totalItemsSold',
+            }
+          ]}
           rowKey="date"
         />
+        
+        <div style={{ marginTop: '20px', padding: '16px', backgroundColor: '#f5f7fa', borderRadius: '6px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+            <div>
+              <div style={{ fontSize: '14px', color: '#666' }}>总销售额</div>
+              <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#1890ff' }}>¥{totalSales.toFixed(2)}</div>
+            </div>
+            <div>
+              <div style={{ fontSize: '14px', color: '#666' }}>订单总数</div>
+              <div style={{ fontSize: '20px', fontWeight: 'bold' }}>{totalOrders}</div>
+            </div>
+            <div>
+              <div style={{ fontSize: '14px', color: '#666' }}>商品总数</div>
+              <div style={{ fontSize: '20px', fontWeight: 'bold' }}>{totalItemsSold}</div>
+            </div>
+            <div>
+              <div style={{ fontSize: '14px', color: '#666' }}>客单价</div>
+              <div style={{ fontSize: '20px', fontWeight: 'bold' }}>¥{averageOrderValue.toFixed(2)}</div>
+            </div>
+          </div>
+        </div>
       </div>
       
       <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '8px' }}>
         <h2 style={{ fontSize: '20px', marginBottom: '16px' }}>商品销售排行</h2>
         <Table
           data={rankingData}
-          columns={rankingColumns}
+          columns={[
+            {
+              title: '排名',
+              colKey: 'rank',
+              render: ({ rowIndex }: { rowIndex: number }) => (
+                <span>{rowIndex + 1}</span>
+              )
+            },
+            {
+              title: '商品名称',
+              colKey: 'productName',
+            },
+            {
+              title: '销售数量',
+              colKey: 'quantitySold',
+            },
+            {
+              title: '销售金额',
+              colKey: 'totalRevenue',
+              render: ({ row }: { row: ProductSalesRanking }) => (
+                <span>¥{row.totalRevenue.toFixed(2)}</span>
+              )
+            }
+          ]}
           rowKey="productId"
         />
       </div>

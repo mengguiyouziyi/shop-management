@@ -3,7 +3,6 @@ import { Button, Form, Input, Table, Message, Switch, Select } from 'tdesign-rea
 import { StoreService } from '../../services/store';
 import { Store } from '../../types/store';
 import { useAppStore } from '../../store/useAppStore';
-import type { TableColumns } from 'tdesign-react';
 
 export default function StoresPage() {
   const [stores, setStores] = useState<Store[]>([]);
@@ -91,80 +90,6 @@ export default function StoresPage() {
     setCurrentStore(store);
     Message.success(`已切换到店铺: ${store.name}`);
   };
-
-  const columns: Array<TableColumns<Store>> = [
-    {
-      title: '店铺名称',
-      colKey: 'name',
-    },
-    {
-      title: '店铺编码',
-      colKey: 'code',
-    },
-    {
-      title: '层级',
-      colKey: 'level',
-      cell: ({ row }) => (
-        <span>{row.level === 0 ? '总部' : `分店 L${row.level}`}</span>
-      ),
-    },
-    {
-      title: '父级店铺',
-      colKey: 'parentId',
-      cell: ({ row }) => {
-        if (!row.parentId) return <span>无</span>;
-        const parent = stores.find(store => store.id === row.parentId);
-        return <span>{parent ? parent.name : '未知'}</span>;
-      },
-    },
-    {
-      title: '地址',
-      colKey: 'address',
-    },
-    {
-      title: '联系电话',
-      colKey: 'phone',
-    },
-    {
-      title: '状态',
-      colKey: 'isActive',
-      cell: ({ row }) => (
-        <span>{row.isActive ? '启用' : '停用'}</span>
-      ),
-    },
-    {
-      title: '操作',
-      colKey: 'actions',
-      cell: ({ row }) => (
-        <div style={{ display: 'flex', gap: '8px' }}>
-          {(!currentStore || currentStore.id !== row.id) && (
-            <Button 
-              size="small" 
-              onClick={() => handleSetCurrentStore(row)}
-            >
-              设为当前店铺
-            </Button>
-          )}
-          <Button 
-            size="small" 
-            variant="outline"
-            onClick={() => handleEdit(row)}
-          >
-            编辑
-          </Button>
-          <Button 
-            size="small" 
-            theme="danger"
-            variant="outline"
-            onClick={() => handleDelete(row.id)}
-            disabled={row.level === 0 && stores.some(store => store.parentId === row.id)}
-          >
-            删除
-          </Button>
-        </div>
-      ),
-    },
-  ];
 
   // 获取可选的父级店铺（不能选择自己或自己的子店铺作为父级）
   const getParentStoreOptions = () => {
@@ -277,7 +202,79 @@ export default function StoresPage() {
         )}
         <Table
           data={stores}
-          columns={columns}
+          columns={[
+            {
+              title: '店铺名称',
+              colKey: 'name',
+            },
+            {
+              title: '店铺编码',
+              colKey: 'code',
+            },
+            {
+              title: '层级',
+              colKey: 'level',
+              render: ({ row }: { row: Store }) => (
+                <span>{row.level === 0 ? '总部' : `分店 L${row.level}`}</span>
+              ),
+            },
+            {
+              title: '父级店铺',
+              colKey: 'parentId',
+              render: ({ row }: { row: Store }) => {
+                if (!row.parentId) return <span>无</span>;
+                const parent = stores.find(store => store.id === row.parentId);
+                return <span>{parent ? parent.name : '未知'}</span>;
+              },
+            },
+            {
+              title: '地址',
+              colKey: 'address',
+            },
+            {
+              title: '联系电话',
+              colKey: 'phone',
+            },
+            {
+              title: '状态',
+              colKey: 'isActive',
+              render: ({ row }: { row: Store }) => (
+                <span>{row.isActive ? '启用' : '停用'}</span>
+              ),
+            },
+            {
+              title: '操作',
+              colKey: 'actions',
+              render: ({ row }: { row: Store }) => (
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  {(!currentStore || currentStore.id !== row.id) && (
+                    <Button 
+                      size="small" 
+                      onClick={() => handleSetCurrentStore(row)}
+                    >
+                      设为当前店铺
+                    </Button>
+                  )}
+                  <Button 
+                    size="small" 
+                    variant="outline"
+                    onClick={() => handleEdit(row)}
+                  >
+                    编辑
+                  </Button>
+                  <Button 
+                    size="small" 
+                    theme="danger"
+                    variant="outline"
+                    onClick={() => handleDelete(row.id)}
+                    disabled={row.level === 0 && stores.some(store => store.parentId === row.id)}
+                  >
+                    删除
+                  </Button>
+                </div>
+              ),
+            },
+          ]}
           rowKey="id"
         />
       </div>
