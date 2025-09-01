@@ -68,7 +68,7 @@ export default function MembersPage() {
       key: 'balance', 
       title: '余额', 
       dataIndex: 'balance',
-      render: (balance: number) => `¥${balance.toFixed(2)}`
+      render: (balance: number) => `¥${Number(balance).toFixed(2)}`
     },
     { 
       key: 'level', 
