@@ -3,6 +3,7 @@ import { Button, Form, Input, Table, Message, Switch, Select } from 'tdesign-rea
 import { StoreService } from '../../services/store';
 import { Store } from '../../types/store';
 import { useAppStore } from '../../store/useAppStore';
+import type { TableColumns } from 'tdesign-react';
 
 export default function StoresPage() {
   const [stores, setStores] = useState<Store[]>([]);
@@ -91,7 +92,7 @@ export default function StoresPage() {
     Message.success(`已切换到店铺: ${store.name}`);
   };
 
-  const columns = [
+  const columns: Array<TableColumns<Store>> = [
     {
       title: '店铺名称',
       colKey: 'name',
@@ -103,18 +104,18 @@ export default function StoresPage() {
     {
       title: '层级',
       colKey: 'level',
-      cell: ({ row }: { row: Store }) => (
+      cell: ({ row }) => (
         <span>{row.level === 0 ? '总部' : `分店 L${row.level}`}</span>
-      )
+      ),
     },
     {
       title: '父级店铺',
       colKey: 'parentId',
-      cell: ({ row }: { row: Store }) => {
+      cell: ({ row }) => {
         if (!row.parentId) return <span>无</span>;
         const parent = stores.find(store => store.id === row.parentId);
         return <span>{parent ? parent.name : '未知'}</span>;
-      }
+      },
     },
     {
       title: '地址',
@@ -127,14 +128,14 @@ export default function StoresPage() {
     {
       title: '状态',
       colKey: 'isActive',
-      cell: ({ row }: { row: Store }) => (
+      cell: ({ row }) => (
         <span>{row.isActive ? '启用' : '停用'}</span>
-      )
+      ),
     },
     {
       title: '操作',
       colKey: 'actions',
-      cell: ({ row }: { row: Store }) => (
+      cell: ({ row }) => (
         <div style={{ display: 'flex', gap: '8px' }}>
           {(!currentStore || currentStore.id !== row.id) && (
             <Button 
@@ -161,8 +162,8 @@ export default function StoresPage() {
             删除
           </Button>
         </div>
-      )
-    }
+      ),
+    },
   ];
 
   // 获取可选的父级店铺（不能选择自己或自己的子店铺作为父级）
