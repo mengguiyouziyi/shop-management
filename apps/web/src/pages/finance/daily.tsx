@@ -15,7 +15,7 @@ export default function DailyFinancePage() {
     );
 
     const totalOrders = dayOrders.length;
-    const totalIncome = dayOrders.reduce((sum, order) => sum + order.totalAmount, 0);
+    const totalIncome = dayOrders.reduce((sum, order) => sum + (order.totalAmount || 0), 0);
     const totalExpense = dayOrders.reduce((sum, order) => {
       return sum + order.items.reduce((itemSum, item) => {
         const product = products.find(p => p.id === item.productId);
@@ -27,7 +27,7 @@ export default function DailyFinancePage() {
     const orderDetails = dayOrders.map(order => ({
       orderNo: order.id,
       time: new Date(order.createdAt).toLocaleString('zh-CN'),
-      amount: order.totalAmount,
+      amount: order.totalAmount || 0,
       paymentMethod: getPaymentMethodName(order.paymentMethod)
     }));
 
@@ -349,7 +349,7 @@ export default function DailyFinancePage() {
                       fontSize: '14px',
                       fontWeight: 'bold'
                     }}>
-                      ¥{order.amount.toFixed(2)}
+                      ¥{order.amount ? order.amount.toFixed(2) : '0.00'}
                     </td>
                     <td style={{ padding: '12px' }}>
                       <span style={{ 
