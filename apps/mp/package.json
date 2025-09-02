@@ -1,0 +1,26 @@
+{
+  "name": "mini-program",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shop management mini program application",
+  "main": "src/app.js",
+  "scripts": {
+    "dev": "taro build --type weapp --watch",
+    "build": "taro build --type weapp",
+    "build:prod": "taro build --type weapp --prod"
+  },
+  "dependencies": {
+    "@tarojs/components": "^3.6.0",
+    "@tarojs/runtime": "^3.6.0",
+    "@tarojs/taro": "^3.6.0",
+    "@tarojs/react": "^3.6.0",
+    "react": "^18.0.0",
+    "core": "*"
+  },
+  "devDependencies": {
+    "@tarojs/cli": "^3.6.0",
+    "@tarojs/plugin-platform-weapp": "^3.6.0",
+    "@types/react": "^18.0.0",
+    "@types/webpack-env": "^1.18.0"
+  }
+}

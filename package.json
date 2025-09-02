@@ -13,7 +13,9 @@
     "lint": "eslint . --ext .ts,.tsx",
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
     "deploy:staging": "echo 'Deploying to staging environment'",
-    "deploy:prod": "echo 'Deploying to production environment'"
+    "deploy:prod": "echo 'Deploying to production environment'",
+    "dev:mp": "cd apps/mp && npm run dev",
+    "build:mp": "cd apps/mp && npm run build"
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0",
