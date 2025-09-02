@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  shop-management-system:
+    build:
+      context: .
+      dockerfile: Dockerfile.simple
+    container_name: shop-management-system
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    networks:
+      - shop-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  shop_data:
+
+networks:
+  shop-network:
+    driver: bridge

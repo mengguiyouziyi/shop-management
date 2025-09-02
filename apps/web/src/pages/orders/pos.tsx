@@ -1,12 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { useAppStore } from '../../store/useAppStore';
+import { useNavigate } from 'react-router-dom';
 
 export default function POSPage() {
+  const navigate = useNavigate();
   const [cart, setCart] = useState<Array<{product: any, quantity: number}>>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [memberSearch, setMemberSearch] = useState('');
   const [selectedMember, setSelectedMember] = useState<any>(null);
-  const { products, members, addOrder } = useAppStore();
+  const [paymentMethod, setPaymentMethod] = useState('cash');
+  const [discount, setDiscount] = useState(0);
+
+  // 模拟商品数据
+  const products = [
+    { id: '1', name: '苹果iPhone 15', category: '手机', price: 5999, stock: 25, minStock: 5, image: '📱' },
+    { id: '2', name: '小米手机', category: '手机', price: 1499, stock: 42, minStock: 10, image: '📱' },
+    { id: '3', name: '华为平板', category: '平板', price: 999, stock: 18, minStock: 5, image: '📟' },
+    { id: '4', name: 'AirPods', category: '配件', price: 299, stock: 67, minStock: 15, image: '🎧' },
+    { id: '5', name: '无线充电器', category: '配件', price: 89, stock: 34, minStock: 10, image: '🔋' },
+    { id: '6', name: '蓝牙音箱', category: '音响', price: 199, stock: 23, minStock: 8, image: '🔊' },
+    { id: '7', name: '智能手表', category: '穿戴', price: 899, stock: 15, minStock: 5, image: '⌚' },
+    { id: '8', name: '移动电源', category: '配件', price: 59, stock: 56, minStock: 20, image: '🔋' }
+  ];
+
+  // 模拟会员数据
+  const members = [
+    { id: '1', name: '张三', phone: '13800138001', level: '黄金会员', balance: 500, points: 1200 },
+    { id: '2', name: '李四', phone: '13800138002', level: '白金会员', balance: 1200, points: 2800 },
+    { id: '3', name: '王五', phone: '13800138003', level: '普通会员', balance: 200, points: 450 },
+    { id: '4', name: '赵六', phone: '13800138004', level: '钻石会员', balance: 2000, points: 5200 }
+  ];
 
   const filteredProducts = products.filter(product => 
     product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -65,8 +87,19 @@ export default function POSPage() {
     ));
   };
 
-  const getTotal = () => {
+  const getSubtotal = () => {
     return cart.reduce((total, item) => total + (item.product.price * item.quantity), 0);
+  };
+
+  const getDiscount = () => {
+    const memberDiscount = selectedMember ? (selectedMember.level === '钻石会员' ? 0.15 : 
+                                           selectedMember.level === '白金会员' ? 0.1 : 
+                                           selectedMember.level === '黄金会员' ? 0.05 : 0) : 0;
+    return getSubtotal() * memberDiscount + discount;
+  };
+
+  const getTotal = () => {
+    return getSubtotal() - getDiscount();
   };
 
   const getTotalItems = () => {
@@ -76,519 +109,513 @@ export default function POSPage() {
   const handleCheckout = () => {
     if (cart.length === 0) return;
     
-    const orderItems = cart.map(item => ({
-      productId: item.product.id,
-      quantity: item.quantity,
-      unitPrice: item.product.price,
-      totalPrice: item.product.price * item.quantity
-    }));
-
-    addOrder({
-      memberId: selectedMember?.id,
-      items: orderItems,
-      subtotal: getTotal(),
-      discount: 0,
-      tax: 0,
-      total: getTotal(),
-      paymentMethod: 'cash' as const,
-      status: 'completed' as const
-    });
-
+    // 模拟结账成功
+    alert(`结账成功！总金额：¥${getTotal().toFixed(2)}`);
     setCart([]);
     setSelectedMember(null);
     setMemberSearch('');
-    alert('结账成功！');
+    setDiscount(0);
   };
 
   return (
     <div style={{ 
-      padding: '20px',
-      fontFamily: 'Arial, sans-serif'
+      background: '#f5f7fa',
+      minHeight: '100vh',
+      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     }}>
-      {/* 页面标题 */}
-      <div style={{ 
-        backgroundColor: '#fff',
-        border: '1px solid #e8e8e8',
-        borderRadius: '8px',
-        padding: '24px',
-        marginBottom: '20px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+      {/* 头部 */}
+      <div style={{
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        color: 'white',
+        padding: '20px',
+        boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
       }}>
-        <h1 style={{ margin: '0', color: '#333', fontSize: '24px', fontWeight: 'bold' }}>
-          💰 POS收银系统
-        </h1>
-        <p style={{ margin: '8px 0 0 0', color: '#666', fontSize: '14px' }}>
-          快速收银结账服务
-        </p>
-      </div>
-
-      <div style={{ display: 'flex', gap: '20px', marginBottom: '20px' }}>
-        {/* 左侧：会员选择 */}
-        <div style={{ flex: 1 }}>
-          <div style={{ 
-            backgroundColor: '#fff',
-            border: '1px solid #e8e8e8',
-            borderRadius: '8px',
-            padding: '20px',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-          }}>
-            <h2 style={{ margin: '0 0 16px 0', color: '#333', fontSize: '18px', fontWeight: 'bold' }}>
-              👤 选择会员
-            </h2>
-            
-            <input
-              type="text"
-              placeholder="搜索会员姓名或手机号"
-              value={memberSearch}
-              onChange={(e) => setMemberSearch(e.target.value)}
-              style={{ 
-                width: '100%', 
-                padding: '10px 12px',
-                border: '1px solid #d9d9d9',
-                borderRadius: '6px',
-                marginBottom: '12px',
-                fontSize: '14px'
-              }}
-            />
-            
-            {selectedMember && (
-              <div style={{ 
-                background: '#e6f7ff',
-                border: '1px solid #91d5ff',
-                padding: '12px',
-                borderRadius: '6px',
-                marginBottom: '12px'
-              }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
-                  <div>
-                    <p style={{ margin: '0 0 4px 0', fontWeight: 'bold' }}>
-                      {selectedMember.name}
-                    </p>
-                    <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#666' }}>
-                      等级: {selectedMember.level}
-                    </p>
-                    <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#666' }}>
-                      余额: ¥{selectedMember.balance.toFixed(2)}
-                    </p>
-                    <p style={{ margin: '0', fontSize: '12px', color: '#666' }}>
-                      积分: {selectedMember.points}
-                    </p>
-                  </div>
-                  <button 
-                    onClick={() => setSelectedMember(null)}
-                    style={{ 
-                      background: '#ff4d4f',
-                      color: 'white',
-                      border: 'none',
-                      padding: '4px 8px',
-                      borderRadius: '4px',
-                      cursor: 'pointer',
-                      fontSize: '12px'
-                    }}
-                  >
-                    取消
-                  </button>
+        <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <h1 style={{ margin: '0', fontSize: '24px', fontWeight: '300' }}>
+                💰 POS收银系统
+              </h1>
+              <p style={{ margin: '5px 0 0 0', fontSize: '14px', opacity: '0.9' }}>
+                快速收银结账服务
+              </p>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: '12px', opacity: '0.8 }}>当前时间</div>
+                <div style={{ fontSize: '16px', fontWeight: '500' }}>
+                  {new Date().toLocaleTimeString()}
                 </div>
               </div>
-            )}
-            
-            <div style={{ maxHeight: '250px', overflowY: 'auto' }}>
-              {filteredMembers.map(member => (
-                <div 
-                  key={member.id} 
-                  style={{ 
-                    padding: '12px',
-                    border: '1px solid #e8e8e8',
-                    borderRadius: '6px',
-                    marginBottom: '8px',
-                    cursor: 'pointer',
-                    background: selectedMember?.id === member.id ? '#e6f7ff' : 'white',
-                    transition: 'background-color 0.3s'
-                  }}
-                  onClick={() => setSelectedMember(member)}
-                  onMouseEnter={(e) => {
-                    if (selectedMember?.id !== member.id) {
-                      e.currentTarget.style.backgroundColor = '#f5f5f5';
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (selectedMember?.id !== member.id) {
-                      e.currentTarget.style.backgroundColor = 'white';
-                    }
-                  }}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <div>
-                      <strong style={{ fontSize: '14px' }}>{member.name}</strong>
-                      <div style={{ fontSize: '12px', color: '#666', marginTop: '2px' }}>
-                        {member.phone}
-                      </div>
-                      <div style={{ fontSize: '12px', color: '#52c41a', marginTop: '2px' }}>
-                        余额: ¥{member.balance.toFixed(2)}
-                      </div>
-                    </div>
-                    <div style={{ 
-                      fontSize: '12px', 
-                      color: '#666',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'flex-end'
-                    }}>
-                      <span style={{ 
-                        backgroundColor: '#1890ff',
-                        color: 'white',
-                        padding: '2px 6px',
-                        borderRadius: '10px',
-                        fontSize: '10px'
-                      }}>
-                        {member.level}
-                      </span>
-                      <span style={{ marginTop: '4px' }}>
-                        {member.points} 积分
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))}
+              <button 
+                onClick={() => navigate('/')}
+                style={{
+                  background: 'rgba(255,255,255,0.2)',
+                  border: '1px solid rgba(255,255,255,0.3)',
+                  color: 'white',
+                  padding: '8px 16px',
+                  borderRadius: '20px',
+                  cursor: 'pointer',
+                  fontSize: '12px'
+                }}
+              >
+                返回首页
+              </button>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* 右侧：购物车 */}
-        <div style={{ flex: 2 }}>
-          <div style={{ 
-            backgroundColor: '#fff',
-            border: '1px solid #e8e8e8',
-            borderRadius: '8px',
-            padding: '20px',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-          }}>
-            <div style={{ 
-              display: 'flex', 
-              justifyContent: 'space-between', 
-              alignItems: 'center',
-              marginBottom: '16px'
+      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '20px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '300px 1fr 380px', gap: '20px' }}>
+          {/* 左侧：会员选择 */}
+          <div>
+            <div style={{
+              background: 'white',
+              borderRadius: '12px',
+              padding: '20px',
+              boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
+              height: 'fit-content'
             }}>
-              <h2 style={{ margin: '0', color: '#333', fontSize: '18px', fontWeight: 'bold' }}>
-                🛒 购物车
+              <h2 style={{ margin: '0 0 16px 0', color: '#333', fontSize: '16px', fontWeight: '600' }}>
+                👤 选择会员
               </h2>
-              <span style={{ 
-                backgroundColor: '#1890ff',
-                color: 'white',
-                padding: '4px 8px',
-                borderRadius: '12px',
-                fontSize: '12px',
-                fontWeight: 'bold'
-              }}>
-                {getTotalItems()} 件商品
-              </span>
-            </div>
-            
-            <div style={{ 
-              border: '1px solid #e8e8e8', 
-              borderRadius: '6px',
-              padding: '16px',
-              minHeight: '350px',
-              backgroundColor: '#fafafa'
-            }}>
-              {cart.length === 0 ? (
+              
+              <input
+                type="text"
+                placeholder="搜索会员姓名或手机号"
+                value={memberSearch}
+                onChange={(e) => setMemberSearch(e.target.value)}
+                style={{ 
+                  width: '100%', 
+                  padding: '10px 12px',
+                  border: '1px solid #e1e8ed',
+                  borderRadius: '8px',
+                  marginBottom: '12px',
+                  fontSize: '13px',
+                  outline: 'none',
+                  transition: 'border-color 0.3s'
+                }}
+                onFocus={(e) => e.target.style.borderColor = '#667eea'}
+                onBlur={(e) => e.target.style.borderColor = '#e1e8ed'}
+              />
+              
+              {selectedMember && (
                 <div style={{ 
-                  textAlign: 'center', 
-                  color: '#999',
-                  padding: '60px 20px'
+                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  color: 'white',
+                  padding: '16px',
+                  borderRadius: '12px',
+                  marginBottom: '12px'
                 }}>
-                  <div style={{ fontSize: '48px', marginBottom: '16px' }}>🛒</div>
-                  <p style={{ fontSize: '16px' }}>购物车为空</p>
-                  <p style={{ fontSize: '14px', marginTop: '8px' }}>点击下方商品添加到购物车</p>
-                </div>
-              ) : (
-                <div>
-                  {cart.map(item => (
-                    <div key={item.product.id} style={{ 
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      marginBottom: '12px',
-                      padding: '12px',
-                      background: 'white',
-                      borderRadius: '6px',
-                      border: '1px solid #e8e8e8',
-                      transition: 'transform 0.3s'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-1px)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                    }}>
-                      <div style={{ flex: 1 }}>
-                        <strong style={{ fontSize: '14px' }}>{item.product.name}</strong>
-                        <div style={{ fontSize: '12px', color: '#666', marginTop: '2px' }}>
-                          ¥{item.product.price} × {item.quantity}
-                        </div>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <button 
-                          onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                          style={{ 
-                            width: '28px',
-                            height: '28px',
-                            border: '1px solid #d9d9d9',
-                            background: 'white',
-                            borderRadius: '4px',
-                            cursor: 'pointer',
-                            fontSize: '14px',
-                            fontWeight: 'bold'
-                          }}
-                        >
-                          -
-                        </button>
-                        <span style={{ 
-                          minWidth: '30px', 
-                          textAlign: 'center',
-                          fontWeight: 'bold'
-                        }}>
-                          {item.quantity}
-                        </span>
-                        <button 
-                          onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                          style={{ 
-                            width: '28px',
-                            height: '28px',
-                            border: '1px solid #d9d9d9',
-                            background: 'white',
-                            borderRadius: '4px',
-                            cursor: 'pointer',
-                            fontSize: '14px',
-                            fontWeight: 'bold'
-                          }}
-                        >
-                          +
-                        </button>
-                        <button 
-                          onClick={() => removeFromCart(item.product.id)}
-                          style={{ 
-                            background: '#ff4d4f',
-                            color: 'white',
-                            border: 'none',
-                            padding: '6px 12px',
-                            borderRadius: '4px',
-                            cursor: 'pointer',
-                            fontSize: '12px'
-                          }}
-                        >
-                          删除
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                  
-                  <div style={{ 
-                    borderTop: '2px solid #e8e8e8',
-                    paddingTop: '16px',
-                    marginTop: '16px',
-                    textAlign: 'right'
-                  }}>
-                    <div style={{ marginBottom: '8px' }}>
-                      <span style={{ fontSize: '14px', color: '#666' }}>商品总计: </span>
-                      <span style={{ fontSize: '16px', fontWeight: 'bold' }}>
-                        ¥{getTotal().toFixed(2)}
-                      </span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start' }}>
+                    <div>
+                      <p style={{ margin: '0 0 8px 0', fontWeight: '600', fontSize: '14px' }}>
+                        {selectedMember.name}
+                      </p>
+                      <p style={{ margin: '0 0 4px 0', fontSize: '11px', opacity: '0.9' }}>
+                        等级: {selectedMember.level}
+                      </p>
+                      <p style={{ margin: '0 0 4px 0', fontSize: '11px', opacity: '0.9' }}>
+                        余额: ¥{selectedMember.balance.toFixed(2)}
+                      </p>
+                      <p style={{ margin: '0', fontSize: '11px', opacity: '0.9' }}>
+                        积分: {selectedMember.points}
+                      </p>
                     </div>
                     <button 
-                      onClick={handleCheckout}
-                      disabled={cart.length === 0}
+                      onClick={() => setSelectedMember(null)}
                       style={{ 
-                        background: cart.length === 0 ? '#d9d9d9' : '#52c41a',
+                        background: 'rgba(255,255,255,0.2)',
                         color: 'white',
                         border: 'none',
-                        padding: '12px 24px',
+                        padding: '4px 8px',
                         borderRadius: '6px',
-                        cursor: cart.length === 0 ? 'not-allowed' : 'pointer',
-                        fontSize: '16px',
-                        fontWeight: 'bold',
-                        transition: 'background-color 0.3s'
-                      }}
-                      onMouseEnter={(e) => {
-                        if (cart.length > 0) {
-                          e.currentTarget.style.backgroundColor = '#73d13d';
-                        }
-                      }}
-                      onMouseLeave={(e) => {
-                        if (cart.length > 0) {
-                          e.currentTarget.style.backgroundColor = '#52c41a';
-                        }
+                        cursor: 'pointer',
+                        fontSize: '11px'
                       }}
                     >
-                      💳 结账 (¥{getTotal().toFixed(2)})
+                      取消
                     </button>
                   </div>
                 </div>
               )}
+              
+              <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                {filteredMembers.map(member => (
+                  <div 
+                    key={member.id} 
+                    style={{ 
+                      padding: '12px',
+                      border: '1px solid #e1e8ed',
+                      borderRadius: '8px',
+                      marginBottom: '8px',
+                      cursor: 'pointer',
+                      background: selectedMember?.id === member.id ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : 'white',
+                      color: selectedMember?.id === member.id ? 'white' : 'inherit',
+                      transition: 'all 0.3s'
+                    }}
+                    onClick={() => setSelectedMember(member)}
+                  >
+                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <div>
+                        <strong style={{ fontSize: '13px' }}>{member.name}</strong>
+                        <div style={{ fontSize: '11px', opacity: selectedMember?.id === member.id ? 0.8 : 0.6, marginTop: '2px' }}>
+                          {member.phone}
+                        </div>
+                        <div style={{ fontSize: '11px', marginTop: '2px' }}>
+                          余额: ¥{member.balance.toFixed(2)}
+                        </div>
+                      </div>
+                      <div style={{ 
+                        fontSize: '11px', 
+                        opacity: selectedMember?.id === member.id ? 0.9 : 0.6,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'flex-end'
+                      }}>
+                        <span style={{ 
+                          background: selectedMember?.id === member.id ? 'rgba(255,255,255,0.2)' : '#667eea',
+                          color: 'white',
+                          padding: '2px 6px',
+                          borderRadius: '10px',
+                          fontSize: '9px'
+                        }}>
+                          {member.level}
+                        </span>
+                        <span style={{ marginTop: '4px' }}>
+                          {member.points} 积分
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* 商品列表 */}
-      <div style={{ 
-        backgroundColor: '#fff',
-        border: '1px solid #e8e8e8',
-        borderRadius: '8px',
-        padding: '20px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-      }}>
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          marginBottom: '16px'
-        }}>
-          <h2 style={{ margin: '0', color: '#333', fontSize: '18px', fontWeight: 'bold' }}>
-            📦 商品列表
-          </h2>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <input
-              type="text"
-              placeholder="搜索商品名称或分类"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              style={{ 
-                width: '250px', 
-                padding: '8px 12px',
-                border: '1px solid #d9d9d9',
-                borderRadius: '6px',
-                fontSize: '14px'
-              }}
-            />
-            <span style={{ color: '#666', fontSize: '14px' }}>
-              找到 {filteredProducts.length} 个商品
-            </span>
-          </div>
-        </div>
-        
-        <div style={{ 
-          display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', 
-          gap: '16px'
-        }}>
-          {filteredProducts.map(product => (
-            <div 
-              key={product.id} 
-              style={{ 
-                border: '1px solid #e8e8e8',
-                borderRadius: '8px',
-                padding: '16px',
-                background: 'white',
-                cursor: 'pointer',
-                transition: 'all 0.3s',
-                position: 'relative'
-              }}
-              onClick={() => addToCart(product)}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = 'none';
-              }}
-            >
-              {product.stock <= 0 && (
-                <div style={{
-                  position: 'absolute',
-                  top: '0',
-                  left: '0',
-                  right: '0',
-                  bottom: '0',
-                  backgroundColor: 'rgba(255, 77, 79, 0.8)',
-                  borderRadius: '8px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: 'white',
-                  fontWeight: 'bold',
-                  fontSize: '14px'
-                }}>
-                缺货
-                </div>
-              )}
-              
-              <h3 style={{ margin: '0 0 8px 0', fontSize: '14px', fontWeight: 'bold' }}>
-                {product.name}
-              </h3>
-              <p style={{ margin: '4px 0', color: '#666', fontSize: '12px' }}>
-                {product.category}
-              </p>
+          {/* 中间：商品列表 */}
+          <div>
+            <div style={{
+              background: 'white',
+              borderRadius: '12px',
+              padding: '20px',
+              boxShadow: '0 2px 10px rgba(0,0,0,0.05)'
+            }}>
               <div style={{ 
                 display: 'flex', 
                 justifyContent: 'space-between', 
                 alignItems: 'center',
-                margin: '8px 0'
+                marginBottom: '16px'
               }}>
-                <span style={{ 
-                  color: '#52c41a', 
-                  fontSize: '16px', 
-                  fontWeight: 'bold' 
+                <h2 style={{ margin: '0', color: '#333', fontSize: '16px', fontWeight: '600' }}>
+                  📦 商品列表
+                </h2>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <input
+                    type="text"
+                    placeholder="搜索商品名称或分类"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    style={{ 
+                      width: '200px', 
+                      padding: '8px 12px',
+                      border: '1px solid #e1e8ed',
+                      borderRadius: '8px',
+                      fontSize: '13px',
+                      outline: 'none',
+                      transition: 'border-color 0.3s'
+                    }}
+                    onFocus={(e) => e.target.style.borderColor = '#667eea'}
+                    onBlur={(e) => e.target.style.borderColor = '#e1e8ed'}
+                  />
+                  <span style={{ color: '#666', fontSize: '12px' }}>
+                    {filteredProducts.length} 个商品
+                  </span>
+                </div>
+              </div>
+              
+              <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', 
+                gap: '12px'
+              }}>
+                {filteredProducts.map(product => (
+                  <div 
+                    key={product.id} 
+                    style={{ 
+                      border: '1px solid #e1e8ed',
+                      borderRadius: '12px',
+                      padding: '16px',
+                      background: 'white',
+                      cursor: 'pointer',
+                      transition: 'all 0.3s',
+                      position: 'relative',
+                      textAlign: 'center'
+                    }}
+                    onClick={() => addToCart(product)}
+                  >
+                    {product.stock <= 0 && (
+                      <div style={{
+                        position: 'absolute',
+                        top: '0',
+                        left: '0',
+                        right: '0',
+                        bottom: '0',
+                        backgroundColor: 'rgba(0,0,0,0.7)',
+                        borderRadius: '12px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: 'white',
+                        fontWeight: 'bold',
+                        fontSize: '12px'
+                      }}>
+                        缺货
+                      </div>
+                    )}
+                    
+                    <div style={{ fontSize: '32px', marginBottom: '8px' }}>
+                      {product.image}
+                    </div>
+                    <h3 style={{ margin: '0 0 4px 0', fontSize: '12px', fontWeight: '600' }}>
+                      {product.name}
+                    </h3>
+                    <p style={{ margin: '2px 0', color: '#666', fontSize: '10px' }}>
+                      {product.category}
+                    </p>
+                    <div style={{ 
+                      color: '#667eea', 
+                      fontSize: '14px', 
+                      fontWeight: 'bold',
+                      margin: '4px 0'
+                    }}>
+                      ¥{product.price.toFixed(2)}
+                    </div>
+                    <div style={{ 
+                      fontSize: '10px',
+                      color: product.stock <= product.minStock ? '#ff4d4f' : '#52c41a',
+                      backgroundColor: product.stock <= product.minStock ? '#fff2f0' : '#f6ffed',
+                      padding: '2px 6px',
+                      borderRadius: '8px',
+                      display: 'inline-block'
+                    }}>
+                      库存: {product.stock}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              {filteredProducts.length === 0 && (
+                <div style={{ 
+                  textAlign: 'center', 
+                  padding: '40px',
+                  color: '#999'
                 }}>
-                  ¥{product.price.toFixed(2)}
-                </span>
+                  <div style={{ fontSize: '48px', marginBottom: '16px' }}>🔍</div>
+                  <p>没有找到匹配的商品</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* 右侧：购物车 */}
+          <div>
+            <div style={{
+              background: 'white',
+              borderRadius: '12px',
+              padding: '20px',
+              boxShadow: '0 2px 10px rgba(0,0,0,0.05)',
+              height: 'fit-content',
+              position: 'sticky',
+              top: '20px'
+            }}>
+              <div style={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center',
+                marginBottom: '16px'
+              }}>
+                <h2 style={{ margin: '0', color: '#333', fontSize: '16px', fontWeight: '600' }}>
+                  🛒 购物车
+                </h2>
                 <span style={{ 
-                  color: '#666', 
-                  fontSize: '12px',
-                  backgroundColor: product.stock <= product.minStock ? '#fff7e6' : '#f6ffed',
-                  padding: '2px 6px',
-                  borderRadius: '10px'
+                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  color: 'white',
+                  padding: '4px 8px',
+                  borderRadius: '12px',
+                  fontSize: '11px',
+                  fontWeight: 'bold'
                 }}>
-                  库存: {product.stock}
+                  {getTotalItems()} 件
                 </span>
               </div>
               
-              <button 
-                onClick={(e) => {
-                  e.stopPropagation();
-                  addToCart(product);
-                }}
-                disabled={product.stock <= 0}
-                style={{ 
-                  width: '100%',
-                  background: product.stock <= 0 ? '#d9d9d9' : '#1890ff',
-                  color: 'white',
-                  border: 'none',
-                  padding: '8px',
-                  borderRadius: '4px',
-                  cursor: product.stock <= 0 ? 'not-allowed' : 'pointer',
-                  fontSize: '12px',
-                  fontWeight: 'bold',
-                  transition: 'background-color 0.3s'
-                }}
-                onMouseEnter={(e) => {
-                  if (product.stock > 0) {
-                    e.currentTarget.style.backgroundColor = '#40a9ff';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (product.stock > 0) {
-                    e.currentTarget.style.backgroundColor = '#1890ff';
-                  }
-                }}
-              >
-                {product.stock <= 0 ? '缺货' : '加入购物车'}
-              </button>
+              <div style={{ 
+                border: '1px solid #e1e8ed', 
+                borderRadius: '8px',
+                padding: '16px',
+                minHeight: '300px',
+                backgroundColor: '#fafbfc'
+              }}>
+                {cart.length === 0 ? (
+                  <div style={{ 
+                    textAlign: 'center', 
+                    color: '#999',
+                    padding: '40px 20px'
+                  }}>
+                    <div style={{ fontSize: '48px', marginBottom: '16px' }}>🛒</div>
+                    <p style={{ fontSize: '14px' }}>购物车为空</p>
+                    <p style={{ fontSize: '12px', marginTop: '8px' }}>点击商品添加到购物车</p>
+                  </div>
+                ) : (
+                  <div>
+                    {cart.map(item => (
+                      <div key={item.product.id} style={{ 
+                        marginBottom: '12px',
+                        padding: '12px',
+                        background: 'white',
+                        borderRadius: '8px',
+                        border: '1px solid #e1e8ed'
+                      }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                          <strong style={{ fontSize: '12px' }}>{item.product.name}</strong>
+                          <button 
+                            onClick={() => removeFromCart(item.product.id)}
+                            style={{ 
+                              background: '#ff4d4f',
+                              color: 'white',
+                              border: 'none',
+                              padding: '2px 6px',
+                              borderRadius: '4px',
+                              cursor: 'pointer',
+                              fontSize: '10px'
+                            }}
+                          >
+                            删除
+                          </button>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <span style={{ fontSize: '11px', color: '#666' }}>
+                            ¥{item.product.price} × {item.quantity}
+                          </span>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                            <button 
+                              onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                              style={{ 
+                                width: '20px',
+                                height: '20px',
+                                border: '1px solid #e1e8ed',
+                                background: 'white',
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                                fontSize: '12px',
+                                fontWeight: 'bold'
+                              }}
+                            >
+                              -
+                            </button>
+                            <span style={{ 
+                              minWidth: '20px', 
+                              textAlign: 'center',
+                              fontSize: '11px',
+                              fontWeight: 'bold'
+                            }}>
+                              {item.quantity}
+                            </span>
+                            <button 
+                              onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                              style={{ 
+                                width: '20px',
+                                height: '20px',
+                                border: '1px solid #e1e8ed',
+                                background: 'white',
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                                fontSize: '12px',
+                                fontWeight: 'bold'
+                              }}
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    
+                    <div style={{ 
+                      borderTop: '2px solid #e1e8ed',
+                      paddingTop: '16px',
+                      marginTop: '16px'
+                    }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                        <span style={{ fontSize: '12px', color: '#666' }}>商品总计:</span>
+                        <span style={{ fontSize: '14px', fontWeight: 'bold' }}>
+                          ¥{getSubtotal().toFixed(2)}
+                        </span>
+                      </div>
+                      {selectedMember && (
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                          <span style={{ fontSize: '12px', color: '#666' }}>会员折扣:</span>
+                          <span style={{ fontSize: '14px', color: '#52c41a', fontWeight: 'bold' }}>
+                            -¥{getDiscount().toFixed(2)}
+                          </span>
+                        </div>
+                      )}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
+                        <span style={{ fontSize: '14px', color: '#333', fontWeight: 'bold' }}>总计:</span>
+                        <span style={{ fontSize: '18px', color: '#667eea', fontWeight: 'bold' }}>
+                          ¥{getTotal().toFixed(2)}
+                        </span>
+                      </div>
+                      
+                      <div style={{ marginBottom: '12px' }}>
+                        <label style={{ fontSize: '12px', color: '#666', display: 'block', marginBottom: '4px' }}>
+                          支付方式:
+                        </label>
+                        <select 
+                          value={paymentMethod}
+                          onChange={(e) => setPaymentMethod(e.target.value)}
+                          style={{ 
+                            width: '100%',
+                            padding: '8px',
+                            border: '1px solid #e1e8ed',
+                            borderRadius: '6px',
+                            fontSize: '12px'
+                          }}
+                        >
+                          <option value="cash">现金</option>
+                          <option value="card">银行卡</option>
+                          <option value="wechat">微信支付</option>
+                          <option value="alipay">支付宝</option>
+                        </select>
+                      </div>
+                      
+                      <button 
+                        onClick={handleCheckout}
+                        disabled={cart.length === 0}
+                        style={{ 
+                          width: '100%',
+                          background: cart.length === 0 ? '#d9d9d9' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                          color: 'white',
+                          border: 'none',
+                          padding: '12px',
+                          borderRadius: '8px',
+                          cursor: cart.length === 0 ? 'not-allowed' : 'pointer',
+                          fontSize: '14px',
+                          fontWeight: 'bold',
+                          transition: 'all 0.3s'
+                        }}
+                      >
+                        💳 结账 (¥{getTotal().toFixed(2)})
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
-          ))}
-        </div>
-        
-        {filteredProducts.length === 0 && (
-          <div style={{ 
-            textAlign: 'center', 
-            padding: '40px',
-            color: '#999'
-          }}>
-            <div style={{ fontSize: '48px', marginBottom: '16px' }}>🔍</div>
-            <p>没有找到匹配的商品</p>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

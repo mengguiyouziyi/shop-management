@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  shop-management-system:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: shop-management-system
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - VITE_APP_VERSION=${APP_VERSION:-latest}
+    volumes:
+      - nginx_logs:/var/log/nginx
+    networks:
+      - shop-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # 可选：添加 Redis 用于缓存
+  redis:
+    image: redis:7-alpine
+    container_name: shop-redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    networks:
+      - shop-network
+    command: redis-server --appendonly yes
+
+  # 可选：添加 PostgreSQL 用于生产数据库
+  postgres:
+    image: postgres:15-alpine
+    container_name: shop-postgres
+    environment:
+      POSTGRES_DB: shop_management
+      POSTGRES_USER: shopuser
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-shoppass}
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - shop-network
+
+volumes:
+  nginx_logs:
+  redis_data:
+  postgres_data:
+
+networks:
+  shop-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
