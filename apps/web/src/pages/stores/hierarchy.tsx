@@ -113,7 +113,6 @@ export default function StoreHierarchyPage() {
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '8px' }}>
               <span style={{ 
                 fontSize: '12px', 
-                color: '#666',
                 backgroundColor: level === 0 ? '#dbeafe' : '#fef3c7',
                 color: level === 0 ? '#1e40af' : '#d97706',
                 padding: '2px 8px',
