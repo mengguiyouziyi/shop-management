@@ -1,0 +1,64 @@
+.product-detail {
+  padding: 20px;
+}
+
+.product-header {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.product-name {
+  font-size: 24px;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.product-price {
+  font-size: 20px;
+  color: #FF3B30;
+  font-weight: bold;
+}
+
+.product-info {
+  margin-bottom: 30px;
+}
+
+.info-item {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.info-label {
+  width: 80px;
+  font-weight: bold;
+}
+
+.info-value {
+  flex: 1;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.edit-btn, .delete-btn {
+  flex: 1;
+  margin: 0 10px;
+  border: none;
+  padding: 15px;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.edit-btn {
+  background-color: #007AFF;
+  color: white;
+}
+
+.delete-btn {
+  background-color: #FF3B30;
+  color: white;
+}

@@ -1,6 +1,13 @@
 export default {
   pages: [
-    'pages/index/index'
+    'pages/index/index',
+    'pages/products/list/index',
+    'pages/products/detail/index',
+    'pages/products/create/index',
+    'pages/orders/list/index',
+    'pages/orders/detail/index',
+    'pages/members/list/index',
+    'pages/members/detail/index'
   ],
   window: {
     backgroundTextStyle: 'light',

@@ -1,0 +1,94 @@
+.member-detail {
+  padding: 20px;
+}
+
+.member-header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.member-name {
+  font-size: 24px;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.member-level {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 14px;
+  background-color: #FF9500;
+  color: white;
+}
+
+.member-info {
+  margin-bottom: 30px;
+}
+
+.info-item {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.info-label {
+  width: 100px;
+  font-weight: bold;
+}
+
+.info-value {
+  flex: 1;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  display: block;
+}
+
+.points-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+}
+
+.points-label {
+  font-size: 16px;
+}
+
+.points-value {
+  font-size: 24px;
+  font-weight: bold;
+  color: #FF9500;
+}
+
+.points-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.add-points-btn, .reduce-points-btn {
+  flex: 1;
+  margin: 0 5px;
+  border: none;
+  padding: 15px;
+  border-radius: 5px;
+  font-size: 16px;
+  color: white;
+}
+
+.add-points-btn {
+  background-color: #34C759;
+}
+
+.reduce-points-btn {
+  background-color: #FF3B30;
+}

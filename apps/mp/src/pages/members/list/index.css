@@ -1,0 +1,57 @@
+.member-list {
+  padding: 20px;
+}
+
+.header {
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.member-scroll {
+  height: calc(100vh - 120px);
+}
+
+.member-item {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  background-color: #fff;
+}
+
+.member-info {
+  margin-bottom: 10px;
+}
+
+.member-name {
+  font-size: 18px;
+  font-weight: bold;
+  display: block;
+}
+
+.member-phone {
+  font-size: 14px;
+  color: #666;
+}
+
+.member-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.member-points {
+  font-size: 16px;
+  color: #FF9500;
+  font-weight: bold;
+}
+
+.member-level {
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-size: 12px;
+  background-color: #007AFF;
+  color: white;
+}
