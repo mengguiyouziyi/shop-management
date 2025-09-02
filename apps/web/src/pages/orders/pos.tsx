@@ -142,7 +142,7 @@ export default function POSPage() {
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
               <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '12px', opacity: '0.8 }}>当前时间</div>
+                <div style={{ fontSize: '12px', opacity: '0.8' }}>当前时间</div>
                 <div style={{ fontSize: '16px', fontWeight: '500' }}>
                   {new Date().toLocaleTimeString()}
                 </div>
