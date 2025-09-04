@@ -1,0 +1,156 @@
+---
+description: Web项目开发规则和最佳实践
+globs: "apps/web/**/*"
+alwaysApply: true
+---
+# Web项目开发规则
+
+## 项目结构规范
+
+### 页面结构
+```
+pages/
+├── moduleName/
+│   ├── index.tsx      # 页面逻辑
+│   ├── index.css      # 页面样式
+│   └── components/    # 页面级组件
+```
+
+### 组件结构
+```
+components/
+├── componentName/
+│   ├── index.tsx      # 组件逻辑
+│   └── index.css      # 组件样式
+```
+
+## 编码规范
+
+### 1. 命名规范
+- 文件名：小写字母，多个单词用连字符分隔 (kebab-case)
+- 组件名：大驼峰命名 (PascalCase)
+- 变量名：小驼峰命名 (camelCase)
+- 常量名：大写字母，单词间用下划线分隔 (UPPER_CASE)
+- 接口名：大驼峰命名，以I开头 (IInterfaceName)
+
+### 2. TypeScript使用规范
+- 所有组件和函数都应有明确的类型定义
+- 使用interface定义对象类型
+- 使用type定义联合类型和原始类型别名
+- 合理使用泛型提高代码复用性
+
+### 3. 组件开发规范
+- 优先使用函数组件和Hooks
+- 组件属性需要完整的TypeScript类型定义
+- 组件应具有清晰的接口和文档注释
+- 避免过大的组件，适时拆分
+- 合理使用React.memo优化性能
+
+### 4. 样式规范
+- 使用Tailwind CSS进行样式开发
+- 避免使用内联样式
+- 复杂样式可以使用CSS Modules
+- 响应式设计使用Tailwind的响应式类
+
+## React和Hooks使用规范
+
+### 1. Hooks使用
+- useState用于管理组件状态
+- useEffect处理副作用
+- useContext用于跨组件状态共享
+- useReducer处理复杂状态逻辑
+- 自定义Hooks提取可复用逻辑
+
+### 2. 性能优化
+- 使用useMemo缓存计算结果
+- 使用useCallback缓存函数引用
+- 合理使用React.lazy和Suspense进行代码分割
+
+## 路由管理
+
+### 1. React Router
+- 使用声明式路由配置
+- 合理使用嵌套路由
+- 路由守卫实现权限控制
+- 路由懒加载优化性能
+
+## 状态管理
+
+### 1. Redux Toolkit
+- 使用Redux Toolkit简化Redux使用
+- 合理划分slice
+- 异步操作使用createAsyncThunk
+- 避免过度使用全局状态
+
+## API请求
+
+### 1. 数据获取
+- 使用Axios或Fetch进行网络请求
+- 统一请求拦截和响应处理
+- 合理使用React Query或SWR进行数据缓存
+- 错误处理和加载状态管理
+
+## 性能优化
+
+### 1. 代码分割
+- 路由级别代码分割
+- 组件级别懒加载
+- 第三方库按需引入
+
+### 2. 图片优化
+- 使用适当的图片格式
+- 实现图片懒加载
+- 响应式图片处理
+
+### 3. 打包优化
+- Tree shaking移除未使用代码
+- 代码压缩和混淆
+- 静态资源压缩
+
+## 测试
+
+### 1. 单元测试
+- 使用Jest进行单元测试
+- 使用React Testing Library测试组件
+- 关键业务逻辑保证测试覆盖率
+
+### 2. 端到端测试
+- 使用Cypress或Playwright进行E2E测试
+- 核心用户流程覆盖
+
+## 安全规范
+
+### 1. XSS防护
+- 用户输入数据转义
+- 使用安全的DOM操作方式
+- Content Security Policy配置
+
+### 2. CSRF防护
+- 使用CSRF Token
+- SameSite Cookie设置
+
+### 3. 认证和授权
+- JWT Token安全存储
+- 权限验证和路由守卫
+- 敏感操作二次确认
+
+## 最佳实践
+
+### 1. 错误处理
+- 全局错误边界捕获组件错误
+- 统一错误处理机制
+- 用户友好的错误提示
+
+### 2. 国际化
+- 使用i18next实现国际化
+- 文案和提示信息集中管理
+
+### 3. 可访问性
+- 遵循WCAG标准
+- 合理使用ARIA属性
+- 键盘导航支持
+
+### 4. 日志和监控
+- 关键操作日志记录
+- 前端错误监控
+- 性能监控和分析

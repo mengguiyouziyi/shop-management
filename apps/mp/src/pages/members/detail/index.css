@@ -1,51 +1,70 @@
 .member-detail {
-  padding: 20px;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding-bottom: 80px;
 }
 
 .member-header {
-  text-align: center;
-  margin-bottom: 30px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #eee;
+  background-color: #ffffff;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .member-name {
   font-size: 24px;
   font-weight: bold;
-  display: block;
-  margin-bottom: 10px;
+  color: #333;
 }
 
 .member-level {
-  display: inline-block;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-size: 14px;
-  background-color: #FF9500;
-  color: white;
+  font-size: 16px;
+  color: #1890ff;
+  background-color: #e6f7ff;
+  padding: 4px 12px;
+  border-radius: 12px;
+  border: 1px solid #1890ff;
 }
 
 .member-info {
-  margin-bottom: 30px;
+  margin-top: 20px;
+  background-color: #ffffff;
+  padding: 20px;
 }
 
 .info-item {
   display: flex;
+  justify-content: space-between;
   margin-bottom: 15px;
 }
 
+.info-item:last-child {
+  margin-bottom: 0;
+}
+
 .info-label {
-  width: 100px;
-  font-weight: bold;
+  font-size: 16px;
+  color: #666;
 }
 
 .info-value {
-  flex: 1;
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+}
+
+.points-section {
+  margin-top: 20px;
+  background-color: #ffffff;
+  padding: 20px;
 }
 
 .section-title {
   font-size: 18px;
   font-weight: bold;
+  color: #333;
   margin-bottom: 15px;
   display: block;
 }
@@ -53,21 +72,30 @@
 .points-info {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding: 15px;
-  background-color: #f9f9f9;
-  border-radius: 5px;
+  margin-bottom: 15px;
 }
 
 .points-label {
   font-size: 16px;
+  color: #666;
 }
 
 .points-value {
-  font-size: 24px;
-  font-weight: bold;
-  color: #FF9500;
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+}
+
+.points-input-container {
+  margin-bottom: 15px;
+}
+
+.points-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
 }
 
 .points-actions {
@@ -75,20 +103,55 @@
   justify-content: space-between;
 }
 
-.add-points-btn, .reduce-points-btn {
+.add-points-btn,
+.reduce-points-btn {
   flex: 1;
   margin: 0 5px;
-  border: none;
-  padding: 15px;
-  border-radius: 5px;
+}
+
+.edit-form {
+  margin-top: 20px;
+  background-color: #ffffff;
+  padding: 20px;
+}
+
+.form-item {
+  margin-bottom: 15px;
+}
+
+.label {
+  display: block;
   font-size: 16px;
-  color: white;
+  color: #666;
+  margin-bottom: 5px;
 }
 
-.add-points-btn {
-  background-color: #34C759;
+.input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
 }
 
-.reduce-points-btn {
-  background-color: #FF3B30;
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.cancel-btn,
+.save-btn {
+  flex: 1;
+  margin: 0 5px;
+}
+
+.action-buttons {
+  margin-top: 20px;
+  padding: 0 20px;
+}
+
+.contact-btn {
+  width: 100%;
+  margin-bottom: 10px;
 }

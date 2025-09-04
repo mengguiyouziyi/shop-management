@@ -7,20 +7,32 @@
   "scripts": {
     "dev": "taro build --type weapp --watch",
     "build": "taro build --type weapp",
-    "build:prod": "taro build --type weapp --prod"
+    "build:prod": "taro build --type weapp --prod",
+    "lint": "eslint src --ext .js,.jsx",
+    "lint:fix": "eslint src --ext .js,.jsx --fix",
+    "format": "prettier --write src/"
   },
   "dependencies": {
-    "@tarojs/components": "^3.6.0",
-    "@tarojs/runtime": "^3.6.0",
-    "@tarojs/taro": "^3.6.0",
-    "@tarojs/react": "^3.6.0",
+    "@tarojs/components": "^3.6.37",
+    "@tarojs/react": "^3.6.37",
+    "@tarojs/runtime": "^3.6.37",
+    "@tarojs/taro": "^3.6.37",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "redux": "^5.0.1"
   },
   "devDependencies": {
-    "@tarojs/cli": "^3.6.0",
-    "@tarojs/plugin-platform-weapp": "^3.6.0",
+    "@babel/plugin-transform-class-properties": "^7.27.1",
+    "@babel/preset-react": "^7.27.1",
+    "@tarojs/cli": "^3.6.37",
+    "@tarojs/plugin-framework-react": "^3.6.37",
+    "@tarojs/plugin-platform-weapp": "^3.6.37",
+    "@tarojs/webpack5-runner": "^3.6.37",
     "@types/react": "^18.2.0",
-    "@types/webpack-env": "^1.18.0"
+    "@types/webpack-env": "^1.18.0",
+    "eslint": "^8.57.1",
+    "eslint-plugin-react": "^7.37.5",
+    "prettier": "^3.4.2",
+    "webpack": "^5.0.0"
   }
 }

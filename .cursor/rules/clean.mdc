@@ -1,0 +1,35 @@
+---
+description: 自动修复代码格式和质量问题
+globs: ""
+alwaysApply: false
+---
+# Clean
+
+修复整个代码库中的所有代码格式和质量问题。
+
+## 小程序项目:
+修复所有ESLint、Prettier和TypeScript问题
+
+### 步骤:
+1. **使用Prettier格式化**: `npx prettier --write .`
+2. **修复ESLint问题**: `npx eslint . --fix`
+3. **检查TypeScript**: `npx tsc --noEmit`
+4. **Taro特定检查**: `taro lint` (如果可用)
+
+## 通用流程:
+1. 首先运行自动化格式化工具
+2. 手动修复剩余的代码规范问题
+3. 解决类型检查错误
+4. 验证所有工具都能通过无错误运行
+5. 提交前审查更改
+
+## 小程序项目常见问题:
+- Taro组件使用规范
+- React Hooks使用规则
+- CSS类名命名规范
+- 导入顺序冲突
+- 行长度违规
+- 未使用的导入/变量
+- 类型注解要求
+- 缺少返回类型
+- 引号/分号使用不一致

@@ -1,0 +1,89 @@
+.search {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  padding-bottom: 80px;
+}
+
+.search-header {
+  background-color: #ffffff;
+  padding: 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  font-size: 16px;
+  background-color: #f5f5f5;
+}
+
+.search-results {
+  padding: 15px;
+}
+
+.result-section {
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.result-item {
+  background-color: #ffffff;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+.product-item {
+  border-left: 4px solid #1890ff;
+}
+
+.member-item {
+  border-left: 4px solid #52c41a;
+}
+
+.order-item {
+  border-left: 4px solid #fa8c16;
+}
+
+.item-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.item-info {
+  font-size: 14px;
+  color: #666;
+}
+
+.no-results {
+  text-align: center;
+  padding: 50px 0;
+}
+
+.no-results-text {
+  font-size: 16px;
+  color: #999;
+}
+
+.search-tips {
+  text-align: center;
+  padding: 50px 0;
+}
+
+.tips-text {
+  font-size: 16px;
+  color: #999;
+}

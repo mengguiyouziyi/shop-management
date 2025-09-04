@@ -1,0 +1,148 @@
+.settings {
+  padding: 15px;
+  background-color: #f5f7fa;
+  min-height: 100vh;
+}
+
+.header-section {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 25px 20px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.subtitle {
+  font-size: 15px;
+  opacity: 0.9;
+  display: block;
+}
+
+/* 设置部分 */
+.settings-section {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+  display: block;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* 设置项 */
+.setting-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.setting-item:last-child {
+  border-bottom: none;
+}
+
+.setting-info {
+  flex: 1;
+}
+
+.setting-label {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.setting-desc {
+  font-size: 13px;
+  color: #666;
+  display: block;
+}
+
+/* 操作项 */
+.action-item {
+  display: flex;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+}
+
+.action-item:last-child {
+  border-bottom: none;
+}
+
+.action-info {
+  flex: 1;
+}
+
+.action-label {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.action-desc {
+  font-size: 13px;
+  color: #666;
+  display: block;
+}
+
+.action-arrow {
+  font-size: 20px;
+  color: #ccc;
+}
+
+/* 版本信息 */
+.version-info {
+  text-align: center;
+  padding: 30px 20px;
+  color: #999;
+}
+
+.version-text {
+  font-size: 14px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.copyright-text {
+  font-size: 12px;
+  display: block;
+}
+
+/* 响应式设计 */
+@media (min-width: 768px) {
+  .settings {
+    padding: 20px;
+  }
+
+  .header-section {
+    padding: 30px;
+  }
+
+  .title {
+    font-size: 24px;
+  }
+
+  .settings-section {
+    padding: 30px;
+  }
+}

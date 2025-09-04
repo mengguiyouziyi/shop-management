@@ -1,28 +1,133 @@
-.tab-bar {
+.tabbar-container {
+  position: relative;
+}
+
+.tabbar {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   height: 60px;
-  background-color: #fff;
-  border-top: 1px solid #eee;
+  background: white;
   display: flex;
-  justify-content: space-around;
-  align-items: center;
-  z-index: 999;
+  border-top: 1px solid #eee;
+  z-index: 1000;
 }
 
-.tab-item {
+.tabbar-item {
   flex: 1;
-  text-align: center;
-  padding: 10px 0;
-}
-
-.tab-title {
-  font-size: 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
   color: #666;
+  cursor: pointer;
 }
 
-.tab-item.active .tab-title {
-  color: #007AFF;
+.tabbar-item.active {
+  color: #1890ff;
+}
+
+.tabbar-icon {
+  font-size: 18px;
+  margin-bottom: 2px;
+}
+
+/* 更多菜单样式 */
+.more-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: flex-end;
+  z-index: 1001;
+}
+
+.more-menu {
+  width: 80%;
+  max-width: 300px;
+  height: 100%;
+  background: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.more-menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.more-menu-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.close-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #f5f5f5;
+  border: none;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.more-menu-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.more-menu-item {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #f5f5f5;
+  cursor: pointer;
+}
+
+.more-menu-item.active {
+  background: #e6f7ff;
+}
+
+.more-menu-icon {
+  font-size: 20px;
+  margin-right: 15px;
+  width: 24px;
+  text-align: center;
+}
+
+.more-menu-text {
+  font-size: 16px;
+  color: #333;
+  flex: 1;
+}
+
+/* 平板和桌面端适配 */
+@media (min-width: 768px) {
+  .tabbar {
+    height: 70px;
+  }
+
+  .tabbar-text {
+    font-size: 14px;
+  }
+
+  .tabbar-icon {
+    font-size: 22px;
+  }
+
+  .more-menu {
+    max-width: 400px;
+  }
 }
